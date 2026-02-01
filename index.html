@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XCharger | الجيل القادم لشحن المركبات الكهربائية</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary:#007bff; --primary-dark:#0056b3;
+      --secondary:#1e272e; --accent:#00d2d3;
+      --light:#f8f9fa; --dark:#0f141a;
+      --glass:rgba(255,255,255,.88);
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --shadow2:0 20px 55px rgba(0,0,0,.12);
+      --transition:all .4s cubic-bezier(.165,.84,.44,1);
+      --radius:24px; --radius2:18px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+    body{
+      background: radial-gradient(900px 450px at 20% 0%, rgba(0,210,211,0.10), transparent 60%),
+                  radial-gradient(900px 450px at 90% 10%, rgba(0,123,255,0.12), transparent 60%),
+                  #f4f7f6;
+      color:var(--secondary); overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    .container{width:90%;max-width:1250px;margin:0 auto}
+    .spacer{height:84px}
+
+    /* Header */
+    header{
+      background:var(--glass); backdrop-filter:blur(12px);
+      padding:1rem 0; position:fixed; width:100%; top:0; z-index:2000;
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    .header-content{display:flex;justify-content:space-between;align-items:center;gap:14px}
+    .logo{font-size:1.75rem;font-weight:900;display:flex;align-items:center;gap:12px;color:var(--dark)}
+    .logo i{color:var(--primary);filter:drop-shadow(0 0 6px rgba(0,123,255,.35))}
+    .logo span{color:var(--primary)}
+    nav ul{display:flex;list-style:none;gap:1.35rem;align-items:center}
+    nav a{color:var(--secondary);font-weight:900;font-size:.98rem;position:relative;transition:var(--transition);padding:8px 2px}
+    nav a::after{content:'';position:absolute;bottom:-6px;right:0;width:0;height:2px;background:var(--primary);transition:var(--transition)}
+    nav a:hover::after{width:100%}
+
+    .header-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .auth-buttons{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .social-mini{display:flex;gap:8px;align-items:center}
+    .social-mini a{
+      width:38px;height:38px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.06);
+      transition:var(--transition);
+    }
+    .social-mini a:hover{transform:translateY(-3px);box-shadow:var(--shadow);background:rgba(0,123,255,.08);border-color:rgba(0,123,255,.18)}
+    .social-mini i{color:var(--secondary);font-size:1.05rem}
+
+    .btn{
+      padding:.9rem 2.1rem;border-radius:999px;font-weight:900;transition:var(--transition);
+      display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;white-space:nowrap;
+    }
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 10px 20px rgba(0,123,255,.25)}
+    .btn-primary:hover{transform:translateY(-4px);box-shadow:0 15px 30px rgba(0,123,255,.45);background:var(--primary-dark)}
+    .btn-ghost{background:rgba(0,0,0,.04);color:var(--secondary);border:1px solid rgba(0,0,0,.06)}
+    .btn-ghost:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+    .btn-light{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.20)}
+    .btn-light:hover{transform:translateY(-4px);box-shadow:0 18px 45px rgba(0,0,0,.18)}
+    .btn-danger{background:#ef4444;color:#fff;box-shadow:0 12px 28px rgba(239,68,68,.22)}
+    .btn-danger:hover{transform:translateY(-4px);filter:brightness(.98)}
+    .btn-small{padding:.65rem 1.05rem;font-size:.92rem}
+
+    .lang-toggle{
+      display:flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(0,0,0,.08); background:rgba(255,255,255,.7);
+      box-shadow:var(--shadow);
+    }
+    .lang-toggle button{
+      padding:.55rem .95rem;border-radius:999px;border:none;cursor:pointer;font-weight:900;
+      background:transparent;color:var(--secondary);transition:var(--transition);
+    }
+    .lang-toggle button.active{
+      background:rgba(0,123,255,.12); color:var(--primary-dark);
+      border:1px solid rgba(0,123,255,.18);
+    }
+
+    /* Hero */
+    .hero{
+      height:100vh;
+      background:
+        linear-gradient(135deg, rgba(15,20,26,.88), rgba(0,123,255,.30)),
+        url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover;
+      display:flex;align-items:center;text-align:center;color:#fff;padding-top:80px;
+    }
+    .hero h2{font-size:clamp(2rem,5vw,4rem);font-weight:900;margin-bottom:1.2rem;line-height:1.2;text-shadow:0 15px 40px rgba(0,0,0,.35)}
+    .hero p{font-size:1.15rem;max-width:760px;margin:0 auto 2.2rem;opacity:.92}
+    .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+    /* Sections */
+    .section-title{text-align:center;margin:6rem 0 3rem}
+    .section-title h2{font-size:2.5rem;font-weight:900;display:inline-block;position:relative}
+    .section-title h2::after{
+      content:'';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
+      width:70px;height:4px;background:var(--primary);border-radius:2px
+    }
+    .section-title p{color:#777;margin-top:1.2rem;font-weight:900}
+
+    /* Stats */
+    .stats-section{
+      background:linear-gradient(135deg, rgba(15,20,26,.98), rgba(0,123,255,.22));
+      color:#fff; padding:5rem 0; text-align:center;
+    }
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem}
+    .stat-item{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px; padding:18px 14px;
+      box-shadow:0 20px 60px rgba(0,0,0,.15);
+    }
+    .stat-item h3{font-size:2.5rem;color:#fff;font-weight:900}
+    .stat-item p{opacity:.9;font-weight:900;margin-top:6px}
+
+    /* Products */
+    .products-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.2rem;margin-bottom:4rem}
+    .product-card{
+      background:#fff;border-radius:var(--radius);padding:1.5rem;transition:var(--transition);
+      border:1px solid rgba(0,0,0,.03);box-shadow:var(--shadow);position:relative;overflow:hidden;
+    }
+    .product-card::before{
+      content:'';position:absolute;top:-120px;left:-120px;width:220px;height:220px;
+      background:radial-gradient(circle, rgba(0,210,211,.20), transparent 60%);
+      opacity:.8;
+    }
+    .product-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,.10)}
+    .product-img{background:#fdfdfd;border-radius:var(--radius2);height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(0,0,0,.04)}
+    .product-img img{max-height:82%;transition:var(--transition)}
+    .product-card:hover .product-img img{transform:scale(1.12) rotate(-3deg)}
+    .badges{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+    .price-badge{
+      background:var(--dark);color:#fff;padding:.55rem 1.2rem;border-radius:14px;font-weight:900;
+      font-size:1.06rem;display:inline-flex;align-items:center;gap:8px
+    }
+    .wholesale-badge{
+      display:none;background:linear-gradient(135deg,#f59e0b,#e11d48);color:#fff;
+      padding:.55rem 1rem;border-radius:14px;font-weight:900;font-size:.98rem;align-items:center;gap:8px;
+      box-shadow:0 12px 28px rgba(245,158,11,.20)
+    }
+    .tag-badge{
+      background:rgba(0,123,255,.10);color:var(--primary-dark);border:1px solid rgba(0,123,255,.18);
+      padding:.45rem .85rem;border-radius:999px;font-weight:900;font-size:.9rem
+    }
+    .feature-list{list-style:none;margin:1.1rem 0}
+    .feature-list li{margin-bottom:.65rem;font-size:.95rem;display:flex;align-items:center;gap:10px;color:#555;font-weight:900}
+    .feature-list i{color:#2ecc71}
+
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .mini-btn{
+      padding:.85rem 1rem;border-radius:16px;border:none;cursor:pointer;font-weight:900;transition:var(--transition);
+      display:flex;align-items:center;justify-content:center;gap:8px
+    }
+    .mini-btn:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+    .mini-software{background:rgba(0,123,255,.12);color:var(--primary-dark);border:1px solid rgba(0,123,255,.18)}
+    .mini-catalog{background:rgba(15,20,26,.08);color:var(--dark);border:1px solid rgba(15,20,26,.10)}
+    .mini-video{background:rgba(239,68,68,.10);color:#b91c1c;border:1px solid rgba(239,68,68,.16)}
+    .mini-order{grid-column:1/-1;background:var(--primary);color:#fff;box-shadow:0 12px 25px rgba(0,123,255,.22)}
+    .mini-order:hover{background:var(--primary-dark)}
+
+    /* Comparison */
+    .compare-wrap{
+      background:rgba(255,255,255,.75);
+      border:1px solid rgba(0,0,0,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow2);
+      overflow:hidden;
+    }
+    .compare-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      padding:16px 18px;border-bottom:1px solid rgba(0,0,0,.06);
+      background:rgba(255,255,255,.85);
+    }
+    .compare-head b{font-weight:900}
+    table.compare{
+      width:100%;border-collapse:separate;border-spacing:0;
+      overflow:hidden;
+    }
+    table.compare th, table.compare td{
+      padding:14px 12px;border-bottom:1px solid rgba(0,0,0,.06);text-align:center;font-weight:900;
+    }
+    table.compare th{
+      background:rgba(0,123,255,.06); color:var(--primary-dark);
+      position:sticky; top:0;
+    }
+    table.compare tr:last-child td{border-bottom:none}
+    .yes{color:#14532d;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.18);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
+    .no{color:#7f1d1d;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.18);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
+    .maybe{color:#0b3a63;background:rgba(0,123,255,.10);border:1px solid rgba(0,123,255,.18);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
+
+    /* FAQ */
+    .faq-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    .faq-card{
+      background:rgba(255,255,255,.85);
+      border:1px solid rgba(0,0,0,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .faq-item{border-bottom:1px solid rgba(0,0,0,.06)}
+    .faq-item:last-child{border-bottom:none}
+    .faq-q{
+      width:100%;text-align:right;display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:16px 16px;background:transparent;border:none;cursor:pointer;font-weight:900;font-size:1.02rem;
+    }
+    .faq-q i{color:var(--primary)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .35s ease;
+      padding:0 16px;
+    }
+    .faq-a p{padding:0 0 14px;color:#556;font-weight:800;line-height:1.9}
+    .faq-side{
+      background:rgba(15,20,26,.96); color:#fff;
+      border-radius:var(--radius);
+      padding:18px 16px;
+      box-shadow:var(--shadow2);
+    }
+    .faq-side h3{font-weight:900;margin-bottom:10px}
+    .faq-side p{opacity:.92;font-weight:800;line-height:1.9}
+    .faq-side .pill{
+      margin-top:10px;display:inline-flex;align-items:center;gap:8px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.08);
+      padding:8px 10px;border-radius:999px;font-weight:900;
+    }
+
+    /* Admin */
+    .admin-wrap{margin:4.2rem 0 0}
+    .admin-card{
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(0,0,0,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow2);
+      padding:2rem;
+      display:none;
+    }
+    .admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .admin-head h3{font-size:1.5rem;font-weight:900;color:var(--secondary);display:flex;align-items:center;gap:10px}
+    .admin-head p{color:#667;font-weight:900;margin-top:6px}
+    .admin-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:14px}
+    .panel{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.05);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow)}
+    .panel h4{font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+    .form-group{margin-bottom:12px}
+    .form-control{
+      width:100%;padding:12px 14px;border-radius:16px;border:1px solid rgba(0,0,0,.10);
+      outline:none;background:rgba(255,255,255,.95);font-weight:900;transition:var(--transition);
+    }
+    .form-control:focus{border-color:rgba(0,123,255,.45);box-shadow:0 0 0 4px rgba(0,123,255,.12)}
+    textarea.form-control{min-height:110px;resize:vertical}
+    .admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .admin-items{display:grid;gap:10px}
+    .admin-item{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px;border-radius:18px;border:1px solid rgba(0,0,0,.06);
+      background:rgba(255,255,255,.85);
+    }
+    .admin-item b{font-weight:900;color:var(--secondary)}
+    .admin-item small{color:#667;font-weight:900;display:block;margin-top:2px}
+    .admin-item .row{display:flex;flex-direction:column}
+    .admin-item .row2{display:flex;gap:8px;flex-wrap:wrap}
+
+    /* Modals */
+    .modal{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:4000;
+      align-items:center;justify-content:center;padding:16px;
+    }
+    .modal-content{
+      background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+      border-radius:var(--radius);border:1px solid rgba(0,0,0,.06);
+      padding:2.2rem;width:min(560px,100%);position:relative;
+      box-shadow:0 30px 90px rgba(0,0,0,.25);
+    }
+    .close-modal{
+      position:absolute;top:14px;left:18px;font-size:1.8rem;cursor:pointer;
+      color:rgba(0,0,0,.55);transition:var(--transition);user-select:none;
+    }
+    .close-modal:hover{transform:rotate(90deg);color:rgba(0,0,0,.85)}
+    .modal-title{text-align:center;font-weight:900;margin-bottom:1.2rem;color:var(--secondary)}
+    .msg{margin-top:10px;font-weight:900;text-align:center;padding:10px 12px;border-radius:14px;display:none}
+    .msg.err{background:rgba(239,68,68,.10);color:#7f1d1d;border:1px solid rgba(239,68,68,.18)}
+    .msg.ok{background:rgba(34,197,94,.12);color:#14532d;border:1px solid rgba(34,197,94,.18)}
+
+    /* Video modal */
+    .video-modal-content{width:min(960px,100%);padding:0;overflow:hidden}
+    .video-head{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.06);
+      background:rgba(255,255,255,.85)
+    }
+    .video-head b{font-weight:900;color:var(--secondary)}
+    .video-wrap{width:100%;aspect-ratio:16/9;background:#000;position:relative}
+    .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+    /* Footer */
+    footer{background:#0b0e11;color:#a0a0a0;padding:5rem 0 2rem;margin-top:4rem}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
+    .footer-logo{color:#fff;font-weight:900;font-size:1.5rem;margin-bottom:1.2rem;display:block}
+    .footer-grid h4{color:#fff;margin-bottom:1.3rem;font-weight:900}
+    .footer-grid ul{list-style:none;display:grid;gap:10px}
+    .footer-grid a{color:#a0a0a0}
+    .footer-grid a:hover{color:#fff}
+    .footer-social{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .footer-social a{
+      width:44px;height:44px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);
+      transition:var(--transition);
+    }
+    .footer-social a:hover{transform:translateY(-4px);background:rgba(0,123,255,.18);border-color:rgba(0,123,255,.25)}
+    .footer-social i{color:#fff}
+    .footer-bottom{text-align:center;margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.05);color:#c0c0c0;font-weight:900}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      nav{display:none}
+      .products-grid{grid-template-columns:1fr}
+      .faq-grid{grid-template-columns:1fr}
+      .admin-grid{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr}
+      .lang-toggle{order:3;width:100%;justify-content:center}
+      .auth-buttons{width:100%;justify-content:center}
+      .header-content{flex-wrap:wrap}
+      .header-right{width:100%;justify-content:center}
+    }
+    @media (max-width: 560px){
+      .actions{grid-template-columns:1fr}
+      .mini-order{grid-column:auto}
+      .social-mini{display:none}
+    }
+  
+        .compare-table .row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);border-top:1px solid rgba(0,0,0,.06);}
+        .compare-table .cell{padding:14px 12px;min-width:190px;white-space:normal}
+        .compare-table .cell.head{font-weight:900;background:rgba(0,0,0,.03)}
+        .pill{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;font-weight:900;font-size:.9rem}
+        .pill.ok{background:rgba(46,204,113,.12);color:#138d52}
+        .pill.no{background:rgba(231,76,60,.12);color:#b03a2e}
+        .admin-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 10px;border:1px solid rgba(0,0,0,.06);border-radius:14px;background:#fff;margin-bottom:10px}
+        .admin-item-title{font-weight:900}
+        .admin-item-actions{display:flex;gap:8px;flex-wrap:wrap}
+        .mini-btn{border:none;cursor:pointer;border-radius:12px;padding:10px 12px;font-weight:900;background:rgba(0,0,0,.06);color:var(--secondary);display:inline-flex;align-items:center;gap:8px}
+        .mini-btn.danger{background:rgba(231,76,60,.12);color:#b03a2e}
+    </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="#home" class="logo" onclick="smoothTo('home'); return false;">
+          <i class="fas fa-charging-station"></i> X<span>Charger</span>
+        </a>
+
+        <nav class="desktop-nav">
+          <ul>
+            <li><a href="#home" data-i18n="nav_home" onclick="smoothTo('home'); return false;">الرئيسية</a></li>
+            <li><a href="#products" data-i18n="nav_products" onclick="smoothTo('products'); return false;">المنتجات</a></li>
+            <li><a href="#compare" data-i18n="nav_compare" onclick="smoothTo('compare'); return false;">المقارنة</a></li>
+            <li><a href="#faq" data-i18n="nav_faq" onclick="smoothTo('faq'); return false;">الأسئلة</a></li>
+            <li><a href="#contact" data-i18n="nav_contact" onclick="smoothTo('contact'); return false;">اتصل بنا</a></li>
+</ul>
+        </nav>
+
+        <div class="header-right">
+          <div class="lang-toggle" title="Language">
+            <button id="btnAR" class="active" onclick="setLang('ar')">AR</button>
+            <button id="btnEN" onclick="setLang('en')">EN</button>
+          </div>
+
+          <div class="social-mini" aria-label="social">
+            <a id="miniMap" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-location-dot"></i></a>
+            <a id="miniPhone" href="#"><i class="fa-solid fa-phone"></i></a>
+            <a id="miniWhatsapp" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
+            <a id="miniInstagram" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+            <a id="miniFacebook" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+          </div>
+
+          <div class="auth-buttons">
+            <button class="btn btn-primary btn-small" id="loginBtn" onclick="openLoginModal()">
+              <i class="fa-solid fa-user-circle"></i> <span data-i18n="btn_login">تسجيل الدخول</span>
+            </button>
+            <button class="btn btn-ghost btn-small" id="logoutBtn" onclick="logoutUser()" style="display:none;">
+              <i class="fas fa-right-from-bracket"></i> <span data-i18n="btn_logout">تسجيل خروج</span>
+            </button>
+          </div>
+        
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+          <button class="btn btn-primary" id="mainLoginBtn" onclick="openLoginModal()">
+            <i class="fas fa-user-circle"></i><span data-i18n="loginBtn">تسجيل الدخول</span>
+          </button>
+          <button class="btn" id="logoutBtn" style="display:none;background:rgba(0,0,0,.06);color:var(--secondary);" type="button">
+            <i class="fa-solid fa-right-from-bracket"></i><span data-i18n="logoutBtn">تسجيل الخروج</span>
+          </button>
+          <span id="authStatus" style="font-weight:700;color:var(--secondary);"></span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn" id="langArBtn" style="padding:.6rem 1rem;background:rgba(0,0,0,.06);color:var(--secondary);">AR</button>
+            <button class="btn" id="langEnBtn" style="padding:.6rem 1rem;background:rgba(0,0,0,.06);color:var(--secondary);">EN</button>
+          </div>
+        </div>
+    </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="container" data-aos="fade-up">
+      <div class="hero-content">
+        <h2 data-i18n="hero_title">طاقة المستقبل بين يديك</h2>
+        <p data-i18n="hero_desc">
+          نصمم وننتج أجهزة شحن ذكية تجمع بين الأمان والاعتمادية وسهولة الاستخدام، مع إصدارات متعددة تناسب المنزل والعمل.
+        </p>
+        <div class="hero-actions">
+          <a href="#products" class="btn btn-primary" onclick="smoothTo('products'); return false;">
+            <i class="fa-solid fa-cart-shopping"></i> <span data-i18n="hero_btn_products">اكتشف منتجاتنا</span>
+          </a>
+          <a href="#contact" class="btn btn-light" onclick="smoothTo('contact'); return false;">
+            <i class="fa-solid fa-message"></i> <span data-i18n="hero_btn_quote">طلب خاص</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stats" class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" data-aos="zoom-in">
+          <h3><i class="fa-solid fa-sliders" style="color:var(--primary);"></i></h3>
+          <p data-i18n="stat_1">تحكم ذكي مرن</p>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
+          <h3>100%</h3>
+          <p data-i18n="stat_2">اعتمادية</p>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
+          <h3>24/7</h3>
+          <p data-i18n="stat_3">دعم فني</p>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
+          <h3>3</h3>
+          <p data-i18n="stat_4">سنوات ضمان</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" class="container">
+    <div class="section-title" data-aos="fade-down">
+      <h2 data-i18n="products_title">إصدارات XCharger المتطورة</h2>
+      <p data-i18n="products_subtitle">اختر الإصدار الذي يناسب احتياجك</p>
+    </div>
+
+    <div class="products-grid" id="productsContainer"></div>
+
+    <div id="admin" class="admin-wrap" data-aos="fade-up">
+      <div class="admin-card" id="adminPanel">
+        <div class="admin-head">
+          <div>
+            <h3><i class="fa-solid fa-gear"></i> <span data-i18n="admin_title">لوحة تحكم المدير</span></h3>
+            <p data-i18n="admin_desc">إضافة/تعديل/حذف المنتجات (حفظ محليًا — ويمكن تفعيل Firebase للإنتاج)</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-small" onclick="resetAdminForm(true)">
+              <i class="fa-solid fa-rotate"></i> <span data-i18n="admin_clear">تفريغ النموذج</span>
+            </button>
+            <button class="btn btn-primary btn-small" onclick="restoreDefaults()">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="admin_restore">استرجاع الافتراضي</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="panel">
+            <h4><i class="fa-solid fa-pen-to-square"></i> <span data-i18n="admin_form">إضافة / تعديل</span></h4>
+
+            <div class="form-group">
+              <label style="font-weight:900;" data-i18n="admin_select">اختر منتج للتعديل (اختياري)</label>
+              <select id="adminSelect" class="form-control" onchange="loadProductToForm()"></select>
+            </div>
+
+            <div class="form-group">
+              <label style="font-weight:900;" data-i18n="admin_name">اسم المنتج</label>
+              <input id="pName" class="form-control" placeholder="مثال: XCharger Smart">
+            </div>
+
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div>
+                <label style="font-weight:900;" data-i18n="admin_retail_jod">سعر المفرق (JOD)</label>
+                <input id="pRetailJOD" class="form-control" placeholder="مثال: 250">
+              </div>
+              <div>
+                <label style="font-weight:900;" data-i18n="admin_wholesale_jod">سعر التاجر (JOD)</label>
+                <input id="pWholeJOD" class="form-control" placeholder="مثال: 180">
+              </div>
+            </div>
+
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div>
+                <label style="font-weight:900;" data-i18n="admin_retail_usd">سعر المفرق (USD)</label>
+                <input id="pRetailUSD" class="form-control" placeholder="مثال: 350">
+              </div>
+              <div>
+                <label style="font-weight:900;" data-i18n="admin_wholesale_usd">سعر التاجر (USD)</label>
+                <input id="pWholeUSD" class="form-control" placeholder="مثال: 250">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label style="font-weight:900;" data-i18n="admin_tag">وسم المنتج</label>
+              <select id="pTag" class="form-control">
+                <option value="new" data-i18n="tag_new">جديد</option>
+                <option value="best" data-i18n="tag_best">الأكثر مبيعاً</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label style="font-weight:900;" data-i18n="admin_img">رابط الصورة</label>
+              <input id="pImg" class="form-control" placeholder="https://...">
+            </div>
+
+            <div class="form-group">
+              <label style="font-weight:900;" data-i18n="admin_video">رابط الفيديو (YouTube Embed)</label>
+              <input id="pVideo" class="form-control" placeholder="https://www.youtube.com/embed/...">
+            </div>
+
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div>
+                <label style="font-weight:900;" data-i18n="admin_soft">رابط السوفت وير</label>
+                <input id="pSoft" class="form-control" placeholder="https://...">
+              </div>
+              <div>
+                <label style="font-weight:900;" data-i18n="admin_cat">رابط الكاتالوج</label>
+                <input id="pCat" class="form-control" placeholder="https://...">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label style="font-weight:900;" data-i18n="admin_feats">المزايا (كل ميزة بسطر)</label>
+              <textarea id="pFeatures" class="form-control" placeholder="شحن سريع&#10;حماية متعددة&#10;مقاوم للماء IP65"></textarea>
+            </div>
+
+            <div class="admin-actions">
+              <button class="btn btn-primary btn-small" onclick="saveFromForm()"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="admin_save">حفظ</span></button>
+              <button class="btn btn-danger btn-small" onclick="deleteSelected()"><i class="fa-solid fa-trash"></i> <span data-i18n="admin_delete">حذف</span></button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h4><i class="fa-solid fa-list"></i> <span data-i18n="admin_list">قائمة المنتجات</span></h4>
+            <div class="admin-items" id="adminList"></div>
+
+            <div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(0,0,0,.06);">
+              <h4 style="margin-bottom:8px;"><i class="fa-brands fa-google"></i> <span data-i18n="factory_location">موقع المصنع</span></h4>
+              <p style="color:#667;font-weight:900;line-height:1.9">
+                <i class="fa-solid fa-location-dot"></i>
+                <span data-i18n="amman"><span id="factoryCity">عمّان – الأردن</span></span>
+                —
+                <a id="mapLink2" href="#" target="_blank" rel="noopener" style="color:var(--primary-dark); font-weight:900;">
+                  <span data-i18n="open_map">افتح الخريطة</span>
+                </a>
+              </p>
+              <p style="color:#667;font-weight:900;line-height:1.9">
+                <i class="fa-solid fa-phone"></i>
+                <a id="phoneLink2" href="#" style="color:var(--primary-dark); font-weight:900;"><a href="tel:0790781206" id="factoryPhone" style="color:inherit;text-decoration:none;">0790781206</a></a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="compare" class="container">
+    <div class="section-title" data-aos="fade-down">
+      <h2 data-i18n="compare_title">مقارنة الإصدارات</h2>
+      <p data-i18n="compare_subtitle">نظرة سريعة لتحديد الإصدار الأنسب لك</p>
+    </div>
+
+    <div class="compare-wrap" data-aos="fade-up">
+      <div class="compare-head">
+        <b><i class="fa-solid fa-table"></i> <span data-i18n="compare_head">جدول المقارنة</span></b>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-small" onclick="smoothTo('products')">
+            <i class="fa-solid fa-box"></i> <span data-i18n="compare_to_products">العودة للمنتجات</span>
+          </button>
+        </div>
+      </div>
+
+      <div style="max-height:520px; overflow:auto;">
+        <table class="compare" id="compareTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="container">
+    <div class="section-title" data-aos="fade-down">
+      <h2 data-i18n="faq_title">الأسئلة الشائعة</h2>
+      <p data-i18n="faq_subtitle">إجابات مختصرة لأهم الأسئلة قبل الشراء</p>
+    </div>
+
+    <div class="faq-grid" data-aos="fade-up">
+      <div class="faq-card" id="faqCard"></div>
+      <div class="faq-side">
+        <h3 data-i18n="faq_side_title">تحتاج عرض سعر أو توريد؟</h3>
+        <p data-i18n="faq_side_desc">
+          اختر الإصدار المناسب ثم اضغط "اطلب الآن" للحصول على ملخص جاهز للإرسال. يمكننا تجهيز عرض خاص للشركاء.
+        </p>
+        <div class="pill"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="faq_side_pill">ضمان + دعم فني</span></div>
+        <div class="pill"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="faq_side_pill2">توصيل سريع</span></div>
+        <div class="pill"><i class="fa-brands fa-whatsapp"></i> <a id="waLink3" href="#" target="_blank" rel="noopener" style="color:#fff; font-weight:900;"><span data-i18n="whatsapp">واتساب</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <span class="footer-logo">XCharger</span>
+          <p style="line-height:1.9" data-i18n="footer_desc">
+            حلول شحن احترافية للمركبات الكهربائية في الأردن والمنطقة — نلتزم بالجودة والابتكار والاستدامة.
+          </p>
+
+          <div class="footer-social" aria-label="social">
+            <a id="fMap" href="#" target="_blank" rel="noopener" title="Map"><i class="fa-solid fa-location-dot"></i></a>
+            <a id="fPhone" href="#" title="Phone"><i class="fa-solid fa-phone"></i></a>
+            <a id="fWhatsapp" href="#" target="_blank" rel="noopener" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a id="fInstagram" href="#" target="_blank" rel="noopener" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a id="fFacebook" href="#" target="_blank" rel="noopener" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 data-i18n="footer_links">روابط مفيدة</h4>
+          <ul>
+            <li><a href="#compare" onclick="smoothTo('compare'); return false;" data-i18n="footer_compare">المقارنة</a></li>
+            <li><a href="#faq" onclick="smoothTo('faq'); return false;" data-i18n="footer_faq">الأسئلة</a></li>
+</ul>
+        </div>
+
+        <div>
+          <h4 data-i18n="footer_contact">تواصل معنا</h4>
+          <p><i class="fa-solid fa-location-dot"></i> <span data-i18n="footer_city">عمّان - الأردن</span></p>
+          <p><i class="fa-solid fa-phone"></i> <a id="phoneLinkFooter" href="#" style="color:#fff; font-weight:900;">0790781206</a></p>
+          <p style="margin-top:10px; color:#cfcfcf; font-weight:900;">
+            <i class="fa-solid fa-clock"></i> <span data-i18n="footer_hours">الأحد - الخميس: 8 ص - 5 م</span>
+          </p>
+          <p style="margin-top:10px;">
+            <i class="fa-solid fa-map"></i> <a id="mapLinkFooter" href="#" target="_blank" rel="noopener" style="color:#fff; font-weight:900;"><span data-i18n="open_map">افتح الخريطة</span></a>
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        &copy; <span id="year"></span> XCharger. <span data-i18n="footer_rights">جميع الحقوق محفوظة.</span>
+      </div>
+    </div>
+  
+    <!-- Compare Modal -->
+    <div class="modal" id="compareModal" style="display:none;">
+      <div class="modal-content" style="max-width:1100px;width:92%;padding:22px;border-radius:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+          <h3 style="margin:0;font-weight:900;"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="compare">مقارنة الإصدارات</span></h3>
+          <button class="btn" id="compareClose" style="background:rgba(0,0,0,.06);color:var(--secondary);padding:.6rem 1rem;border-radius:14px;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <p style="margin:0 0 14px;color:#666;" data-i18n="compareHint">مقارنة فنية بين الإصدارات</p>
+
+        <div class="compare-table" style="overflow:auto;border:1px solid rgba(0,0,0,.06);border-radius:18px;">
+          <div id="compareHead" class="compare-head" style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);background:#fff;border-bottom:1px solid rgba(0,0,0,.06);"></div>
+          <div id="compareBody" class="compare-body" style="background:#fff;"></div>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- Product Editor Modal (Admin) -->
+    <div class="modal" id="productEditorModal" style="display:none;">
+      <div class="modal-content" style="max-width:900px;width:94%;padding:22px;border-radius:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+          <h3 id="pe_title" style="margin:0;font-weight:900;">إضافة منتج</h3>
+          <button class="btn" id="pe_close" style="background:rgba(0,0,0,.06);color:var(--secondary);padding:.6rem 1rem;border-radius:14px;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label>الاسم (عربي)</label>
+            <input class="form-control" id="pe_name_ar" placeholder="مثال: XCharger الأساسي">
+          </div>
+          <div class="form-group">
+            <label>Name (EN)</label>
+            <input class="form-control" id="pe_name_en" placeholder="e.g., XCharger Basic">
+          </div>
+
+          <div class="form-group">
+            <label>رابط الصورة</label>
+            <input class="form-control" id="pe_image" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label>رابط الفيديو</label>
+            <input class="form-control" id="pe_video" placeholder="https://youtube.com/...">
+          </div>
+
+          <div class="form-group">
+            <label>رابط السوفت وير</label>
+            <input class="form-control" id="pe_software" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label>رابط الكاتالوج</label>
+            <input class="form-control" id="pe_catalog" placeholder="https://...">
+          </div>
+
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>المزايا (عربي) — افصل بفواصل</label>
+            <input class="form-control" id="pe_features_ar" placeholder="ميزة 1, ميزة 2, ...">
+          </div>
+
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Features (EN) — comma separated</label>
+            <input class="form-control" id="pe_features_en" placeholder="Feature 1, Feature 2, ...">
+          </div>
+
+          <div class="form-group">
+            <label>ترتيب العرض</label>
+            <input class="form-control" id="pe_order" placeholder="1" inputmode="numeric">
+          </div>
+
+          <div class="form-group">
+            <label>سعر المفرق (JOD)</label>
+            <input class="form-control" id="pe_retail_jod" placeholder="90" inputmode="decimal">
+          </div>
+
+          <div class="form-group">
+            <label>سعر التاجر (JOD)</label>
+            <input class="form-control" id="pe_wholesale_jod" placeholder="90" inputmode="decimal">
+          </div>
+
+          <div class="form-group">
+            <label>Retail (USD)</label>
+            <input class="form-control" id="pe_retail_usd" placeholder="127" inputmode="decimal">
+          </div>
+
+          <div class="form-group">
+            <label>Wholesale (USD)</label>
+            <input class="form-control" id="pe_wholesale_usd" placeholder="127" inputmode="decimal">
+          </div>
+
+          <div class="form-group">
+            <label>القدرة</label>
+            <input class="form-control" id="pe_power" placeholder="7kW">
+          </div>
+
+          <div class="form-group">
+            <label>التيار</label>
+            <input class="form-control" id="pe_current" placeholder="32A">
+          </div>
+
+          <div class="form-group">
+            <label>الجهد</label>
+            <input class="form-control" id="pe_voltage" placeholder="230V~ 50/60Hz">
+          </div>
+
+          <div class="form-group">
+            <label>المعيار</label>
+            <input class="form-control" id="pe_standard" placeholder="IEC 61851">
+          </div>
+
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>الحمايات</label>
+            <input class="form-control" id="pe_protections" placeholder="OV/OC/OT/RCD">
+          </div>
+
+          <div class="form-group">
+            <label>تصنيف الحماية</label>
+            <input class="form-control" id="pe_ip" placeholder="IP65">
+          </div>
+
+          <div class="form-group">
+            <label>Wi‑Fi</label>
+            <select class="form-control" id="pe_wifi">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Remote</label>
+            <select class="form-control" id="pe_remote">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Voice</label>
+            <select class="form-control" id="pe_voice">
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Screen/UI</label>
+            <select class="form-control" id="pe_screen">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Scheduling</label>
+            <select class="form-control" id="pe_scheduling">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+          <button class="btn" id="pe_cancel" style="background:rgba(0,0,0,.06);color:var(--secondary);border-radius:14px;">
+            إلغاء
+          </button>
+          <button class="btn btn-primary" id="pe_save" style="border-radius:14px;">
+            حفظ
+          </button>
+        </div>
+      </div>
+    </div>
+    </footer>
+    
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content" data-aos="zoom-in">
+      <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+      <h3 class="modal-title" data-i18n="login_title">تسجيل الدخول</h3>
+
+      <div class="form-group">
+        <input type="email" class="form-control" id="loginEmail" placeholder="البريد الإلكتروني">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" id="loginPassword" placeholder="كلمة المرور">
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="loginUser()">
+        <i class="fa-solid fa-shield-halved"></i> <span data-i18n="login_btn">دخول آمن</span>
+      </button>
+
+      <div class="msg err" id="loginErr"></div>
+      <div class="msg ok" id="loginOk"></div>
+
+      <p style="color:#667; margin-top: 12px; text-align:center; font-weight:900;" data-i18n="login_note">
+        تحديد الصلاحيات يتم من Firebase (role) بعد تسجيل الدخول.
+      </p>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal" id="videoModal">
+    <div class="modal-content video-modal-content" data-aos="zoom-in">
+      <div class="video-head">
+        <b><i class="fa-solid fa-circle-play"></i> <span data-i18n="video_title">فيديو الشرح</span></b>
+        <span class="close-modal" style="position:static; font-size:1.6rem;" onclick="closeVideoModal()">&times;</span>
+      </div>
+      <div class="video-wrap">
+        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Firebase (Compat SDK) - optional -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  
+    <script type="module">
+      // =========================
+      // XCharger One-Page (Firebase)
+      // Products are loaded from Firestore (no hardcoded products)
+      // Admin can add/edit/delete products from Admin Panel (role-based)
+      // =========================
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+      import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+      import { getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      // Firebase config (provided by user)
+      const firebaseConfig = {
+        apiKey: "AIzaSyAK4E04TdC_OERPQmvxlKFs_qFSmVwMuiI",
+        authDomain: "xcharger-5bb95.firebaseapp.com",
+        projectId: "xcharger-5bb95",
+        storageBucket: "xcharger-5bb95.firebasestorage.app",
+        messagingSenderId: "570288654795",
+        appId: "1:570288654795:web:94ecb2b696a0da7f408e4e",
+        measurementId: "G-Q9ZX3HYVQV"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      try { getAnalytics(app); } catch(e) {}
+
+      const auth = getAuth(app);
+      const db   = getFirestore(app);
+
+      // ========= UI / i18n =========
+      let LANG = (localStorage.getItem("xcharger_lang") || "ar");
+      const FX_USD_PER_JOD = 1.41; // used ONLY if USD fields missing (fallback)
+
+      const i18n = {
+        ar: {
+          currency: "JOD",
+          priceRetail: "سعر المفرق",
+          priceWholesale: "سعر التاجر",
+          loginTitle: "تسجيل الدخول",
+          emailPH: "البريد الإلكتروني",
+          passPH: "كلمة المرور",
+          loginBtn: "تسجيل الدخول",
+          logoutBtn: "تسجيل الخروج",
+          adminTitle: "لوحة تحكم المدير",
+          addProduct: "إضافة منتج",
+          edit: "تعديل",
+          del: "حذف",
+          save: "حفظ",
+          cancel: "إلغاء",
+          confirmDelete: "هل أنت متأكد من حذف هذا المنتج؟",
+          productsEmpty: "لا يوجد منتجات بعد. أضف أول منتج من لوحة التحكم (للمدير).",
+          orderNow: "اطلب الآن",
+          software: "السوفت وير",
+          catalog: "الكاتالوج",
+          video: "شرح المنتج",
+          compare: "مقارنة الإصدارات",
+          compareHint: "مقارنة فنية بين الإصدارات",
+          stats_1: "تحكم ذكي مرن",
+          stat_2: "أمان واعتمادية",
+          stat_3: "دعم فني",
+          stat_4: "ضمان",
+          contact_city: "عمّان – الأردن",
+          contact_phone: "0790781206",
+          contact_email: "<a href="mailto:sales@xcharger.com" id="factoryEmail" style="color:inherit;text-decoration:none;">sales@xcharger.com</a>",
+          faq_q1: "ما هي القدرة والتيار المدعومان في XCharger؟",
+          faq_a1: "الإصدارات مصممة للاستخدام المنزلي والتجاري الخفيف، بقدرة تصل إلى 7kW (حتى 32A) مع حمايات كهربائية متعددة وميزات ذكية حسب الإصدار.",
+        },
+        en: {
+          currency: "USD",
+          priceRetail: "Retail price",
+          priceWholesale: "Wholesale price",
+          loginTitle: "Sign in",
+          emailPH: "Email",
+          passPH: "Password",
+          loginBtn: "Sign in",
+          logoutBtn: "Sign out",
+          adminTitle: "Admin panel",
+          addProduct: "Add product",
+          edit: "Edit",
+          del: "Delete",
+          save: "Save",
+          cancel: "Cancel",
+          confirmDelete: "Are you sure you want to delete this product?",
+          productsEmpty: "No products yet. Admin can add the first product from the admin panel.",
+          orderNow: "Order now",
+          software: "Software",
+          catalog: "Catalog",
+          video: "Video",
+          compare: "Compare editions",
+          compareHint: "Technical comparison across editions",
+          stats_1: "Flexible smart control",
+          stat_2: "Safety & reliability",
+          stat_3: "Technical support",
+          stat_4: "Warranty",
+          contact_city: "Amman – Jordan",
+          contact_phone: "0790781206",
+          contact_email: "sales@xcharger.com",
+          faq_q1: "What power and current does XCharger support?",
+          faq_a1: "Editions are designed for home and light commercial use, up to 7kW (up to 32A) with multiple electrical protections and smart features depending on the edition.",
+        }
+      };
+
+      function setLang(next) {
+        LANG = next === "en" ? "en" : "ar";
+        document.documentElement.lang = LANG;
+        document.documentElement.dir = (LANG === "ar") ? "rtl" : "ltr";
+        localStorage.setItem("xcharger_lang", LANG);
+        // Update any elements with data-i18n
+        document.querySelectorAll("[data-i18n]").forEach(el=>{
+          const k = el.getAttribute("data-i18n");
+          if (i18n[LANG] && i18n[LANG][k]) el.textContent = i18n[LANG][k];
+        });
+        // Update placeholders
+        const email = document.getElementById("loginEmail");
+        const pass  = document.getElementById("loginPassword");
+        if (email) email.placeholder = i18n[LANG].emailPH;
+        if (pass)  pass.placeholder  = i18n[LANG].passPH;
+
+        // Update static contact text (if present)
+        const city = document.getElementById("factoryCity");
+        const phone = document.getElementById("factoryPhone");
+        const emailEl = document.getElementById("factoryEmail");
+        if (city) city.textContent = i18n[LANG].contact_city;
+        if (phone) phone.textContent = i18n[LANG].contact_phone;
+        if (emailEl) emailEl.textContent = i18n[LANG].contact_email;
+
+        // Re-render products with correct currency
+        renderProducts();
+        renderCompare();
+      }
+
+      // ========= Auth + Role =========
+      let CURRENT = { user: null, role: "retail" }; // retail | wholesale | admin
+      const ROLE_DOC = (uid) => doc(db, "users", uid); // store {role:"admin"|"wholesale"|"retail"} here
+
+      async function getRole(uid) {
+        try {
+          const snap = await getDoc(ROLE_DOC(uid));
+          if (snap.exists() && snap.data()?.role) return snap.data().role;
+        } catch(e) {}
+        return "retail";
+      }
+
+      function isWholesale() { return (CURRENT.role === "wholesale" || CURRENT.role === "admin"); }
+      function isAdmin() { return CURRENT.role === "admin"; }
+
+      // ========= Products (Firestore) =========
+      // Collection: products
+      // Document example:
+      // {
+      //  order: 1,
+      //  name_ar, name_en,
+      //  image, video, software, catalog,
+      //  features_ar: [], features_en: [],
+      //  specs: { power, current, voltage, standard, protections, wifi, remote, voice, screen, scheduling, ip },
+      //  retail_jod, wholesale_jod, retail_usd, wholesale_usd
+      // }
+      const productsCol = collection(db, "products");
+      let PRODUCTS = []; // local cache
+
+      function asArray(v){
+        if (Array.isArray(v)) return v;
+        if (typeof v === "string") return v.split(",").map(s=>s.trim()).filter(Boolean);
+        return [];
+      }
+
+      function priceRetail(p){
+        if (LANG === "en") return (p.retail_usd ?? Math.round((Number(p.retail_jod||0) * FX_USD_PER_JOD)));
+        return (p.retail_jod ?? 0);
+      }
+      function priceWholesale(p){
+        if (LANG === "en") return (p.wholesale_usd ?? Math.round((Number(p.wholesale_jod||0) * FX_USD_PER_JOD)));
+        return (p.wholesale_jod ?? 0);
+      }
+
+      function formatMoney(v){
+        const n = Number(String(v).replace(/,/g,""));
+        if (!isFinite(n)) return "—";
+        if (LANG === "en") return `${n.toLocaleString("en-US")} ${i18n[LANG].currency}`;
+        return `${n.toLocaleString("ar-JO")} ${i18n[LANG].currency}`;
+      }
+
+      let unsubProducts = null;
+      function startProductsListener(){
+        if (unsubProducts) unsubProducts();
+        const qy = query(productsCol, orderBy("order", "asc"));
+        unsubProducts = onSnapshot(qy, (snap)=>{
+          PRODUCTS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderProducts();
+          renderCompare();
+          renderAdminList();
+        });
+      }
+
+      // ========= Render: Products =========
+      function renderProducts() {
+        const container = document.getElementById("productsContainer");
+        if (!container) return;
+
+        if (!PRODUCTS.length) {
+          container.innerHTML = `
+            <div style="grid-column:1/-1;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:18px;padding:22px;box-shadow:var(--shadow);text-align:center;color:#666;">
+              ${i18n[LANG].productsEmpty}
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = PRODUCTS.map((p, idx) => {
+          const name = (LANG==="en" ? (p.name_en||p.name_ar||"XCharger") : (p.name_ar||p.name_en||"XCharger"));
+          const feats = (LANG==="en" ? asArray(p.features_en) : asArray(p.features_ar));
+          const img = p.image || "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=700";
+          const retail = formatMoney(priceRetail(p));
+          const wholesale = formatMoney(priceWholesale(p));
+          const showW = isWholesale();
+
+          return `
+            <div class="product-card" data-aos="fade-up" data-aos-delay="${idx*80}">
+              <div class="product-img-holder">
+                <img src="${img}" alt="${name}" loading="lazy">
+              </div>
+
+              <div class="price-badge">${retail}</div>
+
+              ${showW ? `<div class="wholesale-pill" style="margin:-6px 0 12px;display:flex;gap:10px;align-items:center;justify-content:center;">
+                <span style="background:rgba(0,0,0,.06);padding:8px 12px;border-radius:999px;font-weight:800;font-size:.95rem;">
+                  ${i18n[LANG].priceWholesale}: ${wholesale}
+                </span>
+              </div>` : ""}
+
+              <h3 style="font-size:1.45rem;margin-bottom:.55rem;font-weight:900;">${name}</h3>
+
+              <ul class="feature-list">
+                ${feats.slice(0,6).map(f => `<li><i class="fas fa-check-circle"></i> ${escapeHtml(f)}</li>`).join("")}
+              </ul>
+
+              <div class="product-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+                <button class="btn btn-primary" style="width:100%;justify-content:center;border-radius:14px;" onclick="orderProduct('${p.id}')">
+                  <i class="fas fa-shopping-cart"></i> ${i18n[LANG].orderNow}
+                </button>
+
+                <button class="btn" style="width:100%;justify-content:center;border-radius:14px;background:rgba(0,0,0,.06);color:var(--secondary);" onclick="openCompare()">
+                  <i class="fa-solid fa-scale-balanced"></i> ${i18n[LANG].compare}
+                </button>
+
+                <button class="action-btn btn-software" style="border-radius:14px;" ${p.software?``:`disabled style="opacity:.55;cursor:not-allowed;border-radius:14px;"`}
+                  onclick="openLink('${p.software||""}')">
+                  <i class="fas fa-download"></i> ${i18n[LANG].software}
+                </button>
+
+                <button class="action-btn btn-catalog" style="border-radius:14px;" ${p.catalog?``:`disabled style="opacity:.55;cursor:not-allowed;border-radius:14px;"`}
+                  onclick="openLink('${p.catalog||""}')">
+                  <i class="fas fa-file-pdf"></i> ${i18n[LANG].catalog}
+                </button>
+
+                <button class="action-btn btn-video" style="border-radius:14px;grid-column:1/-1;" ${p.video?``:`disabled style="opacity:.55;cursor:not-allowed;border-radius:14px;grid-column:1/-1;"`}
+                  onclick="openLink('${p.video||""}')">
+                  <i class="fas fa-play-circle"></i> ${i18n[LANG].video}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // ========= Compare Modal =========
+      function yesNoPill(v){
+        const ok = !!v;
+        const label = ok ? (LANG==="en"?"Yes":"نعم") : (LANG==="en"?"No":"لا");
+        return `<span class="pill ${ok?'ok':'no'}">${label}</span>`;
+      }
+
+      function row(ar, en, getter, fmt){
+        return `
+          <div class="row">
+            <div class="cell head">${LANG==="en"?en:ar}</div>
+            ${PRODUCTS.map(p => {
+              const v = getter(p);
+              const cell = fmt ? fmt(v) : escapeHtml(String(v ?? "—"));
+              return `<div class="cell">${cell}</div>`;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      function renderCompare(){
+        const modal = document.getElementById("compareModal");
+        const head  = document.getElementById("compareHead");
+        const body  = document.getElementById("compareBody");
+        if (!modal || !head || !body) return;
+
+        if (!PRODUCTS.length) {
+          head.innerHTML = "";
+          body.innerHTML = "";
+          return;
+        }
+
+        head.innerHTML = `
+          <div class="cell head">${LANG==="en"?"Spec":"المواصفة"}</div>
+          ${PRODUCTS.map(p => `<div class="cell"><strong>${escapeHtml(LANG==="en" ? (p.name_en||p.name_ar||"XCharger") : (p.name_ar||p.name_en||"XCharger"))}</strong></div>`).join("")}
+        `;
+
+        const get = (k)=> (p)=> p.specs?.[k] ?? "—";
+        const getBool = (k)=> (p)=> !!p.specs?.[k];
+
+        body.innerHTML = [
+          row("القدرة القصوى","Max power", get("power")),
+          row("التيار الأقصى","Max current", get("current")),
+          row("جهد الإدخال","Input voltage", get("voltage")),
+          row("المعيار","Standard", get("standard")),
+          row("الحمايات","Protections", get("protections")),
+          row("Wi‑Fi / App","Wi‑Fi / App", getBool("wifi"), yesNoPill),
+          row("ريموت تحكم","Remote control", getBool("remote"), yesNoPill),
+          row("تحكم صوتي","Voice control", getBool("voice"), yesNoPill),
+          row("شاشة / واجهة","Screen / UI", getBool("screen"), yesNoPill),
+          row("جدولة الشحن","Scheduling", getBool("scheduling"), yesNoPill),
+          row("تصنيف الحماية","Protection rating", get("ip")),
+          row(LANG==="en"?"Retail price (USD)":"سعر المفرق (JOD)",
+              LANG==="en"?"Retail price (USD)":"Retail price (JOD)",
+              p => formatMoney(priceRetail(p))),
+          row(LANG==="en"?"Wholesale price (USD)":"سعر التاجر (JOD)",
+              LANG==="en"?"Wholesale price (USD)":"Wholesale price (JOD)",
+              p => isWholesale() ? formatMoney(priceWholesale(p)) : "—")
+        ].join("");
+      }
+
+      function openCompare(){ 
+        const m = document.getElementById("compareModal");
+        if (m) m.style.display="flex";
+      }
+      function closeCompare(){
+        const m = document.getElementById("compareModal");
+        if (m) m.style.display="none";
+      }
+
+      // ========= Admin Panel =========
+      // Visible only when role === admin
+      const adminPanel = document.getElementById("adminPanel");
+      const adminList  = document.getElementById("adminProductsList");
+      const adminOpenBtn = document.getElementById("adminOpenBtn"); // hidden button in DOM
+      const productEditorModal = document.getElementById("productEditorModal");
+
+      let editingId = null;
+
+      function showAdminUI(){
+        if (!adminPanel) return;
+        adminPanel.style.display = isAdmin() ? "block" : "none";
+      }
+
+      function renderAdminList(){
+        if (!adminList) return;
+        if (!isAdmin()) { adminList.innerHTML=""; return; }
+
+        if (!PRODUCTS.length){
+          adminList.innerHTML = `<div style="color:#666;text-align:center;padding:12px;">—</div>`;
+          return;
+        }
+
+        adminList.innerHTML = PRODUCTS.map(p=>{
+          const name = (p.name_ar||p.name_en||"XCharger");
+          return `
+            <div class="admin-item">
+              <div class="admin-item-title">${escapeHtml(name)}</div>
+              <div class="admin-item-actions">
+                <button class="mini-btn" onclick="editProduct('${p.id}')"><i class="fa-regular fa-pen-to-square"></i> ${i18n[LANG].edit}</button>
+                <button class="mini-btn danger" onclick="removeProduct('${p.id}')"><i class="fa-regular fa-trash-can"></i> ${i18n[LANG].del}</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function openEditor(product){
+        if (!productEditorModal) return;
+        productEditorModal.style.display="flex";
+
+        const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value = (val ?? ""); };
+        const join = (arr)=> Array.isArray(arr)? arr.join(", ") : (arr ?? "");
+
+        editingId = product?.id || null;
+
+        set("pe_name_ar", product?.name_ar);
+        set("pe_name_en", product?.name_en);
+        set("pe_image", product?.image);
+        set("pe_video", product?.video);
+        set("pe_software", product?.software);
+        set("pe_catalog", product?.catalog);
+
+        set("pe_features_ar", join(product?.features_ar));
+        set("pe_features_en", join(product?.features_en));
+
+        set("pe_order", product?.order ?? (PRODUCTS.length + 1));
+
+        set("pe_retail_jod", product?.retail_jod);
+        set("pe_wholesale_jod", product?.wholesale_jod);
+        set("pe_retail_usd", product?.retail_usd);
+        set("pe_wholesale_usd", product?.wholesale_usd);
+
+        // specs
+        const s = product?.specs || {};
+        set("pe_power", s.power);
+        set("pe_current", s.current);
+        set("pe_voltage", s.voltage);
+        set("pe_standard", s.standard);
+        set("pe_protections", s.protections);
+        set("pe_ip", s.ip);
+
+        set("pe_wifi", s.wifi ? "true" : "false");
+        set("pe_remote", s.remote ? "true" : "false");
+        set("pe_voice", s.voice ? "true" : "false");
+        set("pe_screen", s.screen ? "true" : "false");
+        set("pe_scheduling", s.scheduling ? "true" : "false");
+
+        document.getElementById("pe_title").textContent = editingId ? (LANG==="en"?"Edit product":"تعديل المنتج") : (LANG==="en"?"Add product":"إضافة منتج");
+      }
+
+      function closeEditor(){
+        if (!productEditorModal) return;
+        productEditorModal.style.display="none";
+        editingId = null;
+      }
+
+      async function saveEditor(){
+        if (!isAdmin()) return;
+
+        const get = (id)=> (document.getElementById(id)?.value ?? "").trim();
+        const bool = (id)=> get(id) === "true";
+        const num = (id)=> {
+          const v = get(id).replace(/,/g,"");
+          const n = Number(v);
+          return isFinite(n) ? n : 0;
+        };
+
+        const payload = {
+          order: num("pe_order"),
+          name_ar: get("pe_name_ar"),
+          name_en: get("pe_name_en"),
+          image: get("pe_image"),
+          video: get("pe_video"),
+          software: get("pe_software"),
+          catalog: get("pe_catalog"),
+          features_ar: asArray(get("pe_features_ar")),
+          features_en: asArray(get("pe_features_en")),
+          retail_jod: num("pe_retail_jod"),
+          wholesale_jod: num("pe_wholesale_jod"),
+          retail_usd: num("pe_retail_usd"),
+          wholesale_usd: num("pe_wholesale_usd"),
+          specs: {
+            power: get("pe_power"),
+            current: get("pe_current"),
+            voltage: get("pe_voltage"),
+            standard: get("pe_standard"),
+            protections: get("pe_protections"),
+            ip: get("pe_ip"),
+            wifi: bool("pe_wifi"),
+            remote: bool("pe_remote"),
+            voice: bool("pe_voice"),
+            screen: bool("pe_screen"),
+            scheduling: bool("pe_scheduling")
+          },
+          updatedAt: serverTimestamp()
+        };
+
+        if (!payload.name_ar && !payload.name_en) {
+          alert(LANG==="en" ? "Please enter a product name." : "الرجاء إدخال اسم المنتج.");
+          return;
+        }
+
+        try {
+          if (editingId) {
+            await updateDoc(doc(db,"products",editingId), payload);
+          } else {
+            payload.createdAt = serverTimestamp();
+            await addDoc(collection(db,"products"), payload);
+          }
+          closeEditor();
+        } catch(e) {
+          alert((LANG==="en"?"Save failed: ":"فشل الحفظ: ")+ (e?.message || e));
+        }
+      }
+
+      window.editProduct = (id)=>{
+        const p = PRODUCTS.find(x=>x.id===id);
+        openEditor(p);
+      };
+
+      window.removeProduct = async (id)=>{
+        if (!isAdmin()) return;
+        if (!confirm(i18n[LANG].confirmDelete)) return;
+        try {
+          await deleteDoc(doc(db,"products",id));
+        } catch(e) {
+          alert((LANG==="en"?"Delete failed: ":"فشل الحذف: ")+ (e?.message || e));
+        }
+      };
+
+      window.addProduct = ()=> openEditor(null);
+
+      // ========= Orders (simple demo) =========
+      // For production: create orders collection, checkout, etc.
+      window.orderProduct = (id)=>{
+        const p = PRODUCTS.find(x=>x.id===id);
+        const name = LANG==="en" ? (p?.name_en||p?.name_ar||"XCharger") : (p?.name_ar||p?.name_en||"XCharger");
+        const price = formatMoney(priceRetail(p||{}));
+        alert((LANG==="en" ? "Added to cart:
+" : "تمت إضافة المنتج:
+") + `${name}
+${price}`);
+      };
+
+      window.openLink = (url)=>{
+        if (!url) return;
+        window.open(url, "_blank", "noopener");
+      };
+
+      // ========= Login modal =========
+      const loginModal = document.getElementById("loginModal");
+      const loginMsg   = document.getElementById("loginMessage");
+      const loginBtn   = document.getElementById("loginBtn");
+      const logoutBtn  = document.getElementById("logoutBtn");
+
+      window.openLoginModal = ()=>{
+        if (loginMsg) loginMsg.textContent = "";
+        if (loginModal) loginModal.style.display="flex";
+      };
+      window.closeLoginModal = ()=>{
+        if (loginModal) loginModal.style.display="none";
+      };
+
+      async function doLogin(){
+        const email = (document.getElementById("loginEmail")?.value || "").trim();
+        const pass  = (document.getElementById("loginPassword")?.value || "").trim();
+        if (!email || !pass) {
+          if (loginMsg) loginMsg.textContent = (LANG==="en"?"Please fill email & password.":"الرجاء إدخال البريد وكلمة المرور.");
+          return;
+        }
+        try {
+          await signInWithEmailAndPassword(auth, email, pass);
+          closeLoginModal();
+        } catch(e) {
+          if (loginMsg) loginMsg.textContent = (e?.message || (LANG==="en"?"Login failed.":"فشل تسجيل الدخول."));
+        }
+      }
+
+      async function doLogout(){
+        try { await signOut(auth); } catch(e) {}
+      }
+
+      if (loginBtn) loginBtn.addEventListener("click", doLogin);
+      if (logoutBtn) logoutBtn.addEventListener("click", doLogout);
+
+      // ========= Auth state =========
+      onAuthStateChanged(auth, async (user)=>{
+        CURRENT.user = user || null;
+        CURRENT.role = "retail";
+        if (user) CURRENT.role = await getRole(user.uid);
+
+        // Update auth UI
+        const authStatus = document.getElementById("authStatus");
+        if (authStatus) {
+          if (user) {
+            authStatus.innerHTML = `<span style="font-weight:800;">${escapeHtml(user.email||"")}</span>
+              <span style="opacity:.7">•</span>
+              <span style="font-weight:800;text-transform:uppercase;">${escapeHtml(CURRENT.role)}</span>`;
+          } else {
+            authStatus.textContent = "";
+          }
+        }
+
+        const mainLoginBtn = document.getElementById("mainLoginBtn");
+        if (mainLoginBtn) {
+          mainLoginBtn.style.display = user ? "none" : "inline-flex";
+        }
+        if (logoutBtn) logoutBtn.style.display = user ? "inline-flex" : "none";
+
+        showAdminUI();
+        renderProducts();
+        renderCompare();
+        renderAdminList();
+      });
+
+      // ========= Helpers =========
+      function escapeHtml(str){
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+      }
+
+      // ========= Close modals on outside click =========
+      window.addEventListener("click", (e)=>{
+        if (e.target === loginModal) closeLoginModal();
+        const cm = document.getElementById("compareModal");
+        if (e.target === cm) closeCompare();
+        if (e.target === productEditorModal) closeEditor();
+      });
+
+      // ========= Boot =========
+      // AOS init if present
+      try { window.AOS && window.AOS.init({ duration: 1000, once: true }); } catch(e){}
+
+      // Lang switch buttons (if present)
+      document.getElementById("langArBtn")?.addEventListener("click", ()=> setLang("ar"));
+      document.getElementById("langEnBtn")?.addEventListener("click", ()=> setLang("en"));
+
+      // Wire compare close
+      document.getElementById("compareClose")?.addEventListener("click", closeCompare);
+
+      // Admin editor buttons
+      document.getElementById("adminAddBtn")?.addEventListener("click", ()=> window.addProduct());
+      document.getElementById("pe_close")?.addEventListener("click", closeEditor);
+      document.getElementById("pe_cancel")?.addEventListener("click", closeEditor);
+      document.getElementById("pe_save")?.addEventListener("click", saveEditor);
+
+      // Apply current language
+      setLang(LANG);
+
+      // Start listening to products from Firestore
+      startProductsListener();
+    </script>
+
+</body>
+</html>
