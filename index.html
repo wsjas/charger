@@ -34,6 +34,17 @@
     }
     .nav{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 0;}
     .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px; text-decoration:none;}
+
+    .brand-icon{
+      width:36px;height:36px; border-radius:12px;
+      object-fit:contain;
+      background:rgba(255,255,255,.85);
+      box-shadow:0 8px 18px rgba(2,8,23,.18);
+      padding:4px;
+      display:none;
+    }
+    body.has-brand-icon .brand-icon{display:block;}
+
     .brand i{color:var(--primary)}
     .brand span{color:var(--primary)}
     .menu{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
@@ -69,7 +80,7 @@
     .hero .btn-ghost{background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.18); color:#fff}
     .hero .btn-ghost:hover{background:rgba(255,255,255,.14)}
 
-    .stats{margin-top:-34px;}
+    .stats{margin-top:-34px; background:var(--bg); position:relative; z-index:3; padding:0 0 18px;}
     .stats-grid{display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:12px}
     .stat{background:rgba(255,255,255,.80); backdrop-filter: blur(10px); border:1px solid var(--line); border-radius:18px; padding:14px 14px; box-shadow:0 10px 30px rgba(2,8,23,.06); display:flex; align-items:center; gap:12px}
     .stat i{color:var(--primary)}
@@ -85,9 +96,14 @@
 
     .products{display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:16px; margin-top:18px}
     .p-card{padding:16px; display:flex; flex-direction:column; gap:12px}
-    .p-top{display:flex; gap:12px; align-items:center}
-    .p-img{width:92px; height:92px; border-radius:16px; background:#f1f5f9; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden}
-    .p-img img{width:100%; height:100%; object-fit:cover}
+    .p-top{display:flex; flex-direction:column; gap:12px; align-items:stretch}
+    .p-img{width:100%; height:280px; border-radius:18px; background:#ffffff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden; padding:10px}
+    .p-img img{width:100%; height:100%; display:block; object-fit:contain; object-position:center; background:transparent}
+
+    .p-price-row{display:flex; align-items:center; gap:10px; margin-top:6px}
+    .p-old{font-weight:900; color:#ef4444; text-decoration:line-through; font-size:13px; margin-top:2px}
+    .p-discount{font-weight:900; font-size:12px; padding:6px 10px; border-radius:999px;
+      background:#fee2e2; color:#b91c1c; border:1px solid rgba(185,28,28,.18)}
     .p-name{font-weight:900; font-size:18px; margin:0}
     .p-badge{display:inline-flex; gap:8px; align-items:center; font-weight:900; color:#0b1220; background:rgba(22,119,255,.10); border:1px solid rgba(22,119,255,.20); padding:6px 10px; border-radius:999px}
     .p-price{font-weight:900; font-size:20px}
@@ -95,6 +111,11 @@
     .feat{margin:0; padding:0; list-style:none; display:grid; gap:8px}
     .feat li{display:flex; gap:10px; align-items:flex-start; font-weight:800; color:#334155}
     .feat i{color:#16a34a; margin-top:4px}
+    .p-specs{margin-top:10px}
+    .p-specs b{display:block;margin-bottom:6px;font-weight:1000}
+    .spec{margin:0;padding:0 18px;display:grid;gap:6px}
+    .spec li{list-style:disc;color:var(--muted);font-weight:800}
+
     .p-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
     .p-actions .btn{padding:9px 12px; border-radius:14px}
 
@@ -154,14 +175,171 @@
       .menu{display:none}
       .hero-inner{padding:34px 16px}
     }
-  </style>
+  
+    /* Cart */
+    .cart-count{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:22px;
+      height:22px;
+      padding:0 6px;
+      border-radius:999px;
+      background:rgba(22,119,255,.12);
+      border:1px solid rgba(22,119,255,.28);
+      color:var(--primary);
+      font-weight:900;
+      font-size:12px;
+      line-height:1;
+    }
+    .cart-line{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+    }
+    .qty{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:6px 8px;
+      background:#fff;
+      user-select:none;
+    }
+    .qty button{
+      width:30px;height:30px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .qty span{min-width:16px;text-align:center;font-weight:900}
+    .cart-total{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#f8fafc;
+      font-weight:900;
+    }
+    .cart-note{font-weight:800;color:var(--muted); font-size:13px}
+    .modal-inner.wide{max-width:560px}
+
+  
+  /* ===== Hero Slider (admin-controlled) ===== */
+  .hero-wrap{
+    position:relative;
+    margin-top:10px;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow: var(--shadow);
+    min-height: 420px;
+    display:flex;
+    align-items:stretch;
+  }
+  .hero-slider{
+    position:absolute;
+    inset:0;
+    z-index:0;
+  }
+  .hero-slider .slide{
+    position:absolute;
+    inset:0;
+    display:block;
+  }
+  .hero-slider img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:saturate(1.05);
+  }
+  .hero-slider::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg, rgba(2,8,23,.78), rgba(22,119,255,.28));
+  }
+  .dots{
+    position:absolute;
+    bottom:14px;
+    inset-inline:14px;
+    display:flex;
+    gap:8px;
+    z-index:2;
+  }
+  .dot{
+    width:10px;height:10px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.55);
+    background:rgba(255,255,255,.18);
+    cursor:pointer;
+  }
+  .dot.active{
+    background:#fff;
+    border-color:#fff;
+  }
+  .hero-inner{ position:relative; z-index:1; padding:44px 22px; width:100%; }
+/* Slider caption */
+.slide-caption{
+  position:absolute;
+  inset-inline:18px;
+  bottom:56px;
+  z-index:2;
+  color:#fff;
+  text-shadow:0 10px 30px rgba(0,0,0,.45);
+  max-width:min(720px, 92%);
+}
+.cap-title{
+  font-weight:1000;
+  font-size:32px;
+  line-height:1.12;
+  margin:0 0 6px;
+}
+.cap-sub{
+  font-weight:800;
+  font-size:16px;
+  opacity:.92;
+}
+@media (max-width:720px){
+  .cap-title{font-size:22px}
+  .cap-sub{font-size:14px}
+  .slide-caption{bottom:52px}
+}
+
+
+
+/* تحسين عرض صور المنتجات على الهاتف */
+@media (max-width: 640px){
+  .p-img{height:240px;}
+}
+
+
+/* Admin-only hints */
+.admin-only{display:none}
+body.is-admin .admin-only{display:block}
+
+/* Slider: show full image on mobile (no cropping) */
+@media (max-width:720px){
+  .hero-slider img{object-fit:contain; background:#000;}
+}
+
+</style>
 </head>
 
 <body>
 <header>
   <div class="container">
     <div class="nav">
-      <a class="brand" href="#home"><i class="fa-solid fa-charging-station"></i> <span id="brandText">XCharger</span></a>
+      <a class="brand" href="#home"><img id="brandIcon" class="brand-icon" alt="logo"> <span id="brandText">XCharger</span></a>
       <nav class="menu">
         <a href="#home" data-i18n="nav_home">الرئيسية</a>
         <a href="#products" data-i18n="nav_products">المنتجات</a>
@@ -176,6 +354,7 @@
         <button class="btn btn-ghost" id="adminNavBtn" style="display:none"><i class="fa-solid fa-screwdriver-wrench"></i> <span data-i18n="admin_nav">لوحة الإدارة</span></button>
         <button class="btn btn-primary" id="loginBtn"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="login_btn">تسجيل الدخول</span></button>
         <button class="btn btn-ghost" id="logoutBtn" style="display:none"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-i18n="logout_btn">تسجيل خروج</span></button>
+        <button class="btn btn-ghost" id="cartBtn"><i class="fa-solid fa-basket-shopping"></i> <span data-i18n="cart_btn">السلة</span> <span class="cart-count" id="cartCount">0</span></button>
       </div>
     </div>
   </div>
@@ -183,7 +362,19 @@
 
 <main class="hero" id="home">
   <div class="container hero-wrap">
-    <div class="hero-inner">
+    <div class="hero-slider" id="heroSlider">
+    <a class="slide" id="slideLink" href="#" aria-label="slide link">
+      <img id="slideImg" alt="slide" />
+      <div class="slide-caption">
+        <div class="cap-title" id="slideCaptionTitle"></div>
+        <div class="cap-sub" id="slideCaptionSub"></div>
+      </div>
+    </a>
+
+    <div class="dots" id="slideDots" aria-label="slider dots"></div>
+  </div>
+
+  <div class="hero-inner">
       <h1 data-i18n="hero_title">طاقة المستقبل بين يديك</h1>
       <p data-i18n="hero_sub">نصمم وننتج شواحن ذكية تجمع بين الأمان وسهولة الاستخدام مع إصدارات متعددة تناسب احتياجاتك.</p>
       <div class="hero-cta">
@@ -192,14 +383,10 @@
       </div>
     </div>
   </div>
+  </div>
 
   <div class="container stats">
-    <div class="stats-grid">
-      <div class="stat"><i class="fa-solid fa-sliders"></i><div><div class="k" data-i18n="stat_4_title">تحكم ذكي مرن</div><div class="v" data-i18n="stat_4">تجربة استخدام سهلة</div></div></div>
-      <div class="stat"><i class="fa-solid fa-shield-halved"></i><div><div class="k">100%</div><div class="v" data-i18n="stat_3">أمان واعتمادية</div></div></div>
-      <div class="stat"><i class="fa-solid fa-headset"></i><div><div class="k">24/7</div><div class="v" data-i18n="stat_2">دعم فني</div></div></div>
-      <div class="stat"><i class="fa-solid fa-medal"></i><div><div class="k">3</div><div class="v" data-i18n="stat_1">ضمان</div></div></div>
-    </div>
+    <div class="stats-grid" id="highlightsGrid"></div>
   </div>
 </main>
 
@@ -207,7 +394,7 @@
   <div class="container">
     <div class="title">
       <h2 data-i18n="products_title">إصدارات XCharger المتطورة</h2>
-      <p data-i18n="products_sub">تظهر المنتجات تلقائيًا من Firebase Firestore</p>
+      <p class="admin-only" data-i18n="products_sub">تظهر المنتجات تلقائيًا من Firebase Firestore</p>
     </div>
     <div class="products" id="productsGrid"></div>
     <div class="card" style="padding:14px; margin-top:14px;">
@@ -252,6 +439,14 @@
           <div class="field"><label data-i18n="f_price_usd_trade">سعر التاجر (USD)</label><input id="f_price_usd_trade" type="number" min="0" step="0.01" placeholder="110" /></div>
         </div>
 
+
+        <div class="grid-2">
+          <div class="field"><label>السعر قبل الخصم (JOD)</label><input id="f_old_price_jod_retail" type="number" min="0" step="0.01" placeholder="120" /></div>
+          <div class="field"><label>السعر قبل الخصم (USD)</label><input id="f_old_price_usd_retail" type="number" min="0" step="0.01" placeholder="160" /></div>
+        </div>
+
+        <div class="field"><label>نسبة الخصم (اختياري %)</label><input id="f_discount_percent" type="number" min="0" max="95" step="1" placeholder="10" /></div>
+
         <div class="field"><label data-i18n="f_badge">وسم المنتج</label>
           <select id="f_badge">
             <option value="new" data-i18n="badge_new">جديد</option>
@@ -272,6 +467,27 @@
 
         <div class="field"><label data-i18n="f_features">المواصفات (كل سطر ميزة)</label><textarea id="f_features" placeholder="شحن سريع 7kW&#10;IP65&#10;حماية متعددة"></textarea></div>
 
+        <div class="field"><label>مواصفات إضافية (سطر لكل مواصفة)</label><textarea id="f_specs" rows="4" placeholder="مثال:&#10;التيار: 32A&#10;الجهد: 220V&#10;الكفالة: سنة"></textarea></div>
+
+
+        
+        <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+        <h4 style="margin:0 0 10px; font-weight:900">ميزات المقارنة لهذا المنتج</h4>
+
+        <div class="grid-2">
+          <div class="field"><label>قدرة الشحن (power)</label><input id="c_power" placeholder="7 kW" /></div>
+          <div class="field"><label>الحماية (protection)</label><input id="c_protection" placeholder="IP65" /></div>
+        </div>
+
+        <div class="grid-2">
+          <label style="display:flex;gap:10px;align-items:center;font-weight:900"><input type="checkbox" id="c_interface"> واجهة (interface)</label>
+          <label style="display:flex;gap:10px;align-items:center;font-weight:900"><input type="checkbox" id="c_schedule"> جدولة (schedule)</label>
+        </div>
+        <div class="grid-2">
+          <label style="display:flex;gap:10px;align-items:center;font-weight:900"><input type="checkbox" id="c_remote"> ريموت (remote)</label>
+          <label style="display:flex;gap:10px;align-items:center;font-weight:900"><input type="checkbox" id="c_voice"> صوت (voice)</label>
+        </div>
+
         <div class="grid-2">
           <button class="btn btn-primary" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="admin_save">حفظ</span></button>
           <button class="btn btn-ghost" id="clearBtn"><i class="fa-solid fa-rotate"></i> <span data-i18n="admin_clear">تفريغ النموذج</span></button>
@@ -285,6 +501,166 @@
         <div class="muted" style="margin-bottom:12px" data-i18n="admin_list_hint">اضغط تعديل لتحميل المنتج في النموذج.</div>
         <div class="admin-list" id="adminList"></div>
       </div>
+
+      <div class="card admin-card">
+        <h3 style="margin:0 0 12px; font-weight:900">إعدادات الموقع</h3>
+        <div class="muted" style="margin-bottom:12px">هذه الإعدادات تتحكم بصورة الصفحة، السلايدر، وروابط التواصل والاتصال.</div>
+
+        <div class="field"><label>اسم العلامة (Brand)</label><input id="s_brandText" placeholder="XCharger" /></div>
+        <div class="field"><label>أيقونة العلامة (Brand Icon URL)</label><input id="s_brandIcon" placeholder="https://...png" /></div>
+        <div class="field"><label>صورة الصفحة (Hero Image URL)</label><input id="s_heroImage" placeholder="https://..." /></div>
+
+        <div class="grid-2">
+          <div class="field"><label>هاتف</label><input id="s_phone" placeholder="079..." /></div>
+          <div class="field"><label>الإيميل الرسمي</label><input id="s_email" placeholder="info@..." /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field"><label>Facebook</label><input id="s_facebook" placeholder="https://..." /></div>
+          <div class="field"><label>Instagram</label><input id="s_instagram" placeholder="https://..." /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field"><label>WhatsApp</label><input id="s_whatsapp" placeholder="https://wa.me/..." /></div>
+          <div class="field"><label>Map</label><input id="s_map" placeholder="https://maps.google.com/?q=..." /></div>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+
+        <h4 style="margin:0 0 10px; font-weight:900">سلايدر (4 صور)</h4>
+        <div class="grid-2">
+          <div class="field"><label>Slide 1 Image</label><input id="s_sl1_img" placeholder="https://..." /></div>
+          <div class="field"><label>Slide 1 Link</label><input id="s_sl1_link" placeholder="#products أو https://..." /></div>
+        </div>
+  <div class="grid-2">
+    <div class="field"><label>Slide 1 Caption (AR)</label><input id="s_sl1_cap_ar" placeholder="..." /></div>
+    <div class="field"><label>Slide 1 Caption (EN)</label><input id="s_sl1_cap_en" placeholder="..." /></div>
+  </div>
+
+        <div class="grid-2">
+          <div class="field"><label>Slide 2 Image</label><input id="s_sl2_img" placeholder="https://..." /></div>
+          <div class="field"><label>Slide 2 Link</label><input id="s_sl2_link" placeholder="#compare أو https://..." /></div>
+        </div>
+  <div class="grid-2">
+    <div class="field"><label>Slide 2 Caption (AR)</label><input id="s_sl2_cap_ar" placeholder="..." /></div>
+    <div class="field"><label>Slide 2 Caption (EN)</label><input id="s_sl2_cap_en" placeholder="..." /></div>
+  </div>
+
+        <div class="grid-2">
+          <div class="field"><label>Slide 3 Image</label><input id="s_sl3_img" placeholder="https://..." /></div>
+          <div class="field"><label>Slide 3 Link</label><input id="s_sl3_link" placeholder="#faq أو https://..." /></div>
+        </div>
+  <div class="grid-2">
+    <div class="field"><label>Slide 3 Caption (AR)</label><input id="s_sl3_cap_ar" placeholder="..." /></div>
+    <div class="field"><label>Slide 3 Caption (EN)</label><input id="s_sl3_cap_en" placeholder="..." /></div>
+  </div>
+
+        <div class="grid-2">
+          <div class="field"><label>Slide 4 Image</label><input id="s_sl4_img" placeholder="https://..." /></div>
+          <div class="field"><label>Slide 4 Link</label><input id="s_sl4_link" placeholder="#contact أو https://..." /></div>
+        </div>
+  <div class="grid-2">
+    <div class="field"><label>Slide 4 Caption (AR)</label><input id="s_sl4_cap_ar" placeholder="..." /></div>
+    <div class="field"><label>Slide 4 Caption (EN)</label><input id="s_sl4_cap_en" placeholder="..." /></div>
+  </div>
+
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+
+        <h4 style="margin:0 0 10px; font-weight:900">بطاقات المزايا (4 بطاقات)</h4>
+        <div class="muted" style="margin-bottom:10px">عدّل النصوص والأيقونات التي تظهر تحت السلايدر.</div>
+
+        <!-- Highlight 1 -->
+        <div class="grid-2">
+          <div class="field"><label>Card 1 Icon (FontAwesome)</label><input id="h1_icon" placeholder="fa-solid fa-sliders" /></div>
+          <div class="field"><label>Card 1 Key (AR)</label><input id="h1_k_ar" placeholder="تحكم ذكي مرن" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 1 Value (AR)</label><input id="h1_v_ar" placeholder="تجربة استخدام سهلة" /></div>
+          <div class="field"><label>Card 1 Key (EN)</label><input id="h1_k_en" placeholder="Smart control" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 1 Value (EN)</label><input id="h1_v_en" placeholder="Easy experience" /></div>
+          <div class="field"><label>&nbsp;</label><div class="hint">مثال للأيقونة: fa-solid fa-shield-halved</div></div>
+        </div>
+
+        <!-- Highlight 2 -->
+        <div class="grid-2">
+          <div class="field"><label>Card 2 Icon</label><input id="h2_icon" placeholder="fa-solid fa-shield-halved" /></div>
+          <div class="field"><label>Card 2 Key (AR)</label><input id="h2_k_ar" placeholder="100%" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 2 Value (AR)</label><input id="h2_v_ar" placeholder="أمان واعتمادية" /></div>
+          <div class="field"><label>Card 2 Key (EN)</label><input id="h2_k_en" placeholder="100%" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 2 Value (EN)</label><input id="h2_v_en" placeholder="Safety & reliability" /></div>
+          <div class="field"><label>&nbsp;</label></div>
+        </div>
+
+        <!-- Highlight 3 -->
+        <div class="grid-2">
+          <div class="field"><label>Card 3 Icon</label><input id="h3_icon" placeholder="fa-solid fa-headset" /></div>
+          <div class="field"><label>Card 3 Key (AR)</label><input id="h3_k_ar" placeholder="24/7" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 3 Value (AR)</label><input id="h3_v_ar" placeholder="دعم فني" /></div>
+          <div class="field"><label>Card 3 Key (EN)</label><input id="h3_k_en" placeholder="24/7" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 3 Value (EN)</label><input id="h3_v_en" placeholder="Support" /></div>
+          <div class="field"><label>&nbsp;</label></div>
+        </div>
+
+        <!-- Highlight 4 -->
+        <div class="grid-2">
+          <div class="field"><label>Card 4 Icon</label><input id="h4_icon" placeholder="fa-solid fa-medal" /></div>
+          <div class="field"><label>Card 4 Key (AR)</label><input id="h4_k_ar" placeholder="3" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 4 Value (AR)</label><input id="h4_v_ar" placeholder="ضمان" /></div>
+          <div class="field"><label>Card 4 Key (EN)</label><input id="h4_k_en" placeholder="3" /></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Card 4 Value (EN)</label><input id="h4_v_en" placeholder="Warranty" /></div>
+          <div class="field"><label>&nbsp;</label></div>
+        </div>
+
+
+        <div class="grid-2">
+          <button class="btn btn-primary" id="saveSiteBtn"><i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات</button>
+          <button class="btn btn-ghost" id="resetSiteBtn"><i class="fa-solid fa-rotate"></i> إعادة تحميل</button>
+        </div>
+
+        <div id="siteMsg" class="hint"></div>
+      </div>
+
+      <div class="card admin-card">
+        <h3 style="margin:0 0 12px; font-weight:900">إدارة الأسئلة الشائعة (FAQ)</h3>
+
+        <div class="grid-2">
+          <div class="field"><label>السؤال (AR)</label><input id="f_faq_q_ar" placeholder="..." /></div>
+          <div class="field"><label>السؤال (EN)</label><input id="f_faq_q_en" placeholder="..." /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field"><label>الجواب (AR)</label><textarea id="f_faq_a_ar" placeholder="..."></textarea></div>
+          <div class="field"><label>الجواب (EN)</label><textarea id="f_faq_a_en" placeholder="..."></textarea></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field"><label>الترتيب (Order)</label><input id="f_faq_order" type="number" min="0" step="1" value="1" /></div>
+          <div class="field"><label>&nbsp;</label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" id="saveFaqBtn"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>
+              <button class="btn btn-ghost" id="clearFaqBtn"><i class="fa-solid fa-rotate"></i> تفريغ</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="faqMsg" class="hint"></div>
+        <div class="admin-list" id="faqAdminList" style="margin-top:12px"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -295,16 +671,7 @@
       <h2 data-i18n="faq_title">الأسئلة الشائعة</h2>
       <p data-i18n="faq_sub">إجابات مختصرة قبل الشراء</p>
     </div>
-    <div class="grid-2">
-      <div class="card" style="padding:16px">
-        <h3 style="margin:0 0 8px; font-weight:900" data-i18n="faq_q1">هل الشاحن مناسب للاستخدام اليومي؟</h3>
-        <p class="muted" data-i18n="faq_a1">نعم، مصمم ليعمل بثبات مع حماية متعددة ويتيح جدولة الشحن وواجهة استخدام سهلة.</p>
-      </div>
-      <div class="card" style="padding:16px">
-        <h3 style="margin:0 0 8px; font-weight:900" data-i18n="faq_q2">هل يدعم الشاحن الجدولة والواجهة؟</h3>
-        <p class="muted" data-i18n="faq_a2">نعم للجميع — الواجهة وجدولة الشحن متاحة في كل الإصدارات.</p>
-      </div>
-    </div>
+    <div class="grid-2" id="faqGrid"></div>
   </div>
 </section>
 
@@ -315,11 +682,11 @@
         <h3>XCharger</h3>
         <p class="muted" style="color:#cbd5e1" data-i18n="foot_about">حلول شحن للمركبات الكهربائية مصممة في الأردن بجودة واعتمادية.</p>
         <div class="social" style="margin-top:12px">
-          <a class="iconbtn" href="#" aria-label="facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a class="iconbtn" href="#" aria-label="instagram"><i class="fa-brands fa-instagram"></i></a>
-          <a class="iconbtn" href="https://wa.me/962790781206" target="_blank" rel="noopener" aria-label="whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
-          <a class="iconbtn" href="tel:0790781206" aria-label="phone"><i class="fa-solid fa-phone"></i></a>
-          <a class="iconbtn" href="https://maps.google.com/?q=Amman%2C%20Jordan" target="_blank" rel="noopener" aria-label="map"><i class="fa-solid fa-location-dot"></i></a>
+          <a class="iconbtn" id="socialFacebook" href="#" target="_blank" rel="noopener" aria-label="facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="iconbtn" id="socialInstagram" href="#" target="_blank" rel="noopener" aria-label="instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a class="iconbtn" id="socialWhatsapp" href="#" target="_blank" rel="noopener" aria-label="whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a class="iconbtn" id="socialPhone" href="#" aria-label="phone"><i class="fa-solid fa-phone"></i></a>
+          <a class="iconbtn" id="socialMap" href="#" target="_blank" rel="noopener" aria-label="map"><i class="fa-solid fa-location-dot"></i></a>
         </div>
       </div>
 
@@ -333,8 +700,8 @@
       <div>
         <h4 data-i18n="foot_contact">تواصل معنا</h4>
         <p><i class="fa-solid fa-location-dot"></i> <span data-i18n="foot_addr">عمّان - الأردن</span></p>
-        <p><i class="fa-solid fa-phone"></i> 0790781206</p>
-        <p><i class="fa-solid fa-envelope"></i> <a href="mailto:info@xcharger.com" style="color:#cbd5e1;text-decoration:none">info@xcharger.com</a></p>
+        <p><i class="fa-solid fa-phone"></i> <span id="footPhoneText">0790781206</span></p>
+        <p><i class="fa-solid fa-envelope"></i> <a id="footEmailLink" href="mailto:info@xcharger.com" style="color:#cbd5e1;text-decoration:none">info@xcharger.com</a></p>
       </div>
     </div>
 
@@ -365,10 +732,47 @@
   </div>
 </div>
 
+
+<div class="modal" id="cartModal" aria-hidden="true">
+  <div class="modal-inner wide">
+    <div class="modal-head">
+      <h3 data-i18n="cart_title">سلة المشتريات</h3>
+      <button class="x" id="closeCart" aria-label="close">×</button>
+    </div>
+
+    <div id="cartBody" style="margin-top:12px; display:grid; gap:10px"></div>
+
+    <div class="cart-total" style="margin-top:12px">
+      <div data-i18n="cart_total">الإجمالي</div>
+      <div id="cartTotalVal">0</div>
+    </div>
+
+    <div class="cart-note" style="margin-top:8px" data-i18n="cart_note">الأسعار حسب العملة الظاهرة وقت الإضافة. يمكنك تعديل الكميات قبل الإرسال.</div>
+
+    <hr style="border:none; border-top:1px solid var(--line); margin:14px 0">
+
+    <h4 style="margin:0 0 8px; font-weight:900" data-i18n="checkout_title">بيانات الطلب</h4>
+
+    <div class="grid-2">
+      <div class="field"><label data-i18n="co_name">الاسم</label><input id="co_name" placeholder="الاسم الكامل" /></div>
+      <div class="field"><label data-i18n="co_phone">رقم الهاتف</label><input id="co_phone" placeholder="07xxxxxxxx" /></div>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label data-i18n="co_city">المدينة</label><input id="co_city" placeholder="عمّان" /></div>
+      <div class="field"><label data-i18n="co_address">العنوان</label><input id="co_address" placeholder="الحي / الشارع / رقم" /></div>
+    </div>
+    <div class="field"><label data-i18n="co_note">ملاحظات</label><textarea id="co_note" placeholder=""></textarea></div>
+
+    <button class="btn btn-primary" id="placeOrder" style="width:100%; justify-content:center"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="cart_place">إرسال الطلب</span></button>
+    <div id="cartMsg" class="hint"></div>
+  </div>
+</div>
+
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const firebaseConfig = {'apiKey': 'AIzaSyAK4E04TdC_OERPQmvxlKFs_qFSmVwMuiI', 'authDomain': 'xcharger-5bb95.firebaseapp.com', 'projectId': 'xcharger-5bb95', 'storageBucket': 'xcharger-5bb95.firebasestorage.app', 'messagingSenderId': '570288654795', 'appId': '1:570288654795:web:94ecb2b696a0da7f408e4e', 'measurementId': 'G-Q9ZX3HYVQV'};
 
@@ -383,13 +787,15 @@
   let USER = null;
   let PRODUCTS = [];
   let EDITING_ID = null;
+  let CART = [];
+  const CART_KEY = "xcharger_cart_v1";
 
   const $ = (id)=>document.getElementById(id);
 
   const i18n = {
     ar: {
       nav_home:"الرئيسية", nav_products:"المنتجات", nav_compare:"المقارنة", nav_faq:"الأسئلة", nav_contact:"اتصل بنا",
-      login_btn:"تسجيل الدخول", logout_btn:"تسجيل خروج", admin_nav:"لوحة الإدارة",
+      login_btn:"تسجيل الدخول", logout_btn:"تسجيل خروج", admin_nav:"لوحة الإدارة", cart_btn:"السلة", cart_title:"سلة المشتريات", cart_total:"الإجمالي", cart_note:"الأسعار حسب العملة الظاهرة وقت الإضافة. يمكنك تعديل الكميات قبل الإرسال.", checkout_title:"بيانات الطلب", co_name:"الاسم", co_phone:"رقم الهاتف", co_city:"المدينة", co_address:"العنوان", co_note:"ملاحظات", cart_place:"إرسال الطلب", cart_empty:"سلتك فارغة.", cart_added:"تمت الإضافة إلى السلة ✅", cart_saved:"تم إرسال الطلب بنجاح ✅", cart_failed:"فشل إرسال الطلب", cart_remove:"حذف",
       hero_title:"طاقة المستقبل بين يديك", hero_sub:"نصمم وننتج شواحن ذكية تجمع بين الأمان وسهولة الاستخدام مع إصدارات متعددة تناسب احتياجاتك.",
       hero_cta1:"اكتشف منتجاتنا", hero_cta2:"طلب خاص",
       stat_1:"ضمان", stat_2:"دعم فني", stat_3:"أمان واعتمادية", stat_4_title:"تحكم ذكي مرن", stat_4:"تجربة استخدام سهلة",
@@ -415,7 +821,7 @@
     },
     en: {
       nav_home:"Home", nav_products:"Products", nav_compare:"Compare", nav_faq:"FAQ", nav_contact:"Contact",
-      login_btn:"Sign in", logout_btn:"Sign out", admin_nav:"Admin",
+      login_btn:"Sign in", logout_btn:"Sign out", admin_nav:"Admin", cart_btn:"Cart", cart_title:"Shopping cart", cart_total:"Total", cart_note:"Prices use the currency shown when you added items. You can change quantities before sending.", checkout_title:"Order details", co_name:"Name", co_phone:"Phone", co_city:"City", co_address:"Address", co_note:"Notes", cart_place:"Place order", cart_empty:"Your cart is empty.", cart_added:"Added to cart ✅", cart_saved:"Order sent ✅", cart_failed:"Order failed", cart_remove:"Remove",
       hero_title:"Future power in your hands", hero_sub:"We design and manufacture smart EV chargers combining safety and ease of use, with multiple editions for different needs.",
       hero_cta1:"Explore products", hero_cta2:"Custom request",
       stat_1:"Warranty", stat_2:"Support", stat_3:"Safety", stat_4_title:"Flexible smart control", stat_4:"Easy experience",
@@ -485,6 +891,411 @@
     return s.replace(/[&<>"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   }
 
+
+  // ===== Admin-controlled site settings + slider + FAQ =====
+  let SITE = null;
+  let FAQS = [];
+  let EDITING_FAQ_ID = null;
+
+  const DEFAULT_SITE = {
+    brandText: "XCharger",
+    brandIcon: "",
+    heroImage: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1600&q=80",
+    slider: [
+      { img: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&w=1600&q=80", link:"#products",
+        caption_ar: "اكتشف منتجاتنا", caption_en: "Explore our products" },
+      { img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80", link:"#compare",
+        caption_ar: "قارن بين الإصدارات", caption_en: "Compare versions" },
+      { img: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80", link:"#faq",
+        caption_ar: "أسئلة وأجوبة قبل الشراء", caption_en: "FAQ before purchase" },
+      { img: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=1600&q=80", link:"#contact",
+        caption_ar: "تواصل معنا الآن", caption_en: "Contact us" }
+    ],
+    contact: { phone:"0790781206", officialEmail:"info@xcharger.com" },
+    social: { facebook:"#", instagram:"#", whatsapp:"https://wa.me/962790781206", map:"https://maps.google.com/?q=Amman%2C%20Jordan" },
+    compareFeatures: [
+      { key:"power", ar:"قدرة الشحن", en:"Charging power", type:"text" },
+      { key:"protection", ar:"الحماية", en:"Protection", type:"text" },
+      { key:"interface", ar:"واجهة", en:"Interface", type:"bool" },
+      { key:"schedule", ar:"جدولة الشحن", en:"Scheduling", type:"bool" },
+      { key:"remote", ar:"ريموت تحكم", en:"Remote unit", type:"bool" },
+      { key:"voice", ar:"أوامر صوتية", en:"Voice control", type:"bool" }
+    ],
+    highlights: [
+      { icon:"fa-solid fa-sliders", k_ar:"تحكم ذكي مرن", v_ar:"تجربة استخدام سهلة", k_en:"Smart control", v_en:"Easy experience" },
+      { icon:"fa-solid fa-shield-halved", k_ar:"100%", v_ar:"أمان واعتمادية", k_en:"100%", v_en:"Safety & reliability" },
+      { icon:"fa-solid fa-headset", k_ar:"24/7", v_ar:"دعم فني", k_en:"24/7", v_en:"Support" },
+      { icon:"fa-solid fa-medal", k_ar:"3", v_ar:"ضمان", k_en:"3", v_en:"Warranty" }
+    ]
+  };
+
+  function safeUrl(u){ return (typeof u==="string" && u.trim()) ? u.trim() : "#"; }
+
+  // ===== Slider =====
+  let SLIDE_IDX = 0;
+  let SLIDE_TIMER = null;
+
+
+  function renderHighlights(){
+    const grid = $("highlightsGrid");
+    if (!grid) return;
+
+    const s = SITE || DEFAULT_SITE;
+    const items = Array.isArray(s.highlights) && s.highlights.length ? s.highlights.slice(0,4) : (DEFAULT_SITE.highlights||[]);
+
+    const label = (x, aKey, eKey)=> (LANG==="ar" ? (x[aKey] ?? "") : (x[eKey] ?? ""));
+    const safeIcon = (ic)=> (typeof ic==="string" && ic.includes("fa-")) ? ic.trim() : "fa-solid fa-star";
+
+    grid.innerHTML = items.map(x=>{
+      const k = escapeHtml(label(x,"k_ar","k_en") || "");
+      const v = escapeHtml(label(x,"v_ar","v_en") || "");
+      const icon = safeIcon(x.icon);
+      return `
+        <div class="stat">
+          <i class="${icon}"></i>
+          <div>
+            <div class="k">${k}</div>
+            <div class="v">${v}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function initOrUpdateSlider(){
+    const s = SITE || DEFAULT_SITE;
+    const slides = Array.isArray(s.slider) ? s.slider.slice(0,4) : DEFAULT_SITE.slider;
+
+    const imgEl = $("slideImg");
+    const linkEl = $("slideLink");
+    const dotsEl = $("slideDots");
+    if (!imgEl || !linkEl || !dotsEl) return;
+
+    dotsEl.innerHTML = "";
+    slides.forEach((_,i)=>{
+      const d = document.createElement("button");
+      d.className = "dot" + (i===SLIDE_IDX ? " active" : "");
+      d.type="button";
+      d.addEventListener("click", ()=>{ SLIDE_IDX=i; renderSlide(); restartSlider(); });
+      dotsEl.appendChild(d);
+    });
+
+    function renderSlide(){
+      const cur = slides[SLIDE_IDX] || slides[0];
+      imgEl.src = cur.img || DEFAULT_SITE.slider[0].img;
+      linkEl.href = cur.link || "#";
+      [...dotsEl.children].forEach((x,j)=>x.classList.toggle("active", j===SLIDE_IDX));
+    }
+
+    function restartSlider(){
+      if (SLIDE_TIMER) clearInterval(SLIDE_TIMER);
+      SLIDE_TIMER = setInterval(()=>{
+        SLIDE_IDX = (SLIDE_IDX + 1) % slides.length;
+        renderSlide();
+      }, 4500);
+    }
+
+    renderSlide();
+    restartSlider();
+  }
+
+  function applySite() {
+    const s = SITE || DEFAULT_SITE;
+
+    // Brand
+    const brand = $("brandText");
+    if (brand) brand.textContent = s.brandText || "XCharger";
+
+    const bIcon = document.getElementById("brandIcon");
+    const iconUrl = (s.brandIcon || "").trim();
+    if (bIcon) {
+      if (iconUrl) {
+        bIcon.src = iconUrl;
+        document.body.classList.add("has-brand-icon");
+      } else {
+        bIcon.removeAttribute("src");
+        document.body.classList.remove("has-brand-icon");
+      }
+    }
+
+    // Footer contact
+    const phoneTxt = $("footPhoneText");
+    if (phoneTxt) phoneTxt.textContent = s.contact?.phone || DEFAULT_SITE.contact.phone;
+
+    const emailLink = $("footEmailLink");
+    const em = s.contact?.officialEmail || DEFAULT_SITE.contact.officialEmail;
+    if (emailLink) {
+      emailLink.textContent = em;
+      emailLink.href = "mailto:" + em;
+    }
+
+    // Social links
+    const fb = $("socialFacebook");
+    const ig = $("socialInstagram");
+    const wa = $("socialWhatsapp");
+    const ph = $("socialPhone");
+    const mp = $("socialMap");
+
+    if (fb) fb.href = safeUrl(s.social?.facebook);
+    if (ig) ig.href = safeUrl(s.social?.instagram);
+    if (wa) wa.href = safeUrl(s.social?.whatsapp);
+    if (mp) mp.href = safeUrl(s.social?.map);
+    if (ph) ph.href = "tel:" + (s.contact?.phone || DEFAULT_SITE.contact.phone);
+
+    renderHighlights();
+    initOrUpdateSlider();
+  }
+
+  // ===== Admin: Site settings form =====
+  function fillSiteForm(){
+    if (!isAdmin()) return;
+
+    const s = SITE || DEFAULT_SITE;
+    const setVal = (id,v)=>{ const el=$(id); if(el) el.value = v ?? ""; };
+
+    setVal("s_brandText", s.brandText);
+  setVal("s_brandIcon", s.brandIcon);
+    setVal("s_heroImage", s.heroImage);
+
+    setVal("s_phone", s.contact?.phone);
+    setVal("s_email", s.contact?.officialEmail);
+
+    setVal("s_facebook", s.social?.facebook);
+    setVal("s_instagram", s.social?.instagram);
+    setVal("s_whatsapp", s.social?.whatsapp);
+    setVal("s_map", s.social?.map);
+
+    const sl = Array.isArray(s.slider) ? s.slider : DEFAULT_SITE.slider;
+    [0,1,2,3].forEach(i=>{
+      setVal(`s_sl${i+1}_img`, sl[i]?.img);
+      setVal(`s_sl${i+1}_link`, sl[i]?.link);
+      setVal(`s_sl${i+1}_cap_ar`, sl[i]?.caption_ar);
+      setVal(`s_sl${i+1}_cap_en`, sl[i]?.caption_en);
+    });
+
+    const hs = Array.isArray(s.highlights) ? s.highlights : (DEFAULT_SITE.highlights||[]);
+    [0,1,2,3].forEach(i=>{
+      const x = hs[i] || {};
+      setVal(`h${i+1}_icon`, x.icon);
+      setVal(`h${i+1}_k_ar`, x.k_ar);
+      setVal(`h${i+1}_v_ar`, x.v_ar);
+      setVal(`h${i+1}_k_en`, x.k_en);
+      setVal(`h${i+1}_v_en`, x.v_en);
+    });
+  }
+
+  function getSiteFormData(){
+    const getVal = (id)=>($(id)?.value||"").trim();
+    return {
+      brandText: getVal("s_brandText"),
+    brandIcon: getVal("s_brandIcon"),
+      heroImage: getVal("s_heroImage"),
+      contact: {
+        phone: getVal("s_phone"),
+        officialEmail: getVal("s_email")
+      },
+      social: {
+        facebook: getVal("s_facebook"),
+        instagram: getVal("s_instagram"),
+        whatsapp: getVal("s_whatsapp"),
+        map: getVal("s_map")
+      },
+      slider: [
+        { img: getVal("s_sl1_img"), link: getVal("s_sl1_link"), caption_ar: getVal("s_sl1_cap_ar"), caption_en: getVal("s_sl1_cap_en") },
+        { img: getVal("s_sl2_img"), link: getVal("s_sl2_link"), caption_ar: getVal("s_sl2_cap_ar"), caption_en: getVal("s_sl2_cap_en") },
+        { img: getVal("s_sl3_img"), link: getVal("s_sl3_link"), caption_ar: getVal("s_sl3_cap_ar"), caption_en: getVal("s_sl3_cap_en") },
+        { img: getVal("s_sl4_img"), link: getVal("s_sl4_link"), caption_ar: getVal("s_sl4_cap_ar"), caption_en: getVal("s_sl4_cap_en") }
+      ],
+      highlights: [
+        { icon: getVal("h1_icon"), k_ar: getVal("h1_k_ar"), v_ar: getVal("h1_v_ar"), k_en: getVal("h1_k_en"), v_en: getVal("h1_v_en") },
+        { icon: getVal("h2_icon"), k_ar: getVal("h2_k_ar"), v_ar: getVal("h2_v_ar"), k_en: getVal("h2_k_en"), v_en: getVal("h2_v_en") },
+        { icon: getVal("h3_icon"), k_ar: getVal("h3_k_ar"), v_ar: getVal("h3_v_ar"), k_en: getVal("h3_k_en"), v_en: getVal("h3_v_en") },
+        { icon: getVal("h4_icon"), k_ar: getVal("h4_k_ar"), v_ar: getVal("h4_v_ar"), k_en: getVal("h4_k_en"), v_en: getVal("h4_v_en") }
+      ]
+    };
+
+  }
+
+  $("saveSiteBtn")?.addEventListener("click", async ()=>{
+    const msgEl = $("siteMsg");
+    msgEl.style.display="none";
+
+    if (!isAdmin()) return showHint(msgEl, (LANG==="ar"?"غير مصرح: Admin فقط":"Admin only"), false);
+
+    try{
+      const data = getSiteFormData();
+      await setDoc(doc(db,"settings","site"), { ...DEFAULT_SITE, ...data, updatedAt: serverTimestamp() }, { merge:true });
+      showHint(msgEl, (LANG==="ar"?"تم حفظ إعدادات الموقع ✅":"Site saved ✅"), true);
+    }catch(e){
+      console.error(e);
+      showHint(msgEl, (LANG==="ar"?"فشل الحفظ: ":"Save failed: ")+(e.code||""), false);
+    }
+  });
+
+  $("resetSiteBtn")?.addEventListener("click", ()=>{
+    fillSiteForm();
+  });
+
+  // ===== FAQ public render + admin CRUD =====
+  function renderFaqPublic(){
+    const wrap = $("faqGrid");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+
+    if (!FAQS.length) {
+      wrap.innerHTML = `<div class="card" style="padding:16px"><p class="muted" style="margin:0">${LANG==="ar"?"سيتم عرض الأسئلة هنا بعد إضافتها من لوحة الإدارة.":"FAQ will appear here after adding from Admin panel."}</p></div>`;
+      return;
+    }
+
+    FAQS.forEach(x=>{
+      const q = (LANG==="ar") ? (x.q_ar||"") : (x.q_en||"");
+      const a = (LANG==="ar") ? (x.a_ar||"") : (x.a_en||"");
+      const card = document.createElement("div");
+      card.className="card";
+      card.style.padding="16px";
+      card.innerHTML = `
+        <h3 style="margin:0 0 8px; font-weight:900">${escapeHtml(q)}</h3>
+        <p class="muted" style="margin:0">${escapeHtml(a)}</p>
+      `;
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderFaqAdmin(){
+    const list = $("faqAdminList");
+    if (!list) return;
+    list.innerHTML = "";
+
+    if (!isAdmin()){
+      list.innerHTML = `<div class="muted">${LANG==="ar"?"لوحة FAQ للأدمن فقط.":"FAQ admin only."}</div>`;
+      return;
+    }
+
+    FAQS.forEach(x=>{
+      const it = document.createElement("div");
+      it.className="item";
+      it.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(x.q_ar||x.q_en||"")}</b>
+          <span>order: ${x.order ?? 0} • id: ${x.id}</span>
+        </div>
+        <div class="row">
+          <button class="btn btn-ghost" data-act="edit"><i class="fa-regular fa-pen-to-square"></i> ${LANG==="ar"?"تعديل":"Edit"}</button>
+          <button class="btn btn-ghost danger" data-act="del"><i class="fa-regular fa-trash-can"></i> ${LANG==="ar"?"حذف":"Delete"}</button>
+        </div>
+      `;
+      it.querySelector('[data-act="edit"]').addEventListener("click", ()=>loadFaqToForm(x));
+      it.querySelector('[data-act="del"]').addEventListener("click", ()=>delFaq(x.id));
+      list.appendChild(it);
+    });
+  }
+
+  function clearFaqForm(){
+    EDITING_FAQ_ID = null;
+    ["f_faq_q_ar","f_faq_q_en","f_faq_a_ar","f_faq_a_en"].forEach(id=>$(id) && ($(id).value=""));
+    $("f_faq_order") && ($("f_faq_order").value = 1);
+  }
+
+  function loadFaqToForm(x){
+    EDITING_FAQ_ID = x.id;
+    $("f_faq_q_ar").value = x.q_ar || "";
+    $("f_faq_q_en").value = x.q_en || "";
+    $("f_faq_a_ar").value = x.a_ar || "";
+    $("f_faq_a_en").value = x.a_en || "";
+    $("f_faq_order").value = x.order ?? 1;
+    $("adminPanel").scrollIntoView({behavior:"smooth"});
+  }
+
+  async function delFaq(id){
+    if (!isAdmin()) return;
+    const ok = confirm(LANG==="ar" ? "حذف هذا السؤال؟" : "Delete this FAQ?");
+    if (!ok) return;
+    const msgEl = $("faqMsg");
+    try{
+      await deleteDoc(doc(db,"faq",id));
+      showHint(msgEl, (LANG==="ar"?"تم الحذف ✅":"Deleted ✅"), true);
+      if (EDITING_FAQ_ID===id) clearFaqForm();
+    }catch(e){
+      console.error(e);
+      showHint(msgEl, (LANG==="ar"?"فشل الحذف: ":"Delete failed: ")+(e.code||""), false);
+    }
+  }
+
+  $("clearFaqBtn")?.addEventListener("click", clearFaqForm);
+
+  $("saveFaqBtn")?.addEventListener("click", async ()=>{
+    const msgEl = $("faqMsg");
+    msgEl.style.display="none";
+
+    if (!isAdmin()) return showHint(msgEl, (LANG==="ar"?"غير مصرح: Admin فقط":"Admin only"), false);
+
+    const data = {
+      q_ar: $("f_faq_q_ar").value.trim(),
+      a_ar: $("f_faq_a_ar").value.trim(),
+      q_en: $("f_faq_q_en").value.trim(),
+      a_en: $("f_faq_a_en").value.trim(),
+      order: Number($("f_faq_order").value || 0)
+    };
+
+    if (!data.q_ar && !data.q_en) return showHint(msgEl, (LANG==="ar"?"اكتب سؤالاً على الأقل":"Enter a question"), false);
+
+    try{
+      if (EDITING_FAQ_ID){
+        await updateDoc(doc(db,"faq",EDITING_FAQ_ID), { ...data, updatedAt: serverTimestamp() });
+      } else {
+        await addDoc(collection(db,"faq"), { ...data, createdAt: serverTimestamp() });
+      }
+      showHint(msgEl, (LANG==="ar"?"تم الحفظ ✅":"Saved ✅"), true);
+      clearFaqForm();
+    }catch(e){
+      console.error(e);
+      showHint(msgEl, (LANG==="ar"?"فشل الحفظ: ":"Save failed: ")+(e.code||""), false);
+    }
+  });
+
+  // ===== Live subscriptions (settings + faq) =====
+  // ملاحظة: تحتاج Rules تسمح بالقراءة العامة لـ settings/site و faq
+  try{
+    onSnapshot(doc(db,"settings","site"), async (snap)=>{
+      if (!snap.exists()) {
+        // لا تنشئ المستند تلقائياً إلا إذا كان أدمن (قد تمنع القواعد هذا)
+        if (isAdmin()) {
+          await setDoc(doc(db,"settings","site"), { ...DEFAULT_SITE, createdAt: serverTimestamp() }, { merge:true });
+        }
+        SITE = DEFAULT_SITE;
+        applySite();
+        fillSiteForm();
+        return;
+      }
+      SITE = snap.data();
+      applySite();
+      fillSiteForm();
+      renderCompare();
+    }, (err)=>{
+      console.warn("settings/site snapshot error", err);
+      SITE = DEFAULT_SITE;
+      applySite();
+    });
+  }catch(e){
+    console.warn("settings snapshot setup error", e);
+  }
+
+  try{
+    const faqQ = query(collection(db,"faq"), orderBy("order","asc"));
+    onSnapshot(faqQ, (snap)=>{
+      FAQS = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+      renderFaqPublic();
+      renderFaqAdmin();
+    }, (err)=>{
+      console.warn("faq snapshot error", err);
+      FAQS = [];
+      renderFaqPublic();
+    });
+  }catch(e){
+    console.warn("faq snapshot setup error", e);
+  }
+
+
   // Modal
   function openModal() {
     $("loginModal").style.display = "block";
@@ -494,6 +1305,117 @@
   function closeModal() {
     $("loginModal").style.display = "none";
   }
+
+  // Cart modal
+  function openCart() {
+    $("cartModal").style.display = "block";
+    $("cartMsg").style.display = "none";
+    renderCart();
+  }
+  function closeCart() {
+    $("cartModal").style.display = "none";
+  }
+
+  $("cartBtn").addEventListener("click", openCart);
+  $("closeCart").addEventListener("click", closeCart);
+  $("cartModal").addEventListener("click", (e)=>{ if (e.target.id==="cartModal") closeCart(); });
+
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(CART_KEY);
+      CART = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(CART)) CART = [];
+    } catch(e) { CART = []; }
+    updateCartCount();
+  }
+  function saveCart() {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(CART)); } catch(e) {}
+    updateCartCount();
+  }
+  function updateCartCount() {
+    const c = CART.reduce((a,it)=>a + (Number(it.qty)||0), 0);
+    $("cartCount").textContent = String(c);
+  }
+
+  function money(n, cur) {
+    const v = Number(n||0);
+    if (cur === "JOD") return v.toFixed(0) + " د.أ";
+    if (cur === "USD") return "$" + v.toFixed(0);
+    return v.toFixed(0) + " " + (cur||"");
+  }
+
+  function totalsByCurrency() {
+    const out = {};
+    CART.forEach(it=>{
+      const cur = it.currency || "JOD";
+      out[cur] = (out[cur] || 0) + (Number(it.unitPrice||0) * Number(it.qty||0));
+    });
+    return out;
+  }
+
+  function renderCart() {
+    const body = $("cartBody");
+    body.innerHTML = "";
+
+    if (!CART.length) {
+      body.innerHTML = `<div class="muted" style="text-align:center; font-weight:900">${i18n[LANG].cart_empty}</div>`;
+      $("cartTotalVal").textContent = "0";
+      return;
+    }
+
+    CART.forEach((it, idx)=>{
+      const line = document.createElement("div");
+      line.className = "cart-line";
+      line.innerHTML = `
+        <div style="display:grid; gap:4px">
+          <div style="font-weight:900">${escapeHtml(it.name||"")}</div>
+          <div class="muted" style="font-size:13px; font-weight:900">${money(it.unitPrice, it.currency)} • ${it.currency}</div>
+        </div>
+        <div style="display:grid; gap:8px; justify-items:end">
+          <div class="qty">
+            <button type="button" data-act="minus">−</button>
+            <span>${Number(it.qty||1)}</span>
+            <button type="button" data-act="plus">+</button>
+          </div>
+          <button type="button" class="btn btn-ghost danger" style="padding:8px 10px; border-radius:14px" data-act="rm"><i class="fa-regular fa-trash-can"></i> ${i18n[LANG].cart_remove}</button>
+        </div>
+      `;
+      line.querySelector('[data-act="minus"]').addEventListener("click", ()=>{
+        it.qty = Math.max(1, (Number(it.qty)||1) - 1);
+        CART[idx]=it; saveCart(); renderCart();
+      });
+      line.querySelector('[data-act="plus"]').addEventListener("click", ()=>{
+        it.qty = (Number(it.qty)||1) + 1;
+        CART[idx]=it; saveCart(); renderCart();
+      });
+      line.querySelector('[data-act="rm"]').addEventListener("click", ()=>{
+        CART.splice(idx,1); saveCart(); renderCart();
+      });
+      body.appendChild(line);
+    });
+
+    const totals = totalsByCurrency();
+    const parts = Object.entries(totals).map(([cur,val])=>money(val,cur));
+    $("cartTotalVal").textContent = parts.join("  |  ");
+  }
+
+  window.__addToCart = (productId)=>{
+    const p = PRODUCTS.find(x=>x.id===productId);
+    if (!p) return;
+
+    const cur = (LANG==="ar") ? "JOD" : "USD";
+    const unit = (LANG==="ar") ? Number(p.price_jod_retail||0) : Number(p.price_usd_retail||0);
+
+    const existing = CART.find(x=>x.productId===productId && x.currency===cur && Number(x.unitPrice||0)===unit);
+    if (existing) {
+      existing.qty = (Number(existing.qty)||1) + 1;
+    } else {
+      CART.push({ productId, name: p.name||"", unitPrice: unit, currency: cur, qty: 1 });
+    }
+    saveCart();
+    showHint($("cartMsg"), i18n[LANG].cart_added, true);
+    openCart();
+  };
 
   $("loginBtn").addEventListener("click", openModal);
   $("closeModal").addEventListener("click", closeModal);
@@ -512,6 +1434,63 @@
     }
   }
   $("doLogin").addEventListener("click", doLogin);
+
+  async function placeOrder() {
+    const msgEl = $("cartMsg");
+    msgEl.style.display="none";
+
+    if (!CART.length) {
+      showHint(msgEl, i18n[LANG].cart_empty, false);
+      return;
+    }
+
+    const customer = {
+      name: $("co_name").value.trim(),
+      phone: $("co_phone").value.trim(),
+      city: $("co_city").value.trim(),
+      address: $("co_address").value.trim(),
+      note: $("co_note").value.trim(),
+    };
+
+    if (!customer.name || !customer.phone) {
+      showHint(msgEl, (LANG==="ar" ? "يرجى إدخال الاسم ورقم الهاتف" : "Please enter name and phone"), false);
+      return;
+    }
+
+    const totals = totalsByCurrency();
+
+    const payload = {
+      status: "new",
+      createdAt: serverTimestamp(),
+      lang: LANG,
+      customer,
+      items: CART.map(it=>({
+        productId: it.productId,
+        name: it.name,
+        qty: Number(it.qty||1),
+        unitPrice: Number(it.unitPrice||0),
+        currency: it.currency || "JOD"
+      })),
+      totalsByCurrency: totals,
+      user: USER ? { uid: USER.uid, email: USER.email||null, role: ROLE } : null,
+      source: "web"
+    };
+
+    try {
+      await addDoc(collection(db,"orders"), payload);
+      CART = [];
+      saveCart();
+      renderCart();
+      showHint(msgEl, i18n[LANG].cart_saved, true);
+      setTimeout(()=>{ closeCart(); }, 900);
+      // clear checkout inputs
+      ["co_name","co_phone","co_city","co_address","co_note"].forEach(id=>$(id).value="");
+    } catch(e) {
+      console.error("Order error:", e);
+      showHint(msgEl, (i18n[LANG].cart_failed + ": " + (e.code||"")), false);
+    }
+  }
+  $("placeOrder").addEventListener("click", placeOrder);
 
   $("logoutBtn").addEventListener("click", async ()=>{ await signOut(auth); });
 
@@ -543,12 +1522,22 @@
   function toggleAdminUI() {
     $("adminPanel").style.display = isAdmin() ? "block" : "none";
     $("adminNavBtn").style.display = isAdmin() ? "inline-flex" : "none";
+    document.body.classList.toggle("is-admin", isAdmin());
   }
 
   $("adminNavBtn").addEventListener("click", ()=>{ $("adminPanel").scrollIntoView({behavior:"smooth"}); });
 
   // Products
-  function renderProducts() {
+  
+  function renderSpecsHTML(p){
+    const arr = Array.isArray(p.specs) ? p.specs.map(x=>String(x).trim()).filter(Boolean) : [];
+    if (!arr.length) return "";
+    const title = (LANG==="ar") ? "مواصفات" : "Specs";
+    const lis = arr.slice(0,8).map(s=>`<li>${escapeHtml(s)}</li>`).join("");
+    return `<div class="p-specs"><b>${title}</b><ul class="spec">${lis}</ul></div>`;
+  }
+
+function renderProducts() {
     const grid = $("productsGrid");
     grid.innerHTML = "";
     $("productsEmpty").style.display = PRODUCTS.length ? "none" : "block";
@@ -557,6 +1546,18 @@
       const img = p.image || "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80";
       const feats = Array.isArray(p.features) ? p.features : [];
       const price = (LANG==="ar") ? p.price_jod_retail : p.price_usd_retail;
+      const oldPriceRaw = (LANG==="ar") ? p.old_price_jod_retail : p.old_price_usd_retail;
+      let oldPrice = (oldPriceRaw!=null && oldPriceRaw!=="" && !isNaN(Number(oldPriceRaw))) ? Number(oldPriceRaw) : null;
+      let disc = (p.discount_percent!=null && p.discount_percent!=="" && !isNaN(Number(p.discount_percent))) ? Number(p.discount_percent) : null;
+      const curPrice = (price!=null && price!=="" && !isNaN(Number(price))) ? Number(price) : null;
+      if ((oldPrice==null || !(oldPrice>0)) && disc!=null && disc>0 && disc<96 && curPrice!=null && curPrice>0) {
+        oldPrice = +(curPrice / (1 - disc/100)).toFixed(2);
+      }
+      if ((disc==null || !(disc>0)) && oldPrice!=null && curPrice!=null && oldPrice>curPrice && oldPrice>0) {
+        disc = Math.round(((oldPrice-curPrice)/oldPrice)*100);
+      }
+      const discBadge = (disc!=null && disc>0) ? `<div class="p-discount">${LANG==="ar" ? ("خصم "+disc+"%") : (disc+"% OFF")}</div>` : "";
+      const oldPriceHTML = (oldPrice!=null && curPrice!=null && oldPrice>curPrice) ? `<div class="p-old">${fmtPrice(oldPrice)}</div>` : "";
 
       const card = document.createElement("div");
       card.className = "card p-card";
@@ -566,18 +1567,19 @@
           <div style="flex:1">
             <div class="p-badge">${badgeText(p.badge)} </div>
             <h3 class="p-name">${escapeHtml(p.name||"")}</h3>
-            <div class="p-price">${fmtPrice(price)}</div>
+            <div class="p-price-row"><div class="p-price">${fmtPrice(price)}</div>${discBadge}</div>${oldPriceHTML}
             <div class="muted" style="margin-top:4px">${LANG==="ar" ? "عمّان - الأردن" : "Amman, Jordan"}</div>
           </div>
         </div>
         <ul class="feat">
           ${feats.slice(0,6).map(f=>`<li><i class="fa-solid fa-circle-check"></i> ${escapeHtml(String(f).trim())}</li>`).join("")}
         </ul>
+        ${renderSpecsHTML(p)}
         <div class="p-actions">
           <a class="btn btn-ghost" href="${p.software||"#"}" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> ${i18n[LANG].btn_sw}</a>
           <a class="btn btn-ghost" href="${p.catalog||"#"}" target="_blank" rel="noopener"><i class="fa-regular fa-file-pdf"></i> ${i18n[LANG].btn_cat}</a>
           <a class="btn btn-ghost" href="${p.video||"#"}" target="_blank" rel="noopener"><i class="fa-solid fa-play"></i> ${i18n[LANG].btn_vid}</a>
-          <button class="btn btn-primary" style="margin-inline-start:auto" onclick="window.__order('${escapeHtml(p.name||"")}', '${fmtPrice(price)}')"><i class="fa-solid fa-cart-shopping"></i> ${i18n[LANG].btn_order}</button>
+          <button class="btn btn-primary" style="margin-inline-start:auto" onclick="window.__addToCart(\'${p.id}\')"><i class="fa-solid fa-cart-shopping"></i> ${i18n[LANG].btn_order}</button>
         </div>
       `;
       grid.appendChild(card);
@@ -587,14 +1589,9 @@
   function renderCompare() {
     const tbl = $("compareTable");
     const cols = PRODUCTS.slice(0,4);
-    const rows = [
-      { ar:"قدرة الشحن", en:"Charging power", get:(p)=>p.power||"7 kW" },
-      { ar:"الحماية", en:"Protection", get:(p)=>p.protection||"IP65" },
-      { ar:"واجهة نعم للجميع", en:"Interface (Yes for all)", get:(p)=>"✓" },
-      { ar:"جدولة الشحن نعم للجميع", en:"Scheduling (Yes for all)", get:(p)=>"✓" },
-      { ar:"ريموت تحكم", en:"Remote unit", get:(p)=> p.remote ? "✓" : "—" },
-      { ar:"أوامر صوتية", en:"Voice control", get:(p)=> p.voice ? "✓" : "—" },
-    ];
+
+    const s = SITE || DEFAULT_SITE;
+    const feats = Array.isArray(s.compareFeatures) ? s.compareFeatures : DEFAULT_SITE.compareFeatures;
 
     const head = `
       <thead>
@@ -604,20 +1601,26 @@
         </tr>
       </thead>
     `;
-    const body = `
-      <tbody>
-        ${rows.map(r=>`<tr>
-          <td>${LANG==="ar" ? r.ar : r.en}</td>
-          ${cols.map(p=>`<td>${escapeHtml(String(r.get(p)))}</td>`).join("")}
-        </tr>`).join("")}
-      </tbody>
-    `;
-    tbl.innerHTML = head + body;
-  }
 
-  window.__order = (name, price)=>{
-    alert((LANG==="ar" ? "تمت إضافة المنتج:\n" : "Added to cart:\n") + name + "\n" + price);
-  };
+    const bodyRows = feats.map(f=>{
+      const label = (LANG==="ar") ? (f.ar||f.key) : (f.en||f.key);
+      return `
+        <tr>
+          <td>${escapeHtml(label)}</td>
+          ${cols.map(p=>{
+            const val = (p.compare && (f.key in p.compare)) ? p.compare[f.key] : null;
+            if (f.type === "bool") {
+              const b = (val===true) ? "✓" : "—";
+              return `<td>${b}</td>`;
+            }
+            return `<td>${escapeHtml(String(val ?? "—"))}</td>`;
+          }).join("")}
+        </tr>
+      `;
+    }).join("");
+
+    tbl.innerHTML = head + `<tbody>${bodyRows}</tbody>`;
+  }
 
   // Live products subscription
   const qy = query(collection(db,"products"), orderBy("createdAt","desc"));
@@ -636,6 +1639,7 @@
 
   function getFormData() {
     const features = $("f_features").value.split("\n").map(s=>s.trim()).filter(Boolean);
+    const specs = $("f_specs") ? $("f_specs").value.split("\n").map(s=>s.trim()).filter(Boolean) : [];
     return {
       name: $("f_name").value.trim(),
       badge: $("f_badge").value,
@@ -644,18 +1648,33 @@
       software: $("f_software").value.trim(),
       catalog: $("f_catalog").value.trim(),
       features,
+      specs,
       price_jod_retail: numOrNull($("f_price_jod_retail").value),
       price_jod_trade:  numOrNull($("f_price_jod_trade").value),
       price_usd_retail: numOrNull($("f_price_usd_retail").value),
       price_usd_trade:  numOrNull($("f_price_usd_trade").value),
-      remote: /ريموت|remote/i.test(features.join(" ")) ? true : undefined,
-      voice: /صوت|voice/i.test(features.join(" ")) ? true : undefined,
+      old_price_jod_retail: numOrNull($("f_old_price_jod_retail")?.value),
+      old_price_usd_retail: numOrNull($("f_old_price_usd_retail")?.value),
+      discount_percent: numOrNull($("f_discount_percent")?.value),
+      compare: {
+        power: $("c_power")?.value.trim() || "",
+        protection: $("c_protection")?.value.trim() || "",
+        interface: !!$("c_interface")?.checked,
+        schedule: !!$("c_schedule")?.checked,
+        remote: !!$("c_remote")?.checked,
+        voice: !!$("c_voice")?.checked,
+      },
+      // حقول سريعة للاستفادة في العرض (اختياري)
+      remote: !!$("c_remote")?.checked,
+      voice: !!$("c_voice")?.checked,
     };
   }
 
   function clearForm() {
     EDITING_ID = null;
-    ["f_name","f_img","f_video","f_software","f_catalog","f_features","f_price_jod_retail","f_price_jod_trade","f_price_usd_retail","f_price_usd_trade"].forEach(id=>$(id).value="");
+    ["f_name","f_img","f_video","f_software","f_catalog","f_features","f_price_jod_retail","f_price_jod_trade","f_price_usd_retail","f_price_usd_trade","f_old_price_jod_retail","f_old_price_usd_retail","f_discount_percent"].forEach(id=>$(id) && ($(id).value=""));
+    ["c_power","c_protection"].forEach(id=>$(id) && ($(id).value=""));
+    ["c_interface","c_schedule","c_remote","c_voice"].forEach(id=>$(id) && ($(id).checked=false));
     $("f_badge").value="new";
   }
 
@@ -731,6 +1750,15 @@
     $("f_price_jod_trade").value  = p.price_jod_trade ?? "";
     $("f_price_usd_retail").value = p.price_usd_retail ?? "";
     $("f_price_usd_trade").value  = p.price_usd_trade ?? "";
+    $("f_old_price_jod_retail").value = p.old_price_jod_retail ?? "";
+    $("f_old_price_usd_retail").value = p.old_price_usd_retail ?? "";
+    $("f_discount_percent").value = p.discount_percent ?? "";
+    $("c_power").value = p.compare?.power || "";
+    $("c_protection").value = p.compare?.protection || "";
+    $("c_interface").checked = !!p.compare?.interface;
+    $("c_schedule").checked = !!p.compare?.schedule;
+    $("c_remote").checked = !!p.compare?.remote;
+    $("c_voice").checked = !!p.compare?.voice;
     $("adminPanel").scrollIntoView({behavior:"smooth"});
   }
 
@@ -766,6 +1794,7 @@
   $("langEN").addEventListener("click", ()=>{ LANG="en"; applyLang(); });
 
   $("year").textContent = new Date().getFullYear();
+  loadCart();
   applyLang();
 </script>
 
