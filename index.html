@@ -869,7 +869,7 @@
         <input type="password" class="form-control" id="loginPassword" placeholder="كلمة المرور">
       </div>
 
-      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="loginUser()">
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" >
         <i class="fa-solid fa-shield-halved"></i> <span data-i18n="login_btn">دخول آمن</span>
       </button>
 
@@ -1471,6 +1471,8 @@
           if (loginMsg) loginMsg.textContent = (LANG==="en"?"Please fill email & password.":"الرجاء إدخال البريد وكلمة المرور.");
           return;
         }
+      window.loginUser = doLogin;
+
         try {
           await signInWithEmailAndPassword(auth, email, pass);
           closeLoginModal();
