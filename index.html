@@ -354,6 +354,19 @@
 </head>
 
 <body>
+
+    <div id="runtimeWarn" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;z-index:5000;background:#fff3cd;color:#664d03;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.08);font-weight:800;">
+      تنبيه: يجب فتح الصفحة عبر رابط Hosting (https) أو عبر سيرفر محلي، وليس مباشرةً من ملف (file://)، حتى تعمل مكتبات Firebase.
+    </div>
+    <script>
+      (function(){
+        if(location.protocol === 'file:'){
+          var w=document.getElementById('runtimeWarn');
+          if(w) w.style.display='block';
+        }
+      })();
+    </script>
+
   <header>
     <div class="container">
       <div class="header-content">
@@ -889,6 +902,40 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script>
+      // Fallback modal handlers (works even if module script fails to load)
+      (function(){
+        function byId(id){ return document.getElementById(id); }
+        window.openLoginModal = function(){
+          var m = byId('loginModal');
+          if(m){ m.style.display='flex'; }
+          var msg = byId('loginMessage');
+          if(msg){ msg.textContent=''; }
+        };
+        window.closeLoginModal = function(){
+          var m = byId('loginModal');
+          if(m){ m.style.display='none'; }
+        };
+        window.addEventListener('DOMContentLoaded', function(){
+          var btn = byId('mainLoginBtn');
+          if(btn){
+            btn.addEventListener('click', function(e){
+              e.preventDefault();
+              window.openLoginModal();
+            });
+          }
+          var closeX = document.querySelector('#loginModal .close-modal');
+          if(closeX){
+            closeX.addEventListener('click', function(){ window.closeLoginModal(); });
+          }
+          window.addEventListener('click', function(e){
+            var m = byId('loginModal');
+            if(e.target === m){ window.closeLoginModal(); }
+          });
+        });
+      })();
+    </script>
+
 
   
     <script type="module">
