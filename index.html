@@ -355,6 +355,45 @@
 
 <body>
 
+    <div id="debugToast" style="display:none;position:fixed;top:90px;left:16px;right:16px;z-index:6000;background:#111;color:#fff;border-radius:14px;padding:10px 12px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.2);">
+      debug
+    </div>
+    <script>
+      (function(){
+        function toast(msg){
+          var t=document.getElementById('debugToast');
+          if(!t) return;
+          t.textContent=msg;
+          t.style.display='block';
+          clearTimeout(window.__dbg_to);
+          window.__dbg_to=setTimeout(function(){ t.style.display='none'; }, 2500);
+        }
+        window.__toast = toast;
+
+        document.addEventListener('DOMContentLoaded', function(){
+          var btn=document.getElementById('mainLoginBtn');
+          if(btn){
+            btn.addEventListener('click', function(){
+              toast('Login clicked ✔');
+              console.log('Login clicked ✔');
+            });
+          } else {
+            console.warn('mainLoginBtn not found');
+          }
+        });
+
+        var _open = window.openLoginModal;
+        window.openLoginModal = function(){
+          toast('Opening login modal…');
+          console.log('Opening login modal…');
+          if(typeof _open === 'function') return _open();
+          var m=document.getElementById('loginModal');
+          if(m) m.style.display='flex';
+        };
+      })();
+    </script>
+
+
     <div id="runtimeWarn" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;z-index:5000;background:#fff3cd;color:#664d03;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.08);font-weight:800;">
       تنبيه: يجب فتح الصفحة عبر رابط Hosting (https) أو عبر سيرفر محلي، وليس مباشرةً من ملف (file://)، حتى تعمل مكتبات Firebase.
     </div>
