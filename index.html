@@ -1001,7 +1001,7 @@
           stat_4: "ضمان",
           contact_city: "عمّان – الأردن",
           contact_phone: "0790781206",
-          contact_email: "<a href="mailto:sales@xcharger.com" id="factoryEmail" style="color:inherit;text-decoration:none;">sales@xcharger.com</a>",
+          contact_email: "sales@xcharger.com",
           faq_q1: "ما هي القدرة والتيار المدعومان في XCharger؟",
           faq_a1: "الإصدارات مصممة للاستخدام المنزلي والتجاري الخفيف، بقدرة تصل إلى 7kW (حتى 32A) مع حمايات كهربائية متعددة وميزات ذكية حسب الإصدار.",
         },
@@ -1442,10 +1442,7 @@
         const p = PRODUCTS.find(x=>x.id===id);
         const name = LANG==="en" ? (p?.name_en||p?.name_ar||"XCharger") : (p?.name_ar||p?.name_en||"XCharger");
         const price = formatMoney(priceRetail(p||{}));
-        alert((LANG==="en" ? "Added to cart:
-" : "تمت إضافة المنتج:
-") + `${name}
-${price}`);
+        alert((LANG==="en" ? "Added to cart:\n" : "تمت إضافة المنتج:\n") + `${name}\n${price}`);
       };
 
       window.openLink = (url)=>{
