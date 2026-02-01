@@ -1,1598 +1,773 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XCharger | الجيل القادم لشحن المركبات الكهربائية</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XCharger | Factory</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <style>
     :root{
-      --primary:#007bff; --primary-dark:#0056b3;
-      --secondary:#1e272e; --accent:#00d2d3;
-      --light:#f8f9fa; --dark:#0f141a;
-      --glass:rgba(255,255,255,.88);
-      --shadow:0 10px 30px rgba(0,0,0,.08);
-      --shadow2:0 20px 55px rgba(0,0,0,.12);
-      --transition:all .4s cubic-bezier(.165,.84,.44,1);
-      --radius:24px; --radius2:18px;
+      --bg:#f5f7fa;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --primary:#1677ff;
+      --primary2:#00d2d3;
+      --line:rgba(15,23,42,.08);
+      --shadow:0 18px 60px rgba(2,8,23,.10);
+      --radius:18px;
     }
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
-    body{
-      background: radial-gradient(900px 450px at 20% 0%, rgba(0,210,211,0.10), transparent 60%),
-                  radial-gradient(900px 450px at 90% 10%, rgba(0,123,255,0.12), transparent 60%),
-                  #f4f7f6;
-      color:var(--secondary); overflow-x:hidden;
-    }
-    a{text-decoration:none;color:inherit}
-    .container{width:90%;max-width:1250px;margin:0 auto}
-    .spacer{height:84px}
-
-    /* Header */
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:"Cairo",system-ui,-apple-system,Segoe UI,Arial; background:var(--bg); color:var(--text);}
+    a{color:inherit}
+    .container{width:min(1150px,92vw); margin:0 auto;}
     header{
-      background:var(--glass); backdrop-filter:blur(12px);
-      padding:1rem 0; position:fixed; width:100%; top:0; z-index:2000;
-      border-bottom:1px solid rgba(0,0,0,.06);
+      position:fixed; inset-inline:0; top:0; z-index:50;
+      background:rgba(255,255,255,.82);
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--line);
     }
-    .header-content{display:flex;justify-content:space-between;align-items:center;gap:14px}
-    .logo{font-size:1.75rem;font-weight:900;display:flex;align-items:center;gap:12px;color:var(--dark)}
-    .logo i{color:var(--primary);filter:drop-shadow(0 0 6px rgba(0,123,255,.35))}
-    .logo span{color:var(--primary)}
-    nav ul{display:flex;list-style:none;gap:1.35rem;align-items:center}
-    nav a{color:var(--secondary);font-weight:900;font-size:.98rem;position:relative;transition:var(--transition);padding:8px 2px}
-    nav a::after{content:'';position:absolute;bottom:-6px;right:0;width:0;height:2px;background:var(--primary);transition:var(--transition)}
-    nav a:hover::after{width:100%}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:12px 0;}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px; text-decoration:none;}
+    .brand i{color:var(--primary)}
+    .brand span{color:var(--primary)}
+    .menu{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+    .menu a{text-decoration:none; font-weight:800; color:var(--text); opacity:.85; padding:8px 10px; border-radius:12px}
+    .menu a:hover{background:rgba(2,8,23,.04); opacity:1}
+    .actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.9); font-weight:900;}
+    .btn{border:0; cursor:pointer; font-weight:900; border-radius:999px; padding:10px 14px; display:inline-flex; align-items:center; gap:9px;}
+    .btn-primary{background:var(--primary); color:#fff; box-shadow:0 14px 30px rgba(22,119,255,.22)}
+    .btn-primary:hover{filter:brightness(.97)}
+    .btn-ghost{background:#fff; border:1px solid var(--line); color:var(--text)}
+    .btn-ghost:hover{background:rgba(2,8,23,.03)}
+    .chip{font-weight:900; padding:7px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer}
+    .chip.active{background:rgba(22,119,255,.10); border-color:rgba(22,119,255,.25); color:var(--primary)}
 
-    .header-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-    .auth-buttons{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .social-mini{display:flex;gap:8px;align-items:center}
-    .social-mini a{
-      width:38px;height:38px;border-radius:12px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.06);
-      transition:var(--transition);
-    }
-    .social-mini a:hover{transform:translateY(-3px);box-shadow:var(--shadow);background:rgba(0,123,255,.08);border-color:rgba(0,123,255,.18)}
-    .social-mini i{color:var(--secondary);font-size:1.05rem}
-
-    .btn{
-      padding:.9rem 2.1rem;border-radius:999px;font-weight:900;transition:var(--transition);
-      display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;white-space:nowrap;
-    }
-    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 10px 20px rgba(0,123,255,.25)}
-    .btn-primary:hover{transform:translateY(-4px);box-shadow:0 15px 30px rgba(0,123,255,.45);background:var(--primary-dark)}
-    .btn-ghost{background:rgba(0,0,0,.04);color:var(--secondary);border:1px solid rgba(0,0,0,.06)}
-    .btn-ghost:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-    .btn-light{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.20)}
-    .btn-light:hover{transform:translateY(-4px);box-shadow:0 18px 45px rgba(0,0,0,.18)}
-    .btn-danger{background:#ef4444;color:#fff;box-shadow:0 12px 28px rgba(239,68,68,.22)}
-    .btn-danger:hover{transform:translateY(-4px);filter:brightness(.98)}
-    .btn-small{padding:.65rem 1.05rem;font-size:.92rem}
-
-    .lang-toggle{
-      display:flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px;
-      border:1px solid rgba(0,0,0,.08); background:rgba(255,255,255,.7);
-      box-shadow:var(--shadow);
-    }
-    .lang-toggle button{
-      padding:.55rem .95rem;border-radius:999px;border:none;cursor:pointer;font-weight:900;
-      background:transparent;color:var(--secondary);transition:var(--transition);
-    }
-    .lang-toggle button.active{
-      background:rgba(0,123,255,.12); color:var(--primary-dark);
-      border:1px solid rgba(0,123,255,.18);
-    }
-
-    /* Hero */
-    .hero{
-      height:100vh;
+    .hero{padding-top:86px;}
+    .hero-wrap{
+      margin-top:10px;
+      border-radius:28px;
+      overflow:hidden;
       background:
-        linear-gradient(135deg, rgba(15,20,26,.88), rgba(0,123,255,.30)),
-        url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover;
-      display:flex;align-items:center;text-align:center;color:#fff;padding-top:80px;
+        linear-gradient(135deg, rgba(2,8,23,.78), rgba(22,119,255,.28)),
+        url("https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1600&q=80") center/cover;
+      box-shadow: var(--shadow);
+      min-height: 420px;
+      display:flex;
+      align-items:center;
     }
-    .hero h2{font-size:clamp(2rem,5vw,4rem);font-weight:900;margin-bottom:1.2rem;line-height:1.2;text-shadow:0 15px 40px rgba(0,0,0,.35)}
-    .hero p{font-size:1.15rem;max-width:760px;margin:0 auto 2.2rem;opacity:.92}
-    .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .hero-inner{padding:44px 22px; width:100%;}
+    .hero h1{margin:0 0 10px; color:#fff; font-size:clamp(28px,4.2vw,52px); line-height:1.1; font-weight:900;}
+    .hero p{margin:0 0 18px; color:rgba(255,255,255,.9); max-width:780px; font-size:clamp(14px,1.25vw,18px); font-weight:700}
+    .hero-cta{display:flex; gap:10px; flex-wrap:wrap}
+    .hero .btn-ghost{background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.18); color:#fff}
+    .hero .btn-ghost:hover{background:rgba(255,255,255,.14)}
 
-    /* Sections */
-    .section-title{text-align:center;margin:6rem 0 3rem}
-    .section-title h2{font-size:2.5rem;font-weight:900;display:inline-block;position:relative}
-    .section-title h2::after{
-      content:'';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
-      width:70px;height:4px;background:var(--primary);border-radius:2px
-    }
-    .section-title p{color:#777;margin-top:1.2rem;font-weight:900}
+    .stats{margin-top:-34px;}
+    .stats-grid{display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:12px}
+    .stat{background:rgba(255,255,255,.80); backdrop-filter: blur(10px); border:1px solid var(--line); border-radius:18px; padding:14px 14px; box-shadow:0 10px 30px rgba(2,8,23,.06); display:flex; align-items:center; gap:12px}
+    .stat i{color:var(--primary)}
+    .stat .k{font-weight:900}
+    .stat .v{font-weight:900; color:var(--muted); font-size:13px}
 
-    /* Stats */
-    .stats-section{
-      background:linear-gradient(135deg, rgba(15,20,26,.98), rgba(0,123,255,.22));
-      color:#fff; padding:5rem 0; text-align:center;
-    }
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem}
-    .stat-item{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px; padding:18px 14px;
-      box-shadow:0 20px 60px rgba(0,0,0,.15);
-    }
-    .stat-item h3{font-size:2.5rem;color:#fff;font-weight:900}
-    .stat-item p{opacity:.9;font-weight:900;margin-top:6px}
+    section{padding:54px 0}
+    .title{text-align:center; margin-bottom:18px}
+    .title h2{margin:0; font-size:28px; font-weight:900}
+    .title p{margin:10px 0 0; color:var(--muted); font-weight:800}
+    .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 12px 38px rgba(2,8,23,.06);}
+    .grid-2{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
 
-    /* Products */
-    .products-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.2rem;margin-bottom:4rem}
-    .product-card{
-      background:#fff;border-radius:var(--radius);padding:1.5rem;transition:var(--transition);
-      border:1px solid rgba(0,0,0,.03);box-shadow:var(--shadow);position:relative;overflow:hidden;
-    }
-    .product-card::before{
-      content:'';position:absolute;top:-120px;left:-120px;width:220px;height:220px;
-      background:radial-gradient(circle, rgba(0,210,211,.20), transparent 60%);
-      opacity:.8;
-    }
-    .product-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,.10)}
-    .product-img{background:#fdfdfd;border-radius:var(--radius2);height:220px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(0,0,0,.04)}
-    .product-img img{max-height:82%;transition:var(--transition)}
-    .product-card:hover .product-img img{transform:scale(1.12) rotate(-3deg)}
-    .badges{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
-    .price-badge{
-      background:var(--dark);color:#fff;padding:.55rem 1.2rem;border-radius:14px;font-weight:900;
-      font-size:1.06rem;display:inline-flex;align-items:center;gap:8px
-    }
-    .wholesale-badge{
-      display:none;background:linear-gradient(135deg,#f59e0b,#e11d48);color:#fff;
-      padding:.55rem 1rem;border-radius:14px;font-weight:900;font-size:.98rem;align-items:center;gap:8px;
-      box-shadow:0 12px 28px rgba(245,158,11,.20)
-    }
-    .tag-badge{
-      background:rgba(0,123,255,.10);color:var(--primary-dark);border:1px solid rgba(0,123,255,.18);
-      padding:.45rem .85rem;border-radius:999px;font-weight:900;font-size:.9rem
-    }
-    .feature-list{list-style:none;margin:1.1rem 0}
-    .feature-list li{margin-bottom:.65rem;font-size:.95rem;display:flex;align-items:center;gap:10px;color:#555;font-weight:900}
-    .feature-list i{color:#2ecc71}
+    .products{display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:16px; margin-top:18px}
+    .p-card{padding:16px; display:flex; flex-direction:column; gap:12px}
+    .p-top{display:flex; gap:12px; align-items:center}
+    .p-img{width:92px; height:92px; border-radius:16px; background:#f1f5f9; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden}
+    .p-img img{width:100%; height:100%; object-fit:cover}
+    .p-name{font-weight:900; font-size:18px; margin:0}
+    .p-badge{display:inline-flex; gap:8px; align-items:center; font-weight:900; color:#0b1220; background:rgba(22,119,255,.10); border:1px solid rgba(22,119,255,.20); padding:6px 10px; border-radius:999px}
+    .p-price{font-weight:900; font-size:20px}
+    .muted{color:var(--muted); font-weight:800}
+    .feat{margin:0; padding:0; list-style:none; display:grid; gap:8px}
+    .feat li{display:flex; gap:10px; align-items:flex-start; font-weight:800; color:#334155}
+    .feat i{color:#16a34a; margin-top:4px}
+    .p-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
+    .p-actions .btn{padding:9px 12px; border-radius:14px}
 
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .mini-btn{
-      padding:.85rem 1rem;border-radius:16px;border:none;cursor:pointer;font-weight:900;transition:var(--transition);
-      display:flex;align-items:center;justify-content:center;gap:8px
-    }
-    .mini-btn:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
-    .mini-software{background:rgba(0,123,255,.12);color:var(--primary-dark);border:1px solid rgba(0,123,255,.18)}
-    .mini-catalog{background:rgba(15,20,26,.08);color:var(--dark);border:1px solid rgba(15,20,26,.10)}
-    .mini-video{background:rgba(239,68,68,.10);color:#b91c1c;border:1px solid rgba(239,68,68,.16)}
-    .mini-order{grid-column:1/-1;background:var(--primary);color:#fff;box-shadow:0 12px 25px rgba(0,123,255,.22)}
-    .mini-order:hover{background:var(--primary-dark)}
+    .table-wrap{overflow:auto}
+    table{width:100%; border-collapse:collapse; min-width:780px}
+    th,td{padding:12px 12px; border-bottom:1px solid var(--line); text-align:right; font-weight:800}
+    th{background:#f8fafc; position:sticky; top:0; z-index:1}
+    td small{color:var(--muted); font-weight:900}
 
-    /* Comparison */
-    .compare-wrap{
-      background:rgba(255,255,255,.75);
-      border:1px solid rgba(0,0,0,.05);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow2);
-      overflow:hidden;
+    #adminPanel{display:none}
+    .admin-grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; margin-top:16px}
+    .admin-card{padding:16px}
+    .field{display:grid; gap:7px; margin-bottom:12px}
+    label{font-weight:900; color:#0b1220}
+    input,textarea,select{
+      width:100%;
+      padding:11px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-family:inherit;
+      font-weight:800;
+      outline:none;
     }
-    .compare-head{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-      padding:16px 18px;border-bottom:1px solid rgba(0,0,0,.06);
-      background:rgba(255,255,255,.85);
-    }
-    .compare-head b{font-weight:900}
-    table.compare{
-      width:100%;border-collapse:separate;border-spacing:0;
-      overflow:hidden;
-    }
-    table.compare th, table.compare td{
-      padding:14px 12px;border-bottom:1px solid rgba(0,0,0,.06);text-align:center;font-weight:900;
-    }
-    table.compare th{
-      background:rgba(0,123,255,.06); color:var(--primary-dark);
-      position:sticky; top:0;
-    }
-    table.compare tr:last-child td{border-bottom:none}
-    .yes{color:#14532d;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.18);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
-    .no{color:#7f1d1d;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.18);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
-    .maybe{color:#0b3a63;background:rgba(0,123,255,.10);border:1px solid rgba(0,123,255,.18);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
+    textarea{min-height:94px; resize:vertical}
+    input:focus,textarea:focus,select:focus{border-color:rgba(22,119,255,.45); box-shadow:0 0 0 4px rgba(22,119,255,.10)}
+    .admin-list{display:grid; gap:10px}
+    .item{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; border-radius:16px; border:1px solid var(--line); background:#fff}
+    .item .meta{display:grid; gap:2px}
+    .item .meta b{font-weight:900}
+    .item .meta span{font-weight:900; color:var(--muted); font-size:12px}
+    .item .row{display:flex; gap:8px; flex-wrap:wrap}
+    .danger{background:#fff; border:1px solid rgba(239,68,68,.25); color:#b91c1c}
 
-    /* FAQ */
-    .faq-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-    .faq-card{
-      background:rgba(255,255,255,.85);
-      border:1px solid rgba(0,0,0,.05);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .faq-item{border-bottom:1px solid rgba(0,0,0,.06)}
-    .faq-item:last-child{border-bottom:none}
-    .faq-q{
-      width:100%;text-align:right;display:flex;align-items:center;justify-content:space-between;gap:12px;
-      padding:16px 16px;background:transparent;border:none;cursor:pointer;font-weight:900;font-size:1.02rem;
-    }
-    .faq-q i{color:var(--primary)}
-    .faq-a{
-      max-height:0;overflow:hidden;transition:max-height .35s ease;
-      padding:0 16px;
-    }
-    .faq-a p{padding:0 0 14px;color:#556;font-weight:800;line-height:1.9}
-    .faq-side{
-      background:rgba(15,20,26,.96); color:#fff;
-      border-radius:var(--radius);
-      padding:18px 16px;
-      box-shadow:var(--shadow2);
-    }
-    .faq-side h3{font-weight:900;margin-bottom:10px}
-    .faq-side p{opacity:.92;font-weight:800;line-height:1.9}
-    .faq-side .pill{
-      margin-top:10px;display:inline-flex;align-items:center;gap:8px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.08);
-      padding:8px 10px;border-radius:999px;font-weight:900;
-    }
+    footer{background:#0b1220; color:#cbd5e1; padding:34px 0;}
+    .foot{display:grid; grid-template-columns: 1.3fr 1fr 1fr; gap:18px}
+    .foot h3,.foot h4{margin:0 0 10px; color:#fff}
+    .social{display:flex; gap:10px; flex-wrap:wrap}
+    .iconbtn{width:40px; height:40px; border-radius:14px; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.06); text-decoration:none}
 
-    /* Admin */
-    .admin-wrap{margin:4.2rem 0 0}
-    .admin-card{
-      background:rgba(255,255,255,.85);
-      backdrop-filter:blur(10px);
-      border:1px solid rgba(0,0,0,.05);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow2);
-      padding:2rem;
-      display:none;
-    }
-    .admin-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .admin-head h3{font-size:1.5rem;font-weight:900;color:var(--secondary);display:flex;align-items:center;gap:10px}
-    .admin-head p{color:#667;font-weight:900;margin-top:6px}
-    .admin-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:14px}
-    .panel{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.05);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow)}
-    .panel h4{font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:10px}
-    .form-group{margin-bottom:12px}
-    .form-control{
-      width:100%;padding:12px 14px;border-radius:16px;border:1px solid rgba(0,0,0,.10);
-      outline:none;background:rgba(255,255,255,.95);font-weight:900;transition:var(--transition);
-    }
-    .form-control:focus{border-color:rgba(0,123,255,.45);box-shadow:0 0 0 4px rgba(0,123,255,.12)}
-    textarea.form-control{min-height:110px;resize:vertical}
-    .admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .admin-items{display:grid;gap:10px}
-    .admin-item{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:12px;border-radius:18px;border:1px solid rgba(0,0,0,.06);
-      background:rgba(255,255,255,.85);
-    }
-    .admin-item b{font-weight:900;color:var(--secondary)}
-    .admin-item small{color:#667;font-weight:900;display:block;margin-top:2px}
-    .admin-item .row{display:flex;flex-direction:column}
-    .admin-item .row2{display:flex;gap:8px;flex-wrap:wrap}
+    .copy{margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.08); text-align:center; font-weight:800; color:#94a3b8}
 
-    /* Modals */
-    .modal{
-      display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:4000;
-      align-items:center;justify-content:center;padding:16px;
-    }
-    .modal-content{
-      background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
-      border-radius:var(--radius);border:1px solid rgba(0,0,0,.06);
-      padding:2.2rem;width:min(560px,100%);position:relative;
-      box-shadow:0 30px 90px rgba(0,0,0,.25);
-    }
-    .close-modal{
-      position:absolute;top:14px;left:18px;font-size:1.8rem;cursor:pointer;
-      color:rgba(0,0,0,.55);transition:var(--transition);user-select:none;
-    }
-    .close-modal:hover{transform:rotate(90deg);color:rgba(0,0,0,.85)}
-    .modal-title{text-align:center;font-weight:900;margin-bottom:1.2rem;color:var(--secondary)}
-    .msg{margin-top:10px;font-weight:900;text-align:center;padding:10px 12px;border-radius:14px;display:none}
-    .msg.err{background:rgba(239,68,68,.10);color:#7f1d1d;border:1px solid rgba(239,68,68,.18)}
-    .msg.ok{background:rgba(34,197,94,.12);color:#14532d;border:1px solid rgba(34,197,94,.18)}
+    .modal{display:none; position:fixed; inset:0; z-index:60; background:rgba(2,8,23,.55); padding:18px}
+    .modal-inner{max-width:420px; margin:80px auto 0; background:#fff; border-radius:22px; border:1px solid var(--line); box-shadow: var(--shadow); padding:18px}
+    .modal-head{display:flex; justify-content:space-between; align-items:center; gap:10px}
+    .modal-head h3{margin:0; font-weight:900}
+    .x{border:0; background:transparent; font-size:22px; cursor:pointer}
+    .hint{margin-top:12px; font-weight:900; color:#b45309; background:#fff7ed; border:1px solid rgba(180,83,9,.18); padding:10px 12px; border-radius:16px; display:none}
 
-    /* Video modal */
-    .video-modal-content{width:min(960px,100%);padding:0;overflow:hidden}
-    .video-head{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.06);
-      background:rgba(255,255,255,.85)
+    @media (max-width:980px){
+      .stats-grid{grid-template-columns: repeat(2,minmax(0,1fr));}
+      .admin-grid{grid-template-columns: 1fr;}
+      .foot{grid-template-columns:1fr;}
     }
-    .video-head b{font-weight:900;color:var(--secondary)}
-    .video-wrap{width:100%;aspect-ratio:16/9;background:#000;position:relative}
-    .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-
-    /* Footer */
-    footer{background:#0b0e11;color:#a0a0a0;padding:5rem 0 2rem;margin-top:4rem}
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
-    .footer-logo{color:#fff;font-weight:900;font-size:1.5rem;margin-bottom:1.2rem;display:block}
-    .footer-grid h4{color:#fff;margin-bottom:1.3rem;font-weight:900}
-    .footer-grid ul{list-style:none;display:grid;gap:10px}
-    .footer-grid a{color:#a0a0a0}
-    .footer-grid a:hover{color:#fff}
-    .footer-social{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .footer-social a{
-      width:44px;height:44px;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);
-      transition:var(--transition);
+    @media (max-width:720px){
+      .products{grid-template-columns:1fr}
+      .menu{display:none}
+      .hero-inner{padding:34px 16px}
     }
-    .footer-social a:hover{transform:translateY(-4px);background:rgba(0,123,255,.18);border-color:rgba(0,123,255,.25)}
-    .footer-social i{color:#fff}
-    .footer-bottom{text-align:center;margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.05);color:#c0c0c0;font-weight:900}
-
-    /* Responsive */
-    @media (max-width: 980px){
-      nav{display:none}
-      .products-grid{grid-template-columns:1fr}
-      .faq-grid{grid-template-columns:1fr}
-      .admin-grid{grid-template-columns:1fr}
-      .footer-grid{grid-template-columns:1fr}
-      .lang-toggle{order:3;width:100%;justify-content:center}
-      .auth-buttons{width:100%;justify-content:center}
-      .header-content{flex-wrap:wrap}
-      .header-right{width:100%;justify-content:center}
-    }
-    @media (max-width: 560px){
-      .actions{grid-template-columns:1fr}
-      .mini-order{grid-column:auto}
-      .social-mini{display:none}
-    }
-  
-        .compare-table .row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);border-top:1px solid rgba(0,0,0,.06);}
-        .compare-table .cell{padding:14px 12px;min-width:190px;white-space:normal}
-        .compare-table .cell.head{font-weight:900;background:rgba(0,0,0,.03)}
-        .pill{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;font-weight:900;font-size:.9rem}
-        .pill.ok{background:rgba(46,204,113,.12);color:#138d52}
-        .pill.no{background:rgba(231,76,60,.12);color:#b03a2e}
-        .admin-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 10px;border:1px solid rgba(0,0,0,.06);border-radius:14px;background:#fff;margin-bottom:10px}
-        .admin-item-title{font-weight:900}
-        .admin-item-actions{display:flex;gap:8px;flex-wrap:wrap}
-        .mini-btn{border:none;cursor:pointer;border-radius:12px;padding:10px 12px;font-weight:900;background:rgba(0,0,0,.06);color:var(--secondary);display:inline-flex;align-items:center;gap:8px}
-        .mini-btn.danger{background:rgba(231,76,60,.12);color:#b03a2e}
-    </style>
+  </style>
 </head>
 
 <body>
-
-    <div id="debugToast" style="display:none;position:fixed;top:90px;left:16px;right:16px;z-index:6000;background:#111;color:#fff;border-radius:14px;padding:10px 12px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.2);">
-      debug
-    </div>
-    <script>
-      (function(){
-        function toast(msg){
-          var t=document.getElementById('debugToast');
-          if(!t) return;
-          t.textContent=msg;
-          t.style.display='block';
-          clearTimeout(window.__dbg_to);
-          window.__dbg_to=setTimeout(function(){ t.style.display='none'; }, 2500);
-        }
-        window.__toast = toast;
-
-        document.addEventListener('DOMContentLoaded', function(){
-          var btn=document.getElementById('mainLoginBtn');
-          if(btn){
-            btn.addEventListener('click', function(){
-              toast('Login clicked ✔');
-              console.log('Login clicked ✔');
-            });
-          } else {
-            console.warn('mainLoginBtn not found');
-          }
-        });
-
-        var _open = window.openLoginModal;
-        window.openLoginModal = function(){
-          toast('Opening login modal…');
-          console.log('Opening login modal…');
-          if(typeof _open === 'function') return _open();
-          var m=document.getElementById('loginModal');
-          if(m) m.style.display='flex';
-        };
-      })();
-    </script>
-
-
-    <div id="runtimeWarn" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;z-index:5000;background:#fff3cd;color:#664d03;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.08);font-weight:800;">
-      تنبيه: يجب فتح الصفحة عبر رابط Hosting (https) أو عبر سيرفر محلي، وليس مباشرةً من ملف (file://)، حتى تعمل مكتبات Firebase.
-    </div>
-    <script>
-      (function(){
-        if(location.protocol === 'file:'){
-          var w=document.getElementById('runtimeWarn');
-          if(w) w.style.display='block';
-        }
-      })();
-    </script>
-
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <a href="#home" class="logo" onclick="smoothTo('home'); return false;">
-          <i class="fas fa-charging-station"></i> X<span>Charger</span>
-        </a>
-
-        <nav class="desktop-nav">
-          <ul>
-            <li><a href="#home" data-i18n="nav_home" onclick="smoothTo('home'); return false;">الرئيسية</a></li>
-            <li><a href="#products" data-i18n="nav_products" onclick="smoothTo('products'); return false;">المنتجات</a></li>
-            <li><a href="#compare" data-i18n="nav_compare" onclick="smoothTo('compare'); return false;">المقارنة</a></li>
-            <li><a href="#faq" data-i18n="nav_faq" onclick="smoothTo('faq'); return false;">الأسئلة</a></li>
-            <li><a href="#contact" data-i18n="nav_contact" onclick="smoothTo('contact'); return false;">اتصل بنا</a></li>
-</ul>
-        </nav>
-
-        <div class="header-right">
-          <div class="lang-toggle" title="Language">
-            <button id="btnAR" class="active" onclick="setLang('ar')">AR</button>
-            <button id="btnEN" onclick="setLang('en')">EN</button>
-          </div>
-
-          <div class="social-mini" aria-label="social">
-            <a id="miniMap" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-location-dot"></i></a>
-            <a id="miniPhone" href="#"><i class="fa-solid fa-phone"></i></a>
-            <a id="miniWhatsapp" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i></a>
-            <a id="miniInstagram" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
-            <a id="miniFacebook" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
-          </div>
-
-          <div class="auth-buttons">
-            <button class="btn btn-primary btn-small" id="loginBtn" onclick="openLoginModal()">
-              <i class="fa-solid fa-user-circle"></i> <span data-i18n="btn_login">تسجيل الدخول</span>
-            </button>
-            <button class="btn btn-ghost btn-small" id="logoutBtn" onclick="logoutUser()" style="display:none;">
-              <i class="fas fa-right-from-bracket"></i> <span data-i18n="btn_logout">تسجيل خروج</span>
-            </button>
-          </div>
-        
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-          <button class="btn btn-primary" id="mainLoginBtn" onclick="openLoginModal()">
-            <i class="fas fa-user-circle"></i><span data-i18n="loginBtn">تسجيل الدخول</span>
-          </button>
-          <button class="btn" id="logoutBtn" style="display:none;background:rgba(0,0,0,.06);color:var(--secondary);" type="button">
-            <i class="fa-solid fa-right-from-bracket"></i><span data-i18n="logoutBtn">تسجيل الخروج</span>
-          </button>
-          <span id="authStatus" style="font-weight:700;color:var(--secondary);"></span>
-          <div style="display:flex;gap:8px;">
-            <button class="btn" id="langArBtn" style="padding:.6rem 1rem;background:rgba(0,0,0,.06);color:var(--secondary);">AR</button>
-            <button class="btn" id="langEnBtn" style="padding:.6rem 1rem;background:rgba(0,0,0,.06);color:var(--secondary);">EN</button>
-          </div>
-        </div>
-    </div>
+<header>
+  <div class="container">
+    <div class="nav">
+      <a class="brand" href="#home"><i class="fa-solid fa-charging-station"></i> <span id="brandText">XCharger</span></a>
+      <nav class="menu">
+        <a href="#home" data-i18n="nav_home">الرئيسية</a>
+        <a href="#products" data-i18n="nav_products">المنتجات</a>
+        <a href="#compare" data-i18n="nav_compare">المقارنة</a>
+        <a href="#faq" data-i18n="nav_faq">الأسئلة</a>
+        <a href="#contact" data-i18n="nav_contact">اتصل بنا</a>
+      </nav>
+      <div class="actions">
+        <div class="pill" id="userPill" style="display:none"><i class="fa-solid fa-user"></i> <span id="userText"></span></div>
+        <button class="chip active" id="langAR">AR</button>
+        <button class="chip" id="langEN">EN</button>
+        <button class="btn btn-ghost" id="adminNavBtn" style="display:none"><i class="fa-solid fa-screwdriver-wrench"></i> <span data-i18n="admin_nav">لوحة الإدارة</span></button>
+        <button class="btn btn-primary" id="loginBtn"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="login_btn">تسجيل الدخول</span></button>
+        <button class="btn btn-ghost" id="logoutBtn" style="display:none"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-i18n="logout_btn">تسجيل خروج</span></button>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <section class="hero" id="home">
-    <div class="container" data-aos="fade-up">
-      <div class="hero-content">
-        <h2 data-i18n="hero_title">طاقة المستقبل بين يديك</h2>
-        <p data-i18n="hero_desc">
-          نصمم وننتج أجهزة شحن ذكية تجمع بين الأمان والاعتمادية وسهولة الاستخدام، مع إصدارات متعددة تناسب المنزل والعمل.
-        </p>
-        <div class="hero-actions">
-          <a href="#products" class="btn btn-primary" onclick="smoothTo('products'); return false;">
-            <i class="fa-solid fa-cart-shopping"></i> <span data-i18n="hero_btn_products">اكتشف منتجاتنا</span>
-          </a>
-          <a href="#contact" class="btn btn-light" onclick="smoothTo('contact'); return false;">
-            <i class="fa-solid fa-message"></i> <span data-i18n="hero_btn_quote">طلب خاص</span>
-          </a>
-        </div>
+<main class="hero" id="home">
+  <div class="container hero-wrap">
+    <div class="hero-inner">
+      <h1 data-i18n="hero_title">طاقة المستقبل بين يديك</h1>
+      <p data-i18n="hero_sub">نصمم وننتج شواحن ذكية تجمع بين الأمان وسهولة الاستخدام مع إصدارات متعددة تناسب احتياجاتك.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#products"><i class="fa-solid fa-bolt"></i> <span data-i18n="hero_cta1">اكتشف منتجاتنا</span></a>
+        <a class="btn btn-ghost" href="#contact"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="hero_cta2">طلب خاص</span></a>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section id="stats" class="stats-section">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item" data-aos="zoom-in">
-          <h3><i class="fa-solid fa-sliders" style="color:var(--primary);"></i></h3>
-          <p data-i18n="stat_1">تحكم ذكي مرن</p>
-        </div>
-        <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
-          <h3>100%</h3>
-          <p data-i18n="stat_2">اعتمادية</p>
-        </div>
-        <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
-          <h3>24/7</h3>
-          <p data-i18n="stat_3">دعم فني</p>
-        </div>
-        <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
-          <h3>3</h3>
-          <p data-i18n="stat_4">سنوات ضمان</p>
-        </div>
-      </div>
+  <div class="container stats">
+    <div class="stats-grid">
+      <div class="stat"><i class="fa-solid fa-sliders"></i><div><div class="k" data-i18n="stat_4_title">تحكم ذكي مرن</div><div class="v" data-i18n="stat_4">تجربة استخدام سهلة</div></div></div>
+      <div class="stat"><i class="fa-solid fa-shield-halved"></i><div><div class="k">100%</div><div class="v" data-i18n="stat_3">أمان واعتمادية</div></div></div>
+      <div class="stat"><i class="fa-solid fa-headset"></i><div><div class="k">24/7</div><div class="v" data-i18n="stat_2">دعم فني</div></div></div>
+      <div class="stat"><i class="fa-solid fa-medal"></i><div><div class="k">3</div><div class="v" data-i18n="stat_1">ضمان</div></div></div>
     </div>
-  </section>
+  </div>
+</main>
 
-  <section id="products" class="container">
-    <div class="section-title" data-aos="fade-down">
+<section id="products">
+  <div class="container">
+    <div class="title">
       <h2 data-i18n="products_title">إصدارات XCharger المتطورة</h2>
-      <p data-i18n="products_subtitle">اختر الإصدار الذي يناسب احتياجك</p>
+      <p data-i18n="products_sub">تظهر المنتجات تلقائيًا من Firebase Firestore</p>
     </div>
-
-    <div class="products-grid" id="productsContainer"></div>
-
-    <div id="admin" class="admin-wrap" data-aos="fade-up">
-      <div class="admin-card" id="adminPanel">
-        <div class="admin-head">
-          <div>
-            <h3><i class="fa-solid fa-gear"></i> <span data-i18n="admin_title">لوحة تحكم المدير</span></h3>
-            <p data-i18n="admin_desc">إضافة/تعديل/حذف المنتجات (حفظ محليًا — ويمكن تفعيل Firebase للإنتاج)</p>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn btn-ghost btn-small" onclick="resetAdminForm(true)">
-              <i class="fa-solid fa-rotate"></i> <span data-i18n="admin_clear">تفريغ النموذج</span>
-            </button>
-            <button class="btn btn-primary btn-small" onclick="restoreDefaults()">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="admin_restore">استرجاع الافتراضي</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="admin-grid">
-          <div class="panel">
-            <h4><i class="fa-solid fa-pen-to-square"></i> <span data-i18n="admin_form">إضافة / تعديل</span></h4>
-
-            <div class="form-group">
-              <label style="font-weight:900;" data-i18n="admin_select">اختر منتج للتعديل (اختياري)</label>
-              <select id="adminSelect" class="form-control" onchange="loadProductToForm()"></select>
-            </div>
-
-            <div class="form-group">
-              <label style="font-weight:900;" data-i18n="admin_name">اسم المنتج</label>
-              <input id="pName" class="form-control" placeholder="مثال: XCharger Smart">
-            </div>
-
-            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-              <div>
-                <label style="font-weight:900;" data-i18n="admin_retail_jod">سعر المفرق (JOD)</label>
-                <input id="pRetailJOD" class="form-control" placeholder="مثال: 250">
-              </div>
-              <div>
-                <label style="font-weight:900;" data-i18n="admin_wholesale_jod">سعر التاجر (JOD)</label>
-                <input id="pWholeJOD" class="form-control" placeholder="مثال: 180">
-              </div>
-            </div>
-
-            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-              <div>
-                <label style="font-weight:900;" data-i18n="admin_retail_usd">سعر المفرق (USD)</label>
-                <input id="pRetailUSD" class="form-control" placeholder="مثال: 350">
-              </div>
-              <div>
-                <label style="font-weight:900;" data-i18n="admin_wholesale_usd">سعر التاجر (USD)</label>
-                <input id="pWholeUSD" class="form-control" placeholder="مثال: 250">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label style="font-weight:900;" data-i18n="admin_tag">وسم المنتج</label>
-              <select id="pTag" class="form-control">
-                <option value="new" data-i18n="tag_new">جديد</option>
-                <option value="best" data-i18n="tag_best">الأكثر مبيعاً</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label style="font-weight:900;" data-i18n="admin_img">رابط الصورة</label>
-              <input id="pImg" class="form-control" placeholder="https://...">
-            </div>
-
-            <div class="form-group">
-              <label style="font-weight:900;" data-i18n="admin_video">رابط الفيديو (YouTube Embed)</label>
-              <input id="pVideo" class="form-control" placeholder="https://www.youtube.com/embed/...">
-            </div>
-
-            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-              <div>
-                <label style="font-weight:900;" data-i18n="admin_soft">رابط السوفت وير</label>
-                <input id="pSoft" class="form-control" placeholder="https://...">
-              </div>
-              <div>
-                <label style="font-weight:900;" data-i18n="admin_cat">رابط الكاتالوج</label>
-                <input id="pCat" class="form-control" placeholder="https://...">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label style="font-weight:900;" data-i18n="admin_feats">المزايا (كل ميزة بسطر)</label>
-              <textarea id="pFeatures" class="form-control" placeholder="شحن سريع&#10;حماية متعددة&#10;مقاوم للماء IP65"></textarea>
-            </div>
-
-            <div class="admin-actions">
-              <button class="btn btn-primary btn-small" onclick="saveFromForm()"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="admin_save">حفظ</span></button>
-              <button class="btn btn-danger btn-small" onclick="deleteSelected()"><i class="fa-solid fa-trash"></i> <span data-i18n="admin_delete">حذف</span></button>
-            </div>
-          </div>
-
-          <div class="panel">
-            <h4><i class="fa-solid fa-list"></i> <span data-i18n="admin_list">قائمة المنتجات</span></h4>
-            <div class="admin-items" id="adminList"></div>
-
-            <div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(0,0,0,.06);">
-              <h4 style="margin-bottom:8px;"><i class="fa-brands fa-google"></i> <span data-i18n="factory_location">موقع المصنع</span></h4>
-              <p style="color:#667;font-weight:900;line-height:1.9">
-                <i class="fa-solid fa-location-dot"></i>
-                <span data-i18n="amman"><span id="factoryCity">عمّان – الأردن</span></span>
-                —
-                <a id="mapLink2" href="#" target="_blank" rel="noopener" style="color:var(--primary-dark); font-weight:900;">
-                  <span data-i18n="open_map">افتح الخريطة</span>
-                </a>
-              </p>
-              <p style="color:#667;font-weight:900;line-height:1.9">
-                <i class="fa-solid fa-phone"></i>
-                <a id="phoneLink2" href="#" style="color:var(--primary-dark); font-weight:900;"><a href="tel:0790781206" id="factoryPhone" style="color:inherit;text-decoration:none;">0790781206</a></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <div class="products" id="productsGrid"></div>
+    <div class="card" style="padding:14px; margin-top:14px;">
+      <div class="muted" id="productsEmpty" data-i18n="products_empty" style="text-align:center">لا يوجد منتجات بعد. سيتم عرضها هنا عند إضافتها من لوحة الإدارة.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="compare" class="container">
-    <div class="section-title" data-aos="fade-down">
+<section id="compare">
+  <div class="container">
+    <div class="title">
       <h2 data-i18n="compare_title">مقارنة الإصدارات</h2>
-      <p data-i18n="compare_subtitle">نظرة سريعة لتحديد الإصدار الأنسب لك</p>
+      <p data-i18n="compare_sub">جدول يوضح أهم الفروقات بين الإصدارات</p>
+    </div>
+    <div class="card table-wrap">
+      <table id="compareTable"></table>
+    </div>
+  </div>
+</section>
+
+<section id="adminPanel">
+  <div class="container">
+    <div class="title">
+      <h2><i class="fa-solid fa-screwdriver-wrench"></i> <span data-i18n="admin_title">لوحة تحكم المدير</span></h2>
+      <p data-i18n="admin_sub">إضافة/تعديل/حذف المنتجات مباشرة على Firestore</p>
     </div>
 
-    <div class="compare-wrap" data-aos="fade-up">
-      <div class="compare-head">
-        <b><i class="fa-solid fa-table"></i> <span data-i18n="compare_head">جدول المقارنة</span></b>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-ghost btn-small" onclick="smoothTo('products')">
-            <i class="fa-solid fa-box"></i> <span data-i18n="compare_to_products">العودة للمنتجات</span>
-          </button>
+    <div class="admin-grid">
+      <div class="card admin-card">
+        <h3 style="margin:0 0 12px; font-weight:900" data-i18n="admin_form_title">بيانات المنتج</h3>
+        <div class="muted" style="margin-bottom:12px" data-i18n="admin_form_hint">املأ الحقول ثم اضغط حفظ.</div>
+
+        <div class="field"><label data-i18n="f_name">اسم المنتج</label><input id="f_name" placeholder="xcharger" /></div>
+
+        <div class="grid-2">
+          <div class="field"><label data-i18n="f_price_jod_retail">سعر المفرق (JOD)</label><input id="f_price_jod_retail" type="number" min="0" step="0.01" placeholder="90" /></div>
+          <div class="field"><label data-i18n="f_price_jod_trade">سعر التاجر (JOD)</label><input id="f_price_jod_trade" type="number" min="0" step="0.01" placeholder="80" /></div>
         </div>
+
+        <div class="grid-2">
+          <div class="field"><label data-i18n="f_price_usd_retail">سعر المفرق (USD)</label><input id="f_price_usd_retail" type="number" min="0" step="0.01" placeholder="130" /></div>
+          <div class="field"><label data-i18n="f_price_usd_trade">سعر التاجر (USD)</label><input id="f_price_usd_trade" type="number" min="0" step="0.01" placeholder="110" /></div>
+        </div>
+
+        <div class="field"><label data-i18n="f_badge">وسم المنتج</label>
+          <select id="f_badge">
+            <option value="new" data-i18n="badge_new">جديد</option>
+            <option value="best" data-i18n="badge_best">الأكثر مبيعاً</option>
+            <option value="pro" data-i18n="badge_pro">احترافي</option>
+          </select>
+        </div>
+
+        <div class="grid-2">
+          <div class="field"><label data-i18n="f_img">رابط الصورة</label><input id="f_img" placeholder="https://..." /></div>
+          <div class="field"><label data-i18n="f_video">رابط الفيديو (YouTube Embed)</label><input id="f_video" placeholder="https://www.youtube.com/embed/..." /></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field"><label data-i18n="f_software">رابط السوفت وير</label><input id="f_software" placeholder="https://..." /></div>
+          <div class="field"><label data-i18n="f_catalog">رابط الكاتالوج</label><input id="f_catalog" placeholder="https://..." /></div>
+        </div>
+
+        <div class="field"><label data-i18n="f_features">المواصفات (كل سطر ميزة)</label><textarea id="f_features" placeholder="شحن سريع 7kW&#10;IP65&#10;حماية متعددة"></textarea></div>
+
+        <div class="grid-2">
+          <button class="btn btn-primary" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> <span data-i18n="admin_save">حفظ</span></button>
+          <button class="btn btn-ghost" id="clearBtn"><i class="fa-solid fa-rotate"></i> <span data-i18n="admin_clear">تفريغ النموذج</span></button>
+        </div>
+
+        <div id="adminMsg" class="hint"></div>
       </div>
 
-      <div style="max-height:520px; overflow:auto;">
-        <table class="compare" id="compareTable"></table>
+      <div class="card admin-card">
+        <h3 style="margin:0 0 12px; font-weight:900" data-i18n="admin_list_title">المنتجات الحالية</h3>
+        <div class="muted" style="margin-bottom:12px" data-i18n="admin_list_hint">اضغط تعديل لتحميل المنتج في النموذج.</div>
+        <div class="admin-list" id="adminList"></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="faq" class="container">
-    <div class="section-title" data-aos="fade-down">
+<section id="faq">
+  <div class="container">
+    <div class="title">
       <h2 data-i18n="faq_title">الأسئلة الشائعة</h2>
-      <p data-i18n="faq_subtitle">إجابات مختصرة لأهم الأسئلة قبل الشراء</p>
+      <p data-i18n="faq_sub">إجابات مختصرة قبل الشراء</p>
     </div>
-
-    <div class="faq-grid" data-aos="fade-up">
-      <div class="faq-card" id="faqCard"></div>
-      <div class="faq-side">
-        <h3 data-i18n="faq_side_title">تحتاج عرض سعر أو توريد؟</h3>
-        <p data-i18n="faq_side_desc">
-          اختر الإصدار المناسب ثم اضغط "اطلب الآن" للحصول على ملخص جاهز للإرسال. يمكننا تجهيز عرض خاص للشركاء.
-        </p>
-        <div class="pill"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="faq_side_pill">ضمان + دعم فني</span></div>
-        <div class="pill"><i class="fa-solid fa-truck-fast"></i> <span data-i18n="faq_side_pill2">توصيل سريع</span></div>
-        <div class="pill"><i class="fa-brands fa-whatsapp"></i> <a id="waLink3" href="#" target="_blank" rel="noopener" style="color:#fff; font-weight:900;"><span data-i18n="whatsapp">واتساب</span></a></div>
+    <div class="grid-2">
+      <div class="card" style="padding:16px">
+        <h3 style="margin:0 0 8px; font-weight:900" data-i18n="faq_q1">هل الشاحن مناسب للاستخدام اليومي؟</h3>
+        <p class="muted" data-i18n="faq_a1">نعم، مصمم ليعمل بثبات مع حماية متعددة ويتيح جدولة الشحن وواجهة استخدام سهلة.</p>
       </div>
-    </div>
-  </section>
-
-  <footer id="contact">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <span class="footer-logo">XCharger</span>
-          <p style="line-height:1.9" data-i18n="footer_desc">
-            حلول شحن احترافية للمركبات الكهربائية في الأردن والمنطقة — نلتزم بالجودة والابتكار والاستدامة.
-          </p>
-
-          <div class="footer-social" aria-label="social">
-            <a id="fMap" href="#" target="_blank" rel="noopener" title="Map"><i class="fa-solid fa-location-dot"></i></a>
-            <a id="fPhone" href="#" title="Phone"><i class="fa-solid fa-phone"></i></a>
-            <a id="fWhatsapp" href="#" target="_blank" rel="noopener" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-            <a id="fInstagram" href="#" target="_blank" rel="noopener" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a id="fFacebook" href="#" target="_blank" rel="noopener" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <h4 data-i18n="footer_links">روابط مفيدة</h4>
-          <ul>
-            <li><a href="#compare" onclick="smoothTo('compare'); return false;" data-i18n="footer_compare">المقارنة</a></li>
-            <li><a href="#faq" onclick="smoothTo('faq'); return false;" data-i18n="footer_faq">الأسئلة</a></li>
-</ul>
-        </div>
-
-        <div>
-          <h4 data-i18n="footer_contact">تواصل معنا</h4>
-          <p><i class="fa-solid fa-location-dot"></i> <span data-i18n="footer_city">عمّان - الأردن</span></p>
-          <p><i class="fa-solid fa-phone"></i> <a id="phoneLinkFooter" href="#" style="color:#fff; font-weight:900;">0790781206</a></p>
-          <p style="margin-top:10px; color:#cfcfcf; font-weight:900;">
-            <i class="fa-solid fa-clock"></i> <span data-i18n="footer_hours">الأحد - الخميس: 8 ص - 5 م</span>
-          </p>
-          <p style="margin-top:10px;">
-            <i class="fa-solid fa-map"></i> <a id="mapLinkFooter" href="#" target="_blank" rel="noopener" style="color:#fff; font-weight:900;"><span data-i18n="open_map">افتح الخريطة</span></a>
-          </p>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        &copy; <span id="year"></span> XCharger. <span data-i18n="footer_rights">جميع الحقوق محفوظة.</span>
-      </div>
-    </div>
-  
-    <!-- Compare Modal -->
-    <div class="modal" id="compareModal" style="display:none;">
-      <div class="modal-content" style="max-width:1100px;width:92%;padding:22px;border-radius:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
-          <h3 style="margin:0;font-weight:900;"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="compare">مقارنة الإصدارات</span></h3>
-          <button class="btn" id="compareClose" style="background:rgba(0,0,0,.06);color:var(--secondary);padding:.6rem 1rem;border-radius:14px;">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-        <p style="margin:0 0 14px;color:#666;" data-i18n="compareHint">مقارنة فنية بين الإصدارات</p>
-
-        <div class="compare-table" style="overflow:auto;border:1px solid rgba(0,0,0,.06);border-radius:18px;">
-          <div id="compareHead" class="compare-head" style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);background:#fff;border-bottom:1px solid rgba(0,0,0,.06);"></div>
-          <div id="compareBody" class="compare-body" style="background:#fff;"></div>
-        </div>
-      </div>
-    </div>
-    
-
-    <!-- Product Editor Modal (Admin) -->
-    <div class="modal" id="productEditorModal" style="display:none;">
-      <div class="modal-content" style="max-width:900px;width:94%;padding:22px;border-radius:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
-          <h3 id="pe_title" style="margin:0;font-weight:900;">إضافة منتج</h3>
-          <button class="btn" id="pe_close" style="background:rgba(0,0,0,.06);color:var(--secondary);padding:.6rem 1rem;border-radius:14px;">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div class="form-group">
-            <label>الاسم (عربي)</label>
-            <input class="form-control" id="pe_name_ar" placeholder="مثال: XCharger الأساسي">
-          </div>
-          <div class="form-group">
-            <label>Name (EN)</label>
-            <input class="form-control" id="pe_name_en" placeholder="e.g., XCharger Basic">
-          </div>
-
-          <div class="form-group">
-            <label>رابط الصورة</label>
-            <input class="form-control" id="pe_image" placeholder="https://...">
-          </div>
-          <div class="form-group">
-            <label>رابط الفيديو</label>
-            <input class="form-control" id="pe_video" placeholder="https://youtube.com/...">
-          </div>
-
-          <div class="form-group">
-            <label>رابط السوفت وير</label>
-            <input class="form-control" id="pe_software" placeholder="https://...">
-          </div>
-          <div class="form-group">
-            <label>رابط الكاتالوج</label>
-            <input class="form-control" id="pe_catalog" placeholder="https://...">
-          </div>
-
-          <div class="form-group" style="grid-column:1/-1;">
-            <label>المزايا (عربي) — افصل بفواصل</label>
-            <input class="form-control" id="pe_features_ar" placeholder="ميزة 1, ميزة 2, ...">
-          </div>
-
-          <div class="form-group" style="grid-column:1/-1;">
-            <label>Features (EN) — comma separated</label>
-            <input class="form-control" id="pe_features_en" placeholder="Feature 1, Feature 2, ...">
-          </div>
-
-          <div class="form-group">
-            <label>ترتيب العرض</label>
-            <input class="form-control" id="pe_order" placeholder="1" inputmode="numeric">
-          </div>
-
-          <div class="form-group">
-            <label>سعر المفرق (JOD)</label>
-            <input class="form-control" id="pe_retail_jod" placeholder="90" inputmode="decimal">
-          </div>
-
-          <div class="form-group">
-            <label>سعر التاجر (JOD)</label>
-            <input class="form-control" id="pe_wholesale_jod" placeholder="90" inputmode="decimal">
-          </div>
-
-          <div class="form-group">
-            <label>Retail (USD)</label>
-            <input class="form-control" id="pe_retail_usd" placeholder="127" inputmode="decimal">
-          </div>
-
-          <div class="form-group">
-            <label>Wholesale (USD)</label>
-            <input class="form-control" id="pe_wholesale_usd" placeholder="127" inputmode="decimal">
-          </div>
-
-          <div class="form-group">
-            <label>القدرة</label>
-            <input class="form-control" id="pe_power" placeholder="7kW">
-          </div>
-
-          <div class="form-group">
-            <label>التيار</label>
-            <input class="form-control" id="pe_current" placeholder="32A">
-          </div>
-
-          <div class="form-group">
-            <label>الجهد</label>
-            <input class="form-control" id="pe_voltage" placeholder="230V~ 50/60Hz">
-          </div>
-
-          <div class="form-group">
-            <label>المعيار</label>
-            <input class="form-control" id="pe_standard" placeholder="IEC 61851">
-          </div>
-
-          <div class="form-group" style="grid-column:1/-1;">
-            <label>الحمايات</label>
-            <input class="form-control" id="pe_protections" placeholder="OV/OC/OT/RCD">
-          </div>
-
-          <div class="form-group">
-            <label>تصنيف الحماية</label>
-            <input class="form-control" id="pe_ip" placeholder="IP65">
-          </div>
-
-          <div class="form-group">
-            <label>Wi‑Fi</label>
-            <select class="form-control" id="pe_wifi">
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Remote</label>
-            <select class="form-control" id="pe_remote">
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Voice</label>
-            <select class="form-control" id="pe_voice">
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Screen/UI</label>
-            <select class="form-control" id="pe_screen">
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Scheduling</label>
-            <select class="form-control" id="pe_scheduling">
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
-          <button class="btn" id="pe_cancel" style="background:rgba(0,0,0,.06);color:var(--secondary);border-radius:14px;">
-            إلغاء
-          </button>
-          <button class="btn btn-primary" id="pe_save" style="border-radius:14px;">
-            حفظ
-          </button>
-        </div>
-      </div>
-    </div>
-    </footer>
-    
-
-  <!-- Login Modal -->
-  <div class="modal" id="loginModal">
-    <div class="modal-content" data-aos="zoom-in">
-      <span class="close-modal" onclick="closeLoginModal()">&times;</span>
-      <h3 class="modal-title" data-i18n="login_title">تسجيل الدخول</h3>
-
-      <div class="form-group">
-        <input type="email" class="form-control" id="loginEmail" placeholder="البريد الإلكتروني">
-      </div>
-      <div class="form-group">
-        <input type="password" class="form-control" id="loginPassword" placeholder="كلمة المرور">
-      </div>
-
-      <button class="btn btn-primary" style="width:100%; justify-content:center;" >
-        <i class="fa-solid fa-shield-halved"></i> <span data-i18n="login_btn">دخول آمن</span>
-      </button>
-
-      <div class="msg err" id="loginErr"></div>
-      <div class="msg ok" id="loginOk"></div>
-
-      <p style="color:#667; margin-top: 12px; text-align:center; font-weight:900;" data-i18n="login_note">
-        تحديد الصلاحيات يتم من Firebase (role) بعد تسجيل الدخول.
-      </p>
-    </div>
-  </div>
-
-  <!-- Video Modal -->
-  <div class="modal" id="videoModal">
-    <div class="modal-content video-modal-content" data-aos="zoom-in">
-      <div class="video-head">
-        <b><i class="fa-solid fa-circle-play"></i> <span data-i18n="video_title">فيديو الشرح</span></b>
-        <span class="close-modal" style="position:static; font-size:1.6rem;" onclick="closeVideoModal()">&times;</span>
-      </div>
-      <div class="video-wrap">
-        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div class="card" style="padding:16px">
+        <h3 style="margin:0 0 8px; font-weight:900" data-i18n="faq_q2">هل يدعم الشاحن الجدولة والواجهة؟</h3>
+        <p class="muted" data-i18n="faq_a2">نعم للجميع — الواجهة وجدولة الشحن متاحة في كل الإصدارات.</p>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- AOS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<footer id="contact">
+  <div class="container">
+    <div class="foot">
+      <div>
+        <h3>XCharger</h3>
+        <p class="muted" style="color:#cbd5e1" data-i18n="foot_about">حلول شحن للمركبات الكهربائية مصممة في الأردن بجودة واعتمادية.</p>
+        <div class="social" style="margin-top:12px">
+          <a class="iconbtn" href="#" aria-label="facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="iconbtn" href="#" aria-label="instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a class="iconbtn" href="https://wa.me/962790781206" target="_blank" rel="noopener" aria-label="whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a class="iconbtn" href="tel:0790781206" aria-label="phone"><i class="fa-solid fa-phone"></i></a>
+          <a class="iconbtn" href="https://maps.google.com/?q=Amman%2C%20Jordan" target="_blank" rel="noopener" aria-label="map"><i class="fa-solid fa-location-dot"></i></a>
+        </div>
+      </div>
 
-  <!-- Firebase (Compat SDK) - optional -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script>
-      // Fallback modal handlers (works even if module script fails to load)
-      (function(){
-        function byId(id){ return document.getElementById(id); }
-        window.openLoginModal = function(){
-          var m = byId('loginModal');
-          if(m){ m.style.display='flex'; }
-          var msg = byId('loginMessage');
-          if(msg){ msg.textContent=''; }
-        };
-        window.closeLoginModal = function(){
-          var m = byId('loginModal');
-          if(m){ m.style.display='none'; }
-        };
-        window.addEventListener('DOMContentLoaded', function(){
-          var btn = byId('mainLoginBtn');
-          if(btn){
-            btn.addEventListener('click', function(e){
-              e.preventDefault();
-              window.openLoginModal();
-            });
-          }
-          var closeX = document.querySelector('#loginModal .close-modal');
-          if(closeX){
-            closeX.addEventListener('click', function(){ window.closeLoginModal(); });
-          }
-          window.addEventListener('click', function(e){
-            var m = byId('loginModal');
-            if(e.target === m){ window.closeLoginModal(); }
-          });
-        });
-      })();
-    </script>
+      <div>
+        <h4 data-i18n="foot_links">روابط</h4>
+        <p><a href="#products" style="text-decoration:none;color:#cbd5e1" data-i18n="nav_products">المنتجات</a></p>
+        <p><a href="#compare" style="text-decoration:none;color:#cbd5e1" data-i18n="nav_compare">المقارنة</a></p>
+        <p><a href="#faq" style="text-decoration:none;color:#cbd5e1" data-i18n="nav_faq">الأسئلة</a></p>
+      </div>
 
+      <div>
+        <h4 data-i18n="foot_contact">تواصل معنا</h4>
+        <p><i class="fa-solid fa-location-dot"></i> <span data-i18n="foot_addr">عمّان - الأردن</span></p>
+        <p><i class="fa-solid fa-phone"></i> 0790781206</p>
+        <p><i class="fa-solid fa-envelope"></i> <a href="mailto:info@xcharger.com" style="color:#cbd5e1;text-decoration:none">info@xcharger.com</a></p>
+      </div>
+    </div>
 
-  
-    <script type="module">
-      // =========================
-      // XCharger One-Page (Firebase)
-      // Products are loaded from Firestore (no hardcoded products)
-      // Admin can add/edit/delete products from Admin Panel (role-based)
-      // =========================
+    <div class="copy">© <span id="year"></span> XCharger</div>
+  </div>
+</footer>
 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-      import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-      import { getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+<div class="modal" id="loginModal" aria-hidden="true">
+  <div class="modal-inner">
+    <div class="modal-head">
+      <h3 data-i18n="login_title">تسجيل الدخول</h3>
+      <button class="x" id="closeModal" aria-label="close">×</button>
+    </div>
 
-      // Firebase config (provided by user)
-      const firebaseConfig = {
-        apiKey: "AIzaSyAK4E04TdC_OERPQmvxlKFs_qFSmVwMuiI",
-        authDomain: "xcharger-5bb95.firebaseapp.com",
-        projectId: "xcharger-5bb95",
-        storageBucket: "xcharger-5bb95.firebasestorage.app",
-        messagingSenderId: "570288654795",
-        appId: "1:570288654795:web:94ecb2b696a0da7f408e4e",
-        measurementId: "G-Q9ZX3HYVQV"
-      };
+    <div class="field" style="margin-top:10px">
+      <label data-i18n="login_email">البريد الإلكتروني</label>
+      <input id="loginEmail" type="email" placeholder="example@domain.com">
+    </div>
 
-      const app = initializeApp(firebaseConfig);
-      try { getAnalytics(app); } catch(e) {}
+    <div class="field">
+      <label data-i18n="login_pass">كلمة المرور</label>
+      <input id="loginPass" type="password" placeholder="********">
+    </div>
 
-      const auth = getAuth(app);
-      const db   = getFirestore(app);
+    <button class="btn btn-primary" id="doLogin" style="width:100%; justify-content:center"><i class="fa-solid fa-lock"></i> <span data-i18n="login_do">دخول</span></button>
+    <div id="loginMsg" class="hint"></div>
+    <div id="roleHint" class="hint" data-i18n="role_hint">أنت مسجّل دخول لكن دورك ليس Admin. اجعل role="admin" داخل Firestore → users/{uid}.</div>
+  </div>
+</div>
 
-      // ========= UI / i18n =========
-      let LANG = (localStorage.getItem("xcharger_lang") || "ar");
-      const FX_USD_PER_JOD = 1.41; // used ONLY if USD fields missing (fallback)
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { getFirestore, collection, addDoc, doc, getDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-      const i18n = {
-        ar: {
-          currency: "JOD",
-          priceRetail: "سعر المفرق",
-          priceWholesale: "سعر التاجر",
-          loginTitle: "تسجيل الدخول",
-          emailPH: "البريد الإلكتروني",
-          passPH: "كلمة المرور",
-          loginBtn: "تسجيل الدخول",
-          logoutBtn: "تسجيل الخروج",
-          adminTitle: "لوحة تحكم المدير",
-          addProduct: "إضافة منتج",
-          edit: "تعديل",
-          del: "حذف",
-          save: "حفظ",
-          cancel: "إلغاء",
-          confirmDelete: "هل أنت متأكد من حذف هذا المنتج؟",
-          productsEmpty: "لا يوجد منتجات بعد. أضف أول منتج من لوحة التحكم (للمدير).",
-          orderNow: "اطلب الآن",
-          software: "السوفت وير",
-          catalog: "الكاتالوج",
-          video: "شرح المنتج",
-          compare: "مقارنة الإصدارات",
-          compareHint: "مقارنة فنية بين الإصدارات",
-          stats_1: "تحكم ذكي مرن",
-          stat_2: "أمان واعتمادية",
-          stat_3: "دعم فني",
-          stat_4: "ضمان",
-          contact_city: "عمّان – الأردن",
-          contact_phone: "0790781206",
-          contact_email: "sales@xcharger.com",
-          faq_q1: "ما هي القدرة والتيار المدعومان في XCharger؟",
-          faq_a1: "الإصدارات مصممة للاستخدام المنزلي والتجاري الخفيف، بقدرة تصل إلى 7kW (حتى 32A) مع حمايات كهربائية متعددة وميزات ذكية حسب الإصدار.",
-        },
-        en: {
-          currency: "USD",
-          priceRetail: "Retail price",
-          priceWholesale: "Wholesale price",
-          loginTitle: "Sign in",
-          emailPH: "Email",
-          passPH: "Password",
-          loginBtn: "Sign in",
-          logoutBtn: "Sign out",
-          adminTitle: "Admin panel",
-          addProduct: "Add product",
-          edit: "Edit",
-          del: "Delete",
-          save: "Save",
-          cancel: "Cancel",
-          confirmDelete: "Are you sure you want to delete this product?",
-          productsEmpty: "No products yet. Admin can add the first product from the admin panel.",
-          orderNow: "Order now",
-          software: "Software",
-          catalog: "Catalog",
-          video: "Video",
-          compare: "Compare editions",
-          compareHint: "Technical comparison across editions",
-          stats_1: "Flexible smart control",
-          stat_2: "Safety & reliability",
-          stat_3: "Technical support",
-          stat_4: "Warranty",
-          contact_city: "Amman – Jordan",
-          contact_phone: "0790781206",
-          contact_email: "sales@xcharger.com",
-          faq_q1: "What power and current does XCharger support?",
-          faq_a1: "Editions are designed for home and light commercial use, up to 7kW (up to 32A) with multiple electrical protections and smart features depending on the edition.",
-        }
-      };
+  const firebaseConfig = {'apiKey': 'AIzaSyAK4E04TdC_OERPQmvxlKFs_qFSmVwMuiI', 'authDomain': 'xcharger-5bb95.firebaseapp.com', 'projectId': 'xcharger-5bb95', 'storageBucket': 'xcharger-5bb95.firebasestorage.app', 'messagingSenderId': '570288654795', 'appId': '1:570288654795:web:94ecb2b696a0da7f408e4e', 'measurementId': 'G-Q9ZX3HYVQV'};
 
-      function setLang(next) {
-        LANG = next === "en" ? "en" : "ar";
-        document.documentElement.lang = LANG;
-        document.documentElement.dir = (LANG === "ar") ? "rtl" : "ltr";
-        localStorage.setItem("xcharger_lang", LANG);
-        // Update any elements with data-i18n
-        document.querySelectorAll("[data-i18n]").forEach(el=>{
-          const k = el.getAttribute("data-i18n");
-          if (i18n[LANG] && i18n[LANG][k]) el.textContent = i18n[LANG][k];
-        });
-        // Update placeholders
-        const email = document.getElementById("loginEmail");
-        const pass  = document.getElementById("loginPassword");
-        if (email) email.placeholder = i18n[LANG].emailPH;
-        if (pass)  pass.placeholder  = i18n[LANG].passPH;
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-        // Update static contact text (if present)
-        const city = document.getElementById("factoryCity");
-        const phone = document.getElementById("factoryPhone");
-        const emailEl = document.getElementById("factoryEmail");
-        if (city) city.textContent = i18n[LANG].contact_city;
-        if (phone) phone.textContent = i18n[LANG].contact_phone;
-        if (emailEl) emailEl.textContent = i18n[LANG].contact_email;
+  try { await setPersistence(auth, browserLocalPersistence); } catch(e) {}
 
-        // Re-render products with correct currency
-        renderProducts();
-        renderCompare();
-      }
+  let LANG = "ar";
+  let ROLE = "retail";
+  let USER = null;
+  let PRODUCTS = [];
+  let EDITING_ID = null;
 
-      // ========= Auth + Role =========
-      let CURRENT = { user: null, role: "retail" }; // retail | wholesale | admin
-      const ROLE_DOC = (uid) => doc(db, "users", uid); // store {role:"admin"|"wholesale"|"retail"} here
+  const $ = (id)=>document.getElementById(id);
 
-      async function getRole(uid) {
-        try {
-          const snap = await getDoc(ROLE_DOC(uid));
-          if (snap.exists() && snap.data()?.role) return snap.data().role;
-        } catch(e) {}
-        return "retail";
-      }
+  const i18n = {
+    ar: {
+      nav_home:"الرئيسية", nav_products:"المنتجات", nav_compare:"المقارنة", nav_faq:"الأسئلة", nav_contact:"اتصل بنا",
+      login_btn:"تسجيل الدخول", logout_btn:"تسجيل خروج", admin_nav:"لوحة الإدارة",
+      hero_title:"طاقة المستقبل بين يديك", hero_sub:"نصمم وننتج شواحن ذكية تجمع بين الأمان وسهولة الاستخدام مع إصدارات متعددة تناسب احتياجاتك.",
+      hero_cta1:"اكتشف منتجاتنا", hero_cta2:"طلب خاص",
+      stat_1:"ضمان", stat_2:"دعم فني", stat_3:"أمان واعتمادية", stat_4_title:"تحكم ذكي مرن", stat_4:"تجربة استخدام سهلة",
+      products_title:"إصدارات XCharger المتطورة", products_sub:"تظهر المنتجات تلقائيًا من Firebase Firestore",
+      products_empty:"لا يوجد منتجات بعد. سيتم عرضها هنا عند إضافتها من لوحة الإدارة.",
+      compare_title:"مقارنة الإصدارات", compare_sub:"جدول يوضح أهم الفروقات بين الإصدارات",
+      admin_title:"لوحة تحكم المدير", admin_sub:"إضافة/تعديل/حذف المنتجات مباشرة على Firestore",
+      admin_form_title:"بيانات المنتج", admin_form_hint:"املأ الحقول ثم اضغط حفظ.",
+      admin_save:"حفظ", admin_clear:"تفريغ النموذج", admin_list_title:"المنتجات الحالية", admin_list_hint:"اضغط تعديل لتحميل المنتج في النموذج.",
+      f_name:"اسم المنتج", f_price_jod_retail:"سعر المفرق (JOD)", f_price_jod_trade:"سعر التاجر (JOD)", f_price_usd_retail:"سعر المفرق (USD)", f_price_usd_trade:"سعر التاجر (USD)",
+      f_badge:"وسم المنتج", badge_new:"جديد", badge_best:"الأكثر مبيعاً", badge_pro:"احترافي",
+      f_img:"رابط الصورة", f_video:"رابط الفيديو (YouTube Embed)", f_software:"رابط السوفت وير", f_catalog:"رابط الكاتالوج",
+      f_features:"المواصفات (كل سطر ميزة)",
+      faq_title:"الأسئلة الشائعة", faq_sub:"إجابات مختصرة قبل الشراء",
+      faq_q1:"هل الشاحن مناسب للاستخدام اليومي؟", faq_a1:"نعم، مصمم ليعمل بثبات مع حماية متعددة ويتيح جدولة الشحن وواجهة استخدام سهلة.",
+      faq_q2:"هل يدعم الشاحن الجدولة والواجهة؟", faq_a2:"نعم للجميع — الواجهة وجدولة الشحن متاحة في كل الإصدارات.",
+      foot_about:"حلول شحن للمركبات الكهربائية مصممة في الأردن بجودة واعتمادية.",
+      foot_links:"روابط", foot_contact:"تواصل معنا", foot_addr:"عمّان - الأردن",
+      login_title:"تسجيل الدخول", login_email:"البريد الإلكتروني", login_pass:"كلمة المرور", login_do:"دخول",
+      role_hint:'أنت مسجّل دخول لكن دورك ليس Admin. اجعل role="admin" داخل Firestore → users/{uid}.',
+      btn_sw:"السوفت وير", btn_cat:"الكاتالوج", btn_vid:"شرح", btn_order:"اطلب الآن",
+      admin_edit:"تعديل", admin_delete:"حذف", saved_ok:"تم الحفظ بنجاح ✅", deleted_ok:"تم الحذف ✅"
+    },
+    en: {
+      nav_home:"Home", nav_products:"Products", nav_compare:"Compare", nav_faq:"FAQ", nav_contact:"Contact",
+      login_btn:"Sign in", logout_btn:"Sign out", admin_nav:"Admin",
+      hero_title:"Future power in your hands", hero_sub:"We design and manufacture smart EV chargers combining safety and ease of use, with multiple editions for different needs.",
+      hero_cta1:"Explore products", hero_cta2:"Custom request",
+      stat_1:"Warranty", stat_2:"Support", stat_3:"Safety", stat_4_title:"Flexible smart control", stat_4:"Easy experience",
+      products_title:"XCharger editions", products_sub:"Products are loaded live from Firebase Firestore",
+      products_empty:"No products yet. Add the first product from the Admin panel.",
+      compare_title:"Compare editions", compare_sub:"Key differences at a glance",
+      admin_title:"Admin Panel", admin_sub:"Create / update / delete products on Firestore",
+      admin_form_title:"Product data", admin_form_hint:"Fill the fields then click Save.",
+      admin_save:"Save", admin_clear:"Reset", admin_list_title:"Existing products", admin_list_hint:"Click Edit to load into the form.",
+      f_name:"Product name", f_price_jod_retail:"Retail (JOD)", f_price_jod_trade:"Trade (JOD)", f_price_usd_retail:"Retail (USD)", f_price_usd_trade:"Trade (USD)",
+      f_badge:"Badge", badge_new:"New", badge_best:"Best seller", badge_pro:"Pro",
+      f_img:"Image URL", f_video:"Video URL (Embed)", f_software:"Software URL", f_catalog:"Catalog URL",
+      f_features:"Specs (one per line)",
+      faq_title:"FAQ", faq_sub:"Quick answers before buying",
+      faq_q1:"Is it suitable for daily use?", faq_a1:"Yes, built for stability with multiple protections, scheduling and an easy interface.",
+      faq_q2:"Does it support scheduling and interface?", faq_a2:"Yes for all editions — scheduling and interface are included.",
+      foot_about:"EV charging solutions designed in Jordan with quality and reliability.",
+      foot_links:"Links", foot_contact:"Contact", foot_addr:"Amman, Jordan",
+      login_title:"Sign in", login_email:"Email", login_pass:"Password", login_do:"Sign in",
+      role_hint:'You are signed in but not Admin. Set role="admin" in Firestore → users/{uid}.',
+      btn_sw:"Software", btn_cat:"Catalog", btn_vid:"Video", btn_order:"Order",
+      admin_edit:"Edit", admin_delete:"Delete", saved_ok:"Saved ✅", deleted_ok:"Deleted ✅"
+    }
+  };
 
-      function isWholesale() { return (CURRENT.role === "wholesale" || CURRENT.role === "admin"); }
-      function isAdmin() { return CURRENT.role === "admin"; }
+  function applyLang() {
+    document.documentElement.lang = LANG;
+    document.documentElement.dir = (LANG==="ar") ? "rtl" : "ltr";
+    $("langAR").classList.toggle("active", LANG==="ar");
+    $("langEN").classList.toggle("active", LANG==="en");
 
-      // ========= Products (Firestore) =========
-      // Collection: products
-      // Document example:
-      // {
-      //  order: 1,
-      //  name_ar, name_en,
-      //  image, video, software, catalog,
-      //  features_ar: [], features_en: [],
-      //  specs: { power, current, voltage, standard, protections, wifi, remote, voice, screen, scheduling, ip },
-      //  retail_jod, wholesale_jod, retail_usd, wholesale_usd
-      // }
-      const productsCol = collection(db, "products");
-      let PRODUCTS = []; // local cache
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const k = el.getAttribute("data-i18n");
+      const v = i18n[LANG][k];
+      if (typeof v === "string") el.textContent = v;
+    });
 
-      function asArray(v){
-        if (Array.isArray(v)) return v;
-        if (typeof v === "string") return v.split(",").map(s=>s.trim()).filter(Boolean);
-        return [];
-      }
+    renderProducts();
+    renderCompare();
+  }
 
-      function priceRetail(p){
-        if (LANG === "en") return (p.retail_usd ?? Math.round((Number(p.retail_jod||0) * FX_USD_PER_JOD)));
-        return (p.retail_jod ?? 0);
-      }
-      function priceWholesale(p){
-        if (LANG === "en") return (p.wholesale_usd ?? Math.round((Number(p.wholesale_jod||0) * FX_USD_PER_JOD)));
-        return (p.wholesale_jod ?? 0);
-      }
+  function fmtPrice(p) {
+    if (p === null || p === undefined || p === "") return "";
+    const n = Number(p);
+    if (Number.isNaN(n)) return String(p);
+    return (LANG==="ar") ? (n.toFixed(0) + " د.أ") : ("$" + n.toFixed(0));
+  }
 
-      function formatMoney(v){
-        const n = Number(String(v).replace(/,/g,""));
-        if (!isFinite(n)) return "—";
-        if (LANG === "en") return `${n.toLocaleString("en-US")} ${i18n[LANG].currency}`;
-        return `${n.toLocaleString("ar-JO")} ${i18n[LANG].currency}`;
-      }
+  function badgeText(b) {
+    const map = {
+      new: (LANG==="ar" ? "جديد" : "New"),
+      best: (LANG==="ar" ? "الأكثر مبيعاً" : "Best"),
+      pro: (LANG==="ar" ? "احترافي" : "Pro"),
+    };
+    return map[b] || "";
+  }
 
-      let unsubProducts = null;
-      function startProductsListener(){
-        if (unsubProducts) unsubProducts();
-        const qy = query(productsCol, orderBy("order", "asc"));
-        unsubProducts = onSnapshot(qy, (snap)=>{
-          PRODUCTS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-          renderProducts();
-          renderCompare();
-          renderAdminList();
-        });
-      }
+  function showHint(el, msg, ok=true) {
+    if (!el) return;
+    el.style.display = "block";
+    el.style.color = ok ? "#166534" : "#b91c1c";
+    el.textContent = msg;
+    setTimeout(()=>{ el.style.display="none"; }, 2600);
+  }
 
-      // ========= Render: Products =========
-      function renderProducts() {
-        const container = document.getElementById("productsContainer");
-        if (!container) return;
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  }
 
-        if (!PRODUCTS.length) {
-          container.innerHTML = `
-            <div style="grid-column:1/-1;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:18px;padding:22px;box-shadow:var(--shadow);text-align:center;color:#666;">
-              ${i18n[LANG].productsEmpty}
-            </div>
-          `;
-          return;
-        }
+  // Modal
+  function openModal() {
+    $("loginModal").style.display = "block";
+    $("loginMsg").style.display = "none";
+    $("roleHint").style.display = "none";
+  }
+  function closeModal() {
+    $("loginModal").style.display = "none";
+  }
 
-        container.innerHTML = PRODUCTS.map((p, idx) => {
-          const name = (LANG==="en" ? (p.name_en||p.name_ar||"XCharger") : (p.name_ar||p.name_en||"XCharger"));
-          const feats = (LANG==="en" ? asArray(p.features_en) : asArray(p.features_ar));
-          const img = p.image || "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=700";
-          const retail = formatMoney(priceRetail(p));
-          const wholesale = formatMoney(priceWholesale(p));
-          const showW = isWholesale();
+  $("loginBtn").addEventListener("click", openModal);
+  $("closeModal").addEventListener("click", closeModal);
+  $("loginModal").addEventListener("click", (e)=>{ if (e.target.id==="loginModal") closeModal(); });
 
-          return `
-            <div class="product-card" data-aos="fade-up" data-aos-delay="${idx*80}">
-              <div class="product-img-holder">
-                <img src="${img}" alt="${name}" loading="lazy">
-              </div>
+  async function doLogin() {
+    const email = $("loginEmail").value.trim();
+    const pass  = $("loginPass").value;
+    $("loginMsg").style.display="none";
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      closeModal();
+    } catch (e) {
+      $("loginMsg").style.display="block";
+      $("loginMsg").textContent = (LANG==="ar") ? ("فشل الدخول: " + (e.code||"")) : ("Login failed: " + (e.code||""));
+    }
+  }
+  $("doLogin").addEventListener("click", doLogin);
 
-              <div class="price-badge">${retail}</div>
+  $("logoutBtn").addEventListener("click", async ()=>{ await signOut(auth); });
 
-              ${showW ? `<div class="wholesale-pill" style="margin:-6px 0 12px;display:flex;gap:10px;align-items:center;justify-content:center;">
-                <span style="background:rgba(0,0,0,.06);padding:8px 12px;border-radius:999px;font-weight:800;font-size:.95rem;">
-                  ${i18n[LANG].priceWholesale}: ${wholesale}
-                </span>
-              </div>` : ""}
+  async function loadRole(uid) {
+    ROLE = "retail";
+    try {
+      const snap = await getDoc(doc(db,"users",uid));
+      if (snap.exists() && snap.data()?.role) ROLE = String(snap.data().role);
+    } catch(e) {}
+  }
 
-              <h3 style="font-size:1.45rem;margin-bottom:.55rem;font-weight:900;">${name}</h3>
+  function isAdmin() { return ROLE === "admin"; }
 
-              <ul class="feature-list">
-                ${feats.slice(0,6).map(f => `<li><i class="fas fa-check-circle"></i> ${escapeHtml(f)}</li>`).join("")}
-              </ul>
+  function updateHeader() {
+    if (USER) {
+      $("userPill").style.display="inline-flex";
+      $("userText").textContent = (USER.email||USER.uid) + " • " + ROLE.toUpperCase();
+      $("loginBtn").style.display="none";
+      $("logoutBtn").style.display="inline-flex";
+    } else {
+      $("userPill").style.display="none";
+      $("loginBtn").style.display="inline-flex";
+      $("logoutBtn").style.display="none";
+      $("adminNavBtn").style.display="none";
+      $("adminPanel").style.display="none";
+    }
+  }
 
-              <div class="product-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
-                <button class="btn btn-primary" style="width:100%;justify-content:center;border-radius:14px;" onclick="orderProduct('${p.id}')">
-                  <i class="fas fa-shopping-cart"></i> ${i18n[LANG].orderNow}
-                </button>
+  function toggleAdminUI() {
+    $("adminPanel").style.display = isAdmin() ? "block" : "none";
+    $("adminNavBtn").style.display = isAdmin() ? "inline-flex" : "none";
+  }
 
-                <button class="btn" style="width:100%;justify-content:center;border-radius:14px;background:rgba(0,0,0,.06);color:var(--secondary);" onclick="openCompare()">
-                  <i class="fa-solid fa-scale-balanced"></i> ${i18n[LANG].compare}
-                </button>
+  $("adminNavBtn").addEventListener("click", ()=>{ $("adminPanel").scrollIntoView({behavior:"smooth"}); });
 
-                <button class="action-btn btn-software" style="border-radius:14px;" ${p.software?``:`disabled style="opacity:.55;cursor:not-allowed;border-radius:14px;"`}
-                  onclick="openLink('${p.software||""}')">
-                  <i class="fas fa-download"></i> ${i18n[LANG].software}
-                </button>
+  // Products
+  function renderProducts() {
+    const grid = $("productsGrid");
+    grid.innerHTML = "";
+    $("productsEmpty").style.display = PRODUCTS.length ? "none" : "block";
 
-                <button class="action-btn btn-catalog" style="border-radius:14px;" ${p.catalog?``:`disabled style="opacity:.55;cursor:not-allowed;border-radius:14px;"`}
-                  onclick="openLink('${p.catalog||""}')">
-                  <i class="fas fa-file-pdf"></i> ${i18n[LANG].catalog}
-                </button>
+    PRODUCTS.forEach(p=>{
+      const img = p.image || "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80";
+      const feats = Array.isArray(p.features) ? p.features : [];
+      const price = (LANG==="ar") ? p.price_jod_retail : p.price_usd_retail;
 
-                <button class="action-btn btn-video" style="border-radius:14px;grid-column:1/-1;" ${p.video?``:`disabled style="opacity:.55;cursor:not-allowed;border-radius:14px;grid-column:1/-1;"`}
-                  onclick="openLink('${p.video||""}')">
-                  <i class="fas fa-play-circle"></i> ${i18n[LANG].video}
-                </button>
-              </div>
-            </div>
-          `;
-        }).join("");
-      }
-
-      // ========= Compare Modal =========
-      function yesNoPill(v){
-        const ok = !!v;
-        const label = ok ? (LANG==="en"?"Yes":"نعم") : (LANG==="en"?"No":"لا");
-        return `<span class="pill ${ok?'ok':'no'}">${label}</span>`;
-      }
-
-      function row(ar, en, getter, fmt){
-        return `
-          <div class="row">
-            <div class="cell head">${LANG==="en"?en:ar}</div>
-            ${PRODUCTS.map(p => {
-              const v = getter(p);
-              const cell = fmt ? fmt(v) : escapeHtml(String(v ?? "—"));
-              return `<div class="cell">${cell}</div>`;
-            }).join("")}
+      const card = document.createElement("div");
+      card.className = "card p-card";
+      card.innerHTML = `
+        <div class="p-top">
+          <div class="p-img"><img src="${img}" alt=""></div>
+          <div style="flex:1">
+            <div class="p-badge">${badgeText(p.badge)} </div>
+            <h3 class="p-name">${escapeHtml(p.name||"")}</h3>
+            <div class="p-price">${fmtPrice(price)}</div>
+            <div class="muted" style="margin-top:4px">${LANG==="ar" ? "عمّان - الأردن" : "Amman, Jordan"}</div>
           </div>
-        `;
+        </div>
+        <ul class="feat">
+          ${feats.slice(0,6).map(f=>`<li><i class="fa-solid fa-circle-check"></i> ${escapeHtml(String(f).trim())}</li>`).join("")}
+        </ul>
+        <div class="p-actions">
+          <a class="btn btn-ghost" href="${p.software||"#"}" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> ${i18n[LANG].btn_sw}</a>
+          <a class="btn btn-ghost" href="${p.catalog||"#"}" target="_blank" rel="noopener"><i class="fa-regular fa-file-pdf"></i> ${i18n[LANG].btn_cat}</a>
+          <a class="btn btn-ghost" href="${p.video||"#"}" target="_blank" rel="noopener"><i class="fa-solid fa-play"></i> ${i18n[LANG].btn_vid}</a>
+          <button class="btn btn-primary" style="margin-inline-start:auto" onclick="window.__order('${escapeHtml(p.name||"")}', '${fmtPrice(price)}')"><i class="fa-solid fa-cart-shopping"></i> ${i18n[LANG].btn_order}</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function renderCompare() {
+    const tbl = $("compareTable");
+    const cols = PRODUCTS.slice(0,4);
+    const rows = [
+      { ar:"قدرة الشحن", en:"Charging power", get:(p)=>p.power||"7 kW" },
+      { ar:"الحماية", en:"Protection", get:(p)=>p.protection||"IP65" },
+      { ar:"واجهة نعم للجميع", en:"Interface (Yes for all)", get:(p)=>"✓" },
+      { ar:"جدولة الشحن نعم للجميع", en:"Scheduling (Yes for all)", get:(p)=>"✓" },
+      { ar:"ريموت تحكم", en:"Remote unit", get:(p)=> p.remote ? "✓" : "—" },
+      { ar:"أوامر صوتية", en:"Voice control", get:(p)=> p.voice ? "✓" : "—" },
+    ];
+
+    const head = `
+      <thead>
+        <tr>
+          <th>${LANG==="ar" ? "الميزة" : "Feature"}</th>
+          ${cols.map(p=>`<th>${escapeHtml(p.name||"")}<br><small>${fmtPrice(LANG==="ar"?p.price_jod_retail:p.price_usd_retail)}</small></th>`).join("")}
+        </tr>
+      </thead>
+    `;
+    const body = `
+      <tbody>
+        ${rows.map(r=>`<tr>
+          <td>${LANG==="ar" ? r.ar : r.en}</td>
+          ${cols.map(p=>`<td>${escapeHtml(String(r.get(p)))}</td>`).join("")}
+        </tr>`).join("")}
+      </tbody>
+    `;
+    tbl.innerHTML = head + body;
+  }
+
+  window.__order = (name, price)=>{
+    alert((LANG==="ar" ? "تمت إضافة المنتج:\n" : "Added to cart:\n") + name + "\n" + price);
+  };
+
+  // Live products subscription
+  const qy = query(collection(db,"products"), orderBy("createdAt","desc"));
+  onSnapshot(qy, (snap)=>{
+    PRODUCTS = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    renderProducts();
+    renderCompare();
+    renderAdminList();
+  }, (err)=>{ console.error("Firestore snapshot error:", err); });
+
+  // Admin CRUD
+  function numOrNull(v) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function getFormData() {
+    const features = $("f_features").value.split("\n").map(s=>s.trim()).filter(Boolean);
+    return {
+      name: $("f_name").value.trim(),
+      badge: $("f_badge").value,
+      image: $("f_img").value.trim(),
+      video: $("f_video").value.trim(),
+      software: $("f_software").value.trim(),
+      catalog: $("f_catalog").value.trim(),
+      features,
+      price_jod_retail: numOrNull($("f_price_jod_retail").value),
+      price_jod_trade:  numOrNull($("f_price_jod_trade").value),
+      price_usd_retail: numOrNull($("f_price_usd_retail").value),
+      price_usd_trade:  numOrNull($("f_price_usd_trade").value),
+      remote: /ريموت|remote/i.test(features.join(" ")) ? true : undefined,
+      voice: /صوت|voice/i.test(features.join(" ")) ? true : undefined,
+    };
+  }
+
+  function clearForm() {
+    EDITING_ID = null;
+    ["f_name","f_img","f_video","f_software","f_catalog","f_features","f_price_jod_retail","f_price_jod_trade","f_price_usd_retail","f_price_usd_trade"].forEach(id=>$(id).value="");
+    $("f_badge").value="new";
+  }
+
+  $("clearBtn").addEventListener("click", clearForm);
+
+  $("saveBtn").addEventListener("click", async ()=>{
+    const msgEl = $("adminMsg");
+    msgEl.style.display="none";
+
+    if (!isAdmin()) {
+      showHint(msgEl, (LANG==="ar" ? "غير مصرح: Admin فقط" : "Not allowed: Admin only"), false);
+      return;
+    }
+
+    const data = getFormData();
+    if (!data.name) {
+      showHint(msgEl, (LANG==="ar" ? "يرجى إدخال اسم المنتج" : "Please enter a product name"), false);
+      return;
+    }
+
+    try {
+      if (EDITING_ID) {
+        await updateDoc(doc(db,"products",EDITING_ID), {...data, updatedAt: serverTimestamp()});
+      } else {
+        await addDoc(collection(db,"products"), {...data, createdAt: serverTimestamp()});
       }
+      showHint(msgEl, i18n[LANG].saved_ok, true);
+      clearForm();
+    } catch(e) {
+      console.error("Save error:", e);
+      showHint(msgEl, (LANG==="ar" ? "فشل الحفظ: " : "Save failed: ") + (e.code||""), false);
+    }
+  });
 
-      function renderCompare(){
-        const modal = document.getElementById("compareModal");
-        const head  = document.getElementById("compareHead");
-        const body  = document.getElementById("compareBody");
-        if (!modal || !head || !body) return;
+  function renderAdminList() {
+    const list = $("adminList");
+    list.innerHTML = "";
 
-        if (!PRODUCTS.length) {
-          head.innerHTML = "";
-          body.innerHTML = "";
-          return;
-        }
+    if (!isAdmin()) {
+      list.innerHTML = `<div class="muted">${LANG==="ar" ? "لوحة الإدارة للأدمن فقط." : "Admin only."}</div>`;
+      return;
+    }
 
-        head.innerHTML = `
-          <div class="cell head">${LANG==="en"?"Spec":"المواصفة"}</div>
-          ${PRODUCTS.map(p => `<div class="cell"><strong>${escapeHtml(LANG==="en" ? (p.name_en||p.name_ar||"XCharger") : (p.name_ar||p.name_en||"XCharger"))}</strong></div>`).join("")}
-        `;
+    PRODUCTS.forEach(p=>{
+      const it = document.createElement("div");
+      it.className = "item";
+      it.innerHTML = `
+        <div class="meta">
+          <b>${escapeHtml(p.name||"")}</b>
+          <span>${fmtPrice(LANG==="ar"?p.price_jod_retail:p.price_usd_retail)} • id: ${p.id}</span>
+        </div>
+        <div class="row">
+          <button class="btn btn-ghost" data-act="edit"><i class="fa-regular fa-pen-to-square"></i> ${i18n[LANG].admin_edit}</button>
+          <button class="btn btn-ghost danger" data-act="del"><i class="fa-regular fa-trash-can"></i> ${i18n[LANG].admin_delete}</button>
+        </div>
+      `;
+      it.querySelector('[data-act="edit"]').addEventListener("click", ()=>loadToForm(p));
+      it.querySelector('[data-act="del"]').addEventListener("click", ()=>delProduct(p.id));
+      list.appendChild(it);
+    });
+  }
 
-        const get = (k)=> (p)=> p.specs?.[k] ?? "—";
-        const getBool = (k)=> (p)=> !!p.specs?.[k];
+  function loadToForm(p) {
+    EDITING_ID = p.id;
+    $("f_name").value = p.name||"";
+    $("f_badge").value = p.badge||"new";
+    $("f_img").value = p.image||"";
+    $("f_video").value = p.video||"";
+    $("f_software").value = p.software||"";
+    $("f_catalog").value = p.catalog||"";
+    $("f_features").value = (Array.isArray(p.features)?p.features:[]).join("\n");
+    $("f_price_jod_retail").value = p.price_jod_retail ?? "";
+    $("f_price_jod_trade").value  = p.price_jod_trade ?? "";
+    $("f_price_usd_retail").value = p.price_usd_retail ?? "";
+    $("f_price_usd_trade").value  = p.price_usd_trade ?? "";
+    $("adminPanel").scrollIntoView({behavior:"smooth"});
+  }
 
-        body.innerHTML = [
-          row("القدرة القصوى","Max power", get("power")),
-          row("التيار الأقصى","Max current", get("current")),
-          row("جهد الإدخال","Input voltage", get("voltage")),
-          row("المعيار","Standard", get("standard")),
-          row("الحمايات","Protections", get("protections")),
-          row("Wi‑Fi / App","Wi‑Fi / App", getBool("wifi"), yesNoPill),
-          row("ريموت تحكم","Remote control", getBool("remote"), yesNoPill),
-          row("تحكم صوتي","Voice control", getBool("voice"), yesNoPill),
-          row("شاشة / واجهة","Screen / UI", getBool("screen"), yesNoPill),
-          row("جدولة الشحن","Scheduling", getBool("scheduling"), yesNoPill),
-          row("تصنيف الحماية","Protection rating", get("ip")),
-          row(LANG==="en"?"Retail price (USD)":"سعر المفرق (JOD)",
-              LANG==="en"?"Retail price (USD)":"Retail price (JOD)",
-              p => formatMoney(priceRetail(p))),
-          row(LANG==="en"?"Wholesale price (USD)":"سعر التاجر (JOD)",
-              LANG==="en"?"Wholesale price (USD)":"Wholesale price (JOD)",
-              p => isWholesale() ? formatMoney(priceWholesale(p)) : "—")
-        ].join("");
-      }
+  async function delProduct(id) {
+    if (!isAdmin()) return;
+    const ok = confirm(LANG==="ar" ? "هل تريد حذف المنتج؟" : "Delete product?");
+    if (!ok) return;
+    const msgEl = $("adminMsg");
+    try {
+      await deleteDoc(doc(db,"products",id));
+      showHint(msgEl, i18n[LANG].deleted_ok, true);
+      if (EDITING_ID===id) clearForm();
+    } catch(e) {
+      console.error("Delete error:", e);
+      showHint(msgEl, (LANG==="ar" ? "فشل الحذف: " : "Delete failed: ") + (e.code||""), false);
+    }
+  }
 
-      function openCompare(){ 
-        const m = document.getElementById("compareModal");
-        if (m) m.style.display="flex";
-      }
-      function closeCompare(){
-        const m = document.getElementById("compareModal");
-        if (m) m.style.display="none";
-      }
+  onAuthStateChanged(auth, async (u)=>{
+    USER = u || null;
+    if (USER) {
+      await loadRole(USER.uid);
+    } else {
+      ROLE = "retail";
+    }
+    updateHeader();
+    toggleAdminUI();
+    renderAdminList();
+    // if logged in but not admin, show hint inside modal if opened
+  });
 
-      // ========= Admin Panel =========
-      // Visible only when role === admin
-      const adminPanel = document.getElementById("adminPanel");
-      const adminList  = document.getElementById("adminProductsList");
-      const adminOpenBtn = document.getElementById("adminOpenBtn"); // hidden button in DOM
-      const productEditorModal = document.getElementById("productEditorModal");
+  $("langAR").addEventListener("click", ()=>{ LANG="ar"; applyLang(); });
+  $("langEN").addEventListener("click", ()=>{ LANG="en"; applyLang(); });
 
-      let editingId = null;
-
-      function showAdminUI(){
-        if (!adminPanel) return;
-        adminPanel.style.display = isAdmin() ? "block" : "none";
-      }
-
-      function renderAdminList(){
-        if (!adminList) return;
-        if (!isAdmin()) { adminList.innerHTML=""; return; }
-
-        if (!PRODUCTS.length){
-          adminList.innerHTML = `<div style="color:#666;text-align:center;padding:12px;">—</div>`;
-          return;
-        }
-
-        adminList.innerHTML = PRODUCTS.map(p=>{
-          const name = (p.name_ar||p.name_en||"XCharger");
-          return `
-            <div class="admin-item">
-              <div class="admin-item-title">${escapeHtml(name)}</div>
-              <div class="admin-item-actions">
-                <button class="mini-btn" onclick="editProduct('${p.id}')"><i class="fa-regular fa-pen-to-square"></i> ${i18n[LANG].edit}</button>
-                <button class="mini-btn danger" onclick="removeProduct('${p.id}')"><i class="fa-regular fa-trash-can"></i> ${i18n[LANG].del}</button>
-              </div>
-            </div>
-          `;
-        }).join("");
-      }
-
-      function openEditor(product){
-        if (!productEditorModal) return;
-        productEditorModal.style.display="flex";
-
-        const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.value = (val ?? ""); };
-        const join = (arr)=> Array.isArray(arr)? arr.join(", ") : (arr ?? "");
-
-        editingId = product?.id || null;
-
-        set("pe_name_ar", product?.name_ar);
-        set("pe_name_en", product?.name_en);
-        set("pe_image", product?.image);
-        set("pe_video", product?.video);
-        set("pe_software", product?.software);
-        set("pe_catalog", product?.catalog);
-
-        set("pe_features_ar", join(product?.features_ar));
-        set("pe_features_en", join(product?.features_en));
-
-        set("pe_order", product?.order ?? (PRODUCTS.length + 1));
-
-        set("pe_retail_jod", product?.retail_jod);
-        set("pe_wholesale_jod", product?.wholesale_jod);
-        set("pe_retail_usd", product?.retail_usd);
-        set("pe_wholesale_usd", product?.wholesale_usd);
-
-        // specs
-        const s = product?.specs || {};
-        set("pe_power", s.power);
-        set("pe_current", s.current);
-        set("pe_voltage", s.voltage);
-        set("pe_standard", s.standard);
-        set("pe_protections", s.protections);
-        set("pe_ip", s.ip);
-
-        set("pe_wifi", s.wifi ? "true" : "false");
-        set("pe_remote", s.remote ? "true" : "false");
-        set("pe_voice", s.voice ? "true" : "false");
-        set("pe_screen", s.screen ? "true" : "false");
-        set("pe_scheduling", s.scheduling ? "true" : "false");
-
-        document.getElementById("pe_title").textContent = editingId ? (LANG==="en"?"Edit product":"تعديل المنتج") : (LANG==="en"?"Add product":"إضافة منتج");
-      }
-
-      function closeEditor(){
-        if (!productEditorModal) return;
-        productEditorModal.style.display="none";
-        editingId = null;
-      }
-
-      async function saveEditor(){
-        if (!isAdmin()) return;
-
-        const get = (id)=> (document.getElementById(id)?.value ?? "").trim();
-        const bool = (id)=> get(id) === "true";
-        const num = (id)=> {
-          const v = get(id).replace(/,/g,"");
-          const n = Number(v);
-          return isFinite(n) ? n : 0;
-        };
-
-        const payload = {
-          order: num("pe_order"),
-          name_ar: get("pe_name_ar"),
-          name_en: get("pe_name_en"),
-          image: get("pe_image"),
-          video: get("pe_video"),
-          software: get("pe_software"),
-          catalog: get("pe_catalog"),
-          features_ar: asArray(get("pe_features_ar")),
-          features_en: asArray(get("pe_features_en")),
-          retail_jod: num("pe_retail_jod"),
-          wholesale_jod: num("pe_wholesale_jod"),
-          retail_usd: num("pe_retail_usd"),
-          wholesale_usd: num("pe_wholesale_usd"),
-          specs: {
-            power: get("pe_power"),
-            current: get("pe_current"),
-            voltage: get("pe_voltage"),
-            standard: get("pe_standard"),
-            protections: get("pe_protections"),
-            ip: get("pe_ip"),
-            wifi: bool("pe_wifi"),
-            remote: bool("pe_remote"),
-            voice: bool("pe_voice"),
-            screen: bool("pe_screen"),
-            scheduling: bool("pe_scheduling")
-          },
-          updatedAt: serverTimestamp()
-        };
-
-        if (!payload.name_ar && !payload.name_en) {
-          alert(LANG==="en" ? "Please enter a product name." : "الرجاء إدخال اسم المنتج.");
-          return;
-        }
-
-        try {
-          if (editingId) {
-            await updateDoc(doc(db,"products",editingId), payload);
-          } else {
-            payload.createdAt = serverTimestamp();
-            await addDoc(collection(db,"products"), payload);
-          }
-          closeEditor();
-        } catch(e) {
-          alert((LANG==="en"?"Save failed: ":"فشل الحفظ: ")+ (e?.message || e));
-        }
-      }
-
-      window.editProduct = (id)=>{
-        const p = PRODUCTS.find(x=>x.id===id);
-        openEditor(p);
-      };
-
-      window.removeProduct = async (id)=>{
-        if (!isAdmin()) return;
-        if (!confirm(i18n[LANG].confirmDelete)) return;
-        try {
-          await deleteDoc(doc(db,"products",id));
-        } catch(e) {
-          alert((LANG==="en"?"Delete failed: ":"فشل الحذف: ")+ (e?.message || e));
-        }
-      };
-
-      window.addProduct = ()=> openEditor(null);
-
-      // ========= Orders (simple demo) =========
-      // For production: create orders collection, checkout, etc.
-      window.orderProduct = (id)=>{
-        const p = PRODUCTS.find(x=>x.id===id);
-        const name = LANG==="en" ? (p?.name_en||p?.name_ar||"XCharger") : (p?.name_ar||p?.name_en||"XCharger");
-        const price = formatMoney(priceRetail(p||{}));
-        alert((LANG==="en" ? "Added to cart:\n" : "تمت إضافة المنتج:\n") + `${name}\n${price}`);
-      };
-
-      window.openLink = (url)=>{
-        if (!url) return;
-        window.open(url, "_blank", "noopener");
-      };
-
-      // ========= Login modal =========
-      const loginModal = document.getElementById("loginModal");
-      const loginMsg   = document.getElementById("loginMessage");
-      const loginBtn   = document.getElementById("loginBtn");
-      const logoutBtn  = document.getElementById("logoutBtn");
-
-      window.openLoginModal = ()=>{
-        if (loginMsg) loginMsg.textContent = "";
-        if (loginModal) loginModal.style.display="flex";
-      };
-      window.closeLoginModal = ()=>{
-        if (loginModal) loginModal.style.display="none";
-      };
-
-      async function doLogin(){
-        const email = (document.getElementById("loginEmail")?.value || "").trim();
-        const pass  = (document.getElementById("loginPassword")?.value || "").trim();
-        if (!email || !pass) {
-          if (loginMsg) loginMsg.textContent = (LANG==="en"?"Please fill email & password.":"الرجاء إدخال البريد وكلمة المرور.");
-          return;
-        }
-      window.loginUser = doLogin;
-
-        try {
-          await signInWithEmailAndPassword(auth, email, pass);
-          closeLoginModal();
-        } catch(e) {
-          if (loginMsg) loginMsg.textContent = (e?.message || (LANG==="en"?"Login failed.":"فشل تسجيل الدخول."));
-        }
-      }
-
-      async function doLogout(){
-        try { await signOut(auth); } catch(e) {}
-      }
-
-      if (loginBtn) loginBtn.addEventListener("click", doLogin);
-      if (logoutBtn) logoutBtn.addEventListener("click", doLogout);
-
-      // ========= Auth state =========
-      onAuthStateChanged(auth, async (user)=>{
-        CURRENT.user = user || null;
-        CURRENT.role = "retail";
-        if (user) CURRENT.role = await getRole(user.uid);
-
-        // Update auth UI
-        const authStatus = document.getElementById("authStatus");
-        if (authStatus) {
-          if (user) {
-            authStatus.innerHTML = `<span style="font-weight:800;">${escapeHtml(user.email||"")}</span>
-              <span style="opacity:.7">•</span>
-              <span style="font-weight:800;text-transform:uppercase;">${escapeHtml(CURRENT.role)}</span>`;
-          } else {
-            authStatus.textContent = "";
-          }
-        }
-
-        const mainLoginBtn = document.getElementById("mainLoginBtn");
-        if (mainLoginBtn) {
-          mainLoginBtn.style.display = user ? "none" : "inline-flex";
-        }
-        if (logoutBtn) logoutBtn.style.display = user ? "inline-flex" : "none";
-
-        showAdminUI();
-        renderProducts();
-        renderCompare();
-        renderAdminList();
-      });
-
-      // ========= Helpers =========
-      function escapeHtml(str){
-        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-      }
-
-      // ========= Close modals on outside click =========
-      window.addEventListener("click", (e)=>{
-        if (e.target === loginModal) closeLoginModal();
-        const cm = document.getElementById("compareModal");
-        if (e.target === cm) closeCompare();
-        if (e.target === productEditorModal) closeEditor();
-      });
-
-      // ========= Boot =========
-      // AOS init if present
-      try { window.AOS && window.AOS.init({ duration: 1000, once: true }); } catch(e){}
-
-      // Lang switch buttons (if present)
-      document.getElementById("langArBtn")?.addEventListener("click", ()=> setLang("ar"));
-      document.getElementById("langEnBtn")?.addEventListener("click", ()=> setLang("en"));
-
-      // Wire compare close
-      document.getElementById("compareClose")?.addEventListener("click", closeCompare);
-
-      // Admin editor buttons
-      document.getElementById("adminAddBtn")?.addEventListener("click", ()=> window.addProduct());
-      document.getElementById("pe_close")?.addEventListener("click", closeEditor);
-      document.getElementById("pe_cancel")?.addEventListener("click", closeEditor);
-      document.getElementById("pe_save")?.addEventListener("click", saveEditor);
-
-      // Apply current language
-      setLang(LANG);
-
-      // Start listening to products from Firestore
-      startProductsListener();
-    </script>
+  $("year").textContent = new Date().getFullYear();
+  applyLang();
+</script>
 
 </body>
 </html>
