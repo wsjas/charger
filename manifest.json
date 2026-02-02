@@ -1,0 +1,9 @@
+{
+  "name": "XCharger Factory",
+  "short_name": "XCharger",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1677ff",
+  "icons": []
+}

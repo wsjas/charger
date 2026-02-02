@@ -3,6 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="موقع المصنع + متجر المنتجات بواجهة حديثة وأداء سريع، مع مقارنة الإصدارات والأسئلة الشائعة." />
+  <meta name="theme-color" content="#1677ff" />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="./" />
+  <link rel="manifest" href="./manifest.json">
+
   <title>XCharger | Factory</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -332,7 +338,78 @@ body.is-admin .admin-only{display:block}
   .hero-slider img{object-fit:contain; background:#000;}
 }
 
+/* ===== UX/UI improvements ===== */
+.mobile-only{display:none}
+@media (max-width:720px){
+  .mobile-only{display:inline-flex}
+  .actions{gap:8px}
+  .btn{padding:10px 12px}
+}
+/* Mobile drawer */
+.drawer-backdrop{display:none; position:fixed; inset:0; z-index:70; background:rgba(2,8,23,.55)}
+.drawer{position:fixed; top:0; inset-inline-start:0; height:100%; width:min(320px,86vw); background:#fff; z-index:71;
+  border-inline-end:1px solid var(--line); box-shadow: var(--shadow); transform:translateX(110%); transition:transform .22s ease;
+  padding:14px; display:flex; flex-direction:column; gap:10px}
+html[dir="ltr"] .drawer{transform:translateX(-110%); inset-inline-start:auto; inset-inline-end:0; border-inline-end:0; border-inline-start:1px solid var(--line)}
+.drawer.open{transform:translateX(0)}
+.drawer a{display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:14px; text-decoration:none; font-weight:900; border:1px solid var(--line)}
+.drawer a:hover{background:rgba(2,8,23,.03)}
+.drawer .drawer-head{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.drawer .drawer-head b{font-weight:1000}
+.drawer .drawer-close{border:0; background:transparent; font-size:22px; cursor:pointer}
+.drawer .drawer-actions{display:grid; gap:10px; margin-top:auto}
+.drawer-backdrop.show{display:block}
+
+/* Loading indicator */
+.loader{display:none; align-items:center; justify-content:center; gap:10px; padding:14px; font-weight:900; color:var(--muted)}
+.loader.show{display:flex}
+.spin{width:18px;height:18px;border-radius:999px;border:3px solid rgba(22,119,255,.25); border-top-color: var(--primary); animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Hover + motion */
+.card, .btn, .chip, .iconbtn, .item, .p-img{transition:transform .18s ease, box-shadow .18s ease, filter .18s ease, background .18s ease}
+.card:hover{transform:translateY(-2px); box-shadow:0 16px 46px rgba(2,8,23,.10)}
+.btn:hover{transform:translateY(-1px)}
+.iconbtn:hover{transform:translateY(-2px); filter:brightness(1.05)}
+
+/* Small phones */
+@media (max-width:380px){
+  .hero h1{font-size:24px}
+  .cap-title{font-size:18px}
+  .p-img{height:210px}
+  .pill{display:none}
+}
+
+/* Products toolbar */
+.toolbar{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-top:10px}
+.toolbar .left{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.toolbar .right{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.select{padding:10px 12px; border-radius:14px; border:1px solid var(--line); background:#fff; font-weight:900}
+.input{padding:10px 12px; border-radius:14px; border:1px solid var(--line); background:#fff; font-weight:900; min-width:220px}
+@media (max-width:720px){ .input{min-width:180px} }
+
+/* Rating */
+.stars{display:inline-flex; gap:6px; align-items:center}
+.star{border:0; background:transparent; cursor:pointer; padding:2px; font-size:18px; color:#cbd5e1}
+.star.on{color:#f59e0b}
+.rating-meta{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:6px}
+.badge-mini{font-weight:900; font-size:12px; padding:5px 10px; border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--muted)}
+
+/* 404 minimal */
 </style>
+<script type="application/ld+json" id="structuredData">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "XCharger",
+    "url": "./",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Amman",
+      "addressCountry": "JO"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -348,6 +425,7 @@ body.is-admin .admin-only{display:block}
         <a href="#contact" data-i18n="nav_contact">اتصل بنا</a>
       </nav>
       <div class="actions">
+        <button class="btn btn-ghost mobile-only" id="hamburgerBtn" aria-label="menu"><i class="fa-solid fa-bars"></i></button>
         <div class="pill" id="userPill" style="display:none"><i class="fa-solid fa-user"></i> <span id="userText"></span></div>
         <button class="chip active" id="langAR">AR</button>
         <button class="chip" id="langEN">EN</button>
@@ -359,6 +437,24 @@ body.is-admin .admin-only{display:block}
     </div>
   </div>
 </header>
+
+<div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
+<aside class="drawer" id="mobileDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <b id="drawerBrand">XCharger</b>
+    <button class="drawer-close" id="drawerClose" aria-label="close">×</button>
+  </div>
+  <a href="#home"><span data-i18n="nav_home">الرئيسية</span> <i class="fa-solid fa-chevron-left"></i></a>
+  <a href="#products"><span data-i18n="nav_products">المنتجات</span> <i class="fa-solid fa-chevron-left"></i></a>
+  <a href="#compare"><span data-i18n="nav_compare">المقارنة</span> <i class="fa-solid fa-chevron-left"></i></a>
+  <a href="#faq"><span data-i18n="nav_faq">الأسئلة</span> <i class="fa-solid fa-chevron-left"></i></a>
+  <a href="#contact"><span data-i18n="nav_contact">اتصل بنا</span> <i class="fa-solid fa-chevron-left"></i></a>
+  <div class="drawer-actions">
+    <button class="btn btn-primary" id="drawerLoginBtn"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="login_btn">تسجيل الدخول</span></button>
+    <button class="btn btn-ghost" id="drawerCartBtn"><i class="fa-solid fa-basket-shopping"></i> <span data-i18n="cart_btn">السلة</span> <span class="cart-count" id="drawerCartCount">0</span></button>
+  </div>
+</aside>
+
 
 <main class="hero" id="home">
   <div class="container hero-wrap">
@@ -396,6 +492,18 @@ body.is-admin .admin-only{display:block}
       <h2 data-i18n="products_title">إصدارات XCharger المتطورة</h2>
       <p class="admin-only" data-i18n="products_sub">تظهر المنتجات تلقائيًا من Firebase Firestore</p>
     </div>
+    <div class="toolbar card" style="padding:12px; margin-top:14px">
+      <div class="left">
+        <select class="select" id="categoryFilter" aria-label="category">
+          <option value="all">كل الفئات</option>
+        </select>
+        <input class="input" id="productSearch" type="search" placeholder="بحث في المنتجات..." aria-label="product search">
+      </div>
+      <div class="right">
+        <button class="btn btn-ghost" id="clearFilters"><i class="fa-solid fa-broom"></i> مسح</button>
+      </div>
+    </div>
+    <div class="loader" id="productsLoader"><span class="spin"></span><span id="productsLoaderText">جاري تحميل المنتجات...</span></div>
     <div class="products" id="productsGrid"></div>
     <div class="card" style="padding:14px; margin-top:14px;">
       <div class="muted" id="productsEmpty" data-i18n="products_empty" style="text-align:center">لا يوجد منتجات بعد. سيتم عرضها هنا عند إضافتها من لوحة الإدارة.</div>
@@ -408,6 +516,9 @@ body.is-admin .admin-only{display:block}
     <div class="title">
       <h2 data-i18n="compare_title">مقارنة الإصدارات</h2>
       <p data-i18n="compare_sub">جدول يوضح أهم الفروقات بين الإصدارات</p>
+      <div style="margin-top:12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap">
+        <button class="btn btn-ghost" id="exportComparePDF"><i class="fa-regular fa-file-pdf"></i> تصدير PDF</button>
+      </div>
     </div>
     <div class="card table-wrap">
       <table id="compareTable"></table>
@@ -428,6 +539,7 @@ body.is-admin .admin-only{display:block}
         <div class="muted" style="margin-bottom:12px" data-i18n="admin_form_hint">املأ الحقول ثم اضغط حفظ.</div>
 
         <div class="field"><label data-i18n="f_name">اسم المنتج</label><input id="f_name" placeholder="xcharger" /></div>
+        <div class="field"><label>الفئة (Category)</label><input id="f_category" placeholder="مثال: EVSE / Accessories" /></div>
 
         <div class="grid-2">
           <div class="field"><label data-i18n="f_price_jod_retail">سعر المفرق (JOD)</label><input id="f_price_jod_retail" type="number" min="0" step="0.01" placeholder="90" /></div>
@@ -671,6 +783,12 @@ body.is-admin .admin-only{display:block}
       <h2 data-i18n="faq_title">الأسئلة الشائعة</h2>
       <p data-i18n="faq_sub">إجابات مختصرة قبل الشراء</p>
     </div>
+    <div class="card" style="padding:12px; margin-bottom:12px">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input class="input" id="faqSearch" type="search" placeholder="بحث داخل الأسئلة..." aria-label="faq search" style="flex:1; min-width:220px">
+      </div>
+    </div>
     <div class="grid-2" id="faqGrid"></div>
   </div>
 </section>
@@ -742,9 +860,19 @@ body.is-admin .admin-only{display:block}
 
     <div id="cartBody" style="margin-top:12px; display:grid; gap:10px"></div>
 
-    <div class="cart-total" style="margin-top:12px">
-      <div data-i18n="cart_total">الإجمالي</div>
-      <div id="cartTotalVal">0</div>
+    <div class="cart-total" style="margin-top:12px; display:grid; gap:6px">
+      <div style="display:flex; justify-content:space-between; gap:10px"><div data-i18n="cart_total">الإجمالي</div><div id="cartSubTotalVal">0</div></div>
+      <div style="display:flex; justify-content:space-between; gap:10px"><div id="cartDiscountLabel">الخصم</div><div id="cartDiscountVal">0</div></div>
+      <div style="display:flex; justify-content:space-between; gap:10px"><div id="cartAfterLabel">الإجمالي بعد الخصم</div><div id="cartTotalVal">0</div></div>
+    </div>
+
+    <div class="card" style="padding:12px; margin-top:12px">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <div style="font-weight:1000"><i class="fa-solid fa-tag"></i> كود خصم</div>
+        <input class="input" id="couponInput" placeholder="مثال: SAVE10" style="flex:1; min-width:180px" autocomplete="off">
+        <button class="btn btn-ghost" id="applyCoupon"><i class="fa-solid fa-check"></i> تطبيق</button>
+      </div>
+      <div class="muted" id="couponHint" style="margin-top:8px; display:none"></div>
     </div>
 
     <div class="cart-note" style="margin-top:8px" data-i18n="cart_note">الأسعار حسب العملة الظاهرة وقت الإضافة. يمكنك تعديل الكميات قبل الإرسال.</div>
@@ -769,6 +897,9 @@ body.is-admin .admin-only{display:block}
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js" crossorigin="anonymous"></script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -789,6 +920,53 @@ body.is-admin .admin-only{display:block}
   let EDITING_ID = null;
   let CART = [];
   const CART_KEY = "xcharger_cart_v1";
+
+const SETTINGS_KEY = "xcharger_settings_v1";
+  const ORDER_RATE_KEY = "xcharger_order_rate_v1";
+  const RATE_RATE_KEY = "xcharger_rating_rate_v1";
+  const ABANDON_KEY = "xcharger_abandoned_sent_v1";
+  const CLIENT_ID_KEY = "xcharger_client_id_v1";
+
+  const state = {
+    productsLoading: true,
+    category: "all",
+    q: "",
+    faqQ: "",
+    coupon: null, // {code,type,value,amountOff}
+  };
+
+  function getClientId(){
+    let id = localStorage.getItem(CLIENT_ID_KEY);
+    if (!id){
+      id = (crypto?.randomUUID ? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(36).slice(2)));
+      localStorage.setItem(CLIENT_ID_KEY, id);
+    }
+    return id;
+  }
+
+  // Simple event bus (organized events)
+  const Bus = (() => {
+    const map = new Map();
+    return {
+      on(evt, fn){ if(!map.has(evt)) map.set(evt,new Set()); map.get(evt).add(fn); return ()=>map.get(evt)?.delete(fn); },
+      emit(evt, payload){ map.get(evt)?.forEach(fn=>{ try{ fn(payload); } catch(e){ console.warn("bus handler error", evt, e); } }); }
+    };
+  })();
+
+  function loadUiSettings(){
+    try{
+      const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+      if (s.lang === "ar" || s.lang === "en") LANG = s.lang;
+      if (typeof s.category === "string") state.category = s.category;
+      if (typeof s.q === "string") state.q = s.q;
+      if (typeof s.faqQ === "string") state.faqQ = s.faqQ;
+      if (s.coupon && typeof s.coupon === "object") state.coupon = s.coupon;
+    }catch(e){}
+  }
+  function saveUiSettings(){
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({ lang: LANG, category: state.category, q: state.q, faqQ: state.faqQ, coupon: state.coupon }));
+  }
+
 
   const $ = (id)=>document.getElementById(id);
 
@@ -859,6 +1037,15 @@ body.is-admin .admin-only{display:block}
       if (typeof v === "string") el.textContent = v;
     });
 
+// extra labels not covered by data-i18n
+    const d1 = $("cartDiscountLabel"); if (d1) d1.textContent = (LANG==="ar") ? "الخصم" : "Discount";
+    const d2 = $("cartAfterLabel"); if (d2) d2.textContent = (LANG==="ar") ? "الإجمالي بعد الخصم" : "Total after discount";
+    const cInp = $("couponInput"); if (cInp) cInp.placeholder = (LANG==="ar") ? "مثال: SAVE10" : "e.g. SAVE10";
+    const pSearch = $("productSearch"); if (pSearch) pSearch.placeholder = (LANG==="ar") ? "بحث في المنتجات..." : "Search products...";
+    const fSearch = $("faqSearch"); if (fSearch) fSearch.placeholder = (LANG==="ar") ? "بحث داخل الأسئلة..." : "Search FAQs...";
+    saveUiSettings();
+    renderCart();
+
     renderProducts();
     renderCompare();
   }
@@ -889,6 +1076,61 @@ body.is-admin .admin-only{display:block}
 
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, (c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  }
+
+  function safeUrl(u){
+    const s = String(u||"").trim();
+    if (!s) return "#";
+    // block javascript: and data:
+    const low = s.toLowerCase();
+    if (low.startsWith("javascript:") || low.startsWith("data:")) return "#";
+    return s;
+  }
+
+  // Lazy image loader (progressive)
+  let __io = null;
+  function lazyLoadImages(){
+    const imgs = document.querySelectorAll('img[data-src]');
+    if (!imgs.length) return;
+    const load = (img)=>{
+      const src = img.getAttribute("data-src");
+      if (!src) return;
+      img.src = src;
+      img.removeAttribute("data-src");
+    };
+    if (!("IntersectionObserver" in window)){
+      imgs.forEach(load); return;
+    }
+    if (!__io){
+      __io = new IntersectionObserver((entries)=>{
+        entries.forEach(ent=>{
+          if(ent.isIntersecting){
+            load(ent.target);
+            __io.unobserve(ent.target);
+          }
+        });
+      }, { rootMargin:"250px" });
+    }
+    imgs.forEach(img=>__io.observe(img));
+  }
+
+  // Simple local rate limiter (client-side)
+  function rateLimit(key, opts){
+    const now = Date.now();
+    const windowMs = opts.windowMs || 60_000;
+    const max = opts.max || 3;
+    let bucket;
+    try{ bucket = JSON.parse(localStorage.getItem(key) || "{}"); }catch(e){ bucket = {}; }
+    const arr = Array.isArray(bucket.t) ? bucket.t.filter(ts=> now-ts < windowMs) : [];
+    if (arr.length >= max) return { ok:false, retryMs: windowMs - (now - arr[0]) };
+    arr.push(now);
+    localStorage.setItem(key, JSON.stringify({ t: arr }));
+    return { ok:true, retryMs:0 };
+  }
+
+  function isValidPhoneJO(s){
+    const v = String(s||"").replace(/\s+/g,"");
+    return /^\+?9627\d{8}$/.test(v) || /^07\d{8}$/.test(v);
   }
 
 
@@ -1005,6 +1247,8 @@ body.is-admin .admin-only{display:block}
     // Brand
     const brand = $("brandText");
     if (brand) brand.textContent = s.brandText || "XCharger";
+    const dbrand = $("drawerBrand");
+    if (dbrand) dbrand.textContent = s.brandText || "XCharger";
 
     const bIcon = document.getElementById("brandIcon");
     const iconUrl = (s.brandIcon || "").trim();
@@ -1137,17 +1381,30 @@ body.is-admin .admin-only{display:block}
   });
 
   // ===== FAQ public render + admin CRUD =====
-  function renderFaqPublic(){
+  
+function renderFaqPublic(){
     const wrap = $("faqGrid");
     if (!wrap) return;
     wrap.innerHTML = "";
 
     if (!FAQS.length) {
-      wrap.innerHTML = `<div class="card" style="padding:16px"><p class="muted" style="margin:0">${LANG==="ar"?"سيتم عرض الأسئلة هنا بعد إضافتها من لوحة الإدارة.":"FAQ will appear here after adding from Admin panel."}</p></div>`;
+      wrap.innerHTML = `<div class="card" style="padding:16px"><h3 style="margin:0 0 8px; font-weight:900">${LANG==="ar"?"لا توجد أسئلة بعد":"No FAQs yet"}</h3><p class="muted" style="margin:0">${LANG==="ar"?"ستظهر الأسئلة هنا بعد إضافتها من لوحة الإدارة.":"FAQ will appear here after adding from Admin panel."}</p></div>`;
       return;
     }
 
-    FAQS.forEach(x=>{
+    const qx = (state.faqQ||"").trim().toLowerCase();
+    const list = FAQS.filter(x=>{
+      if (!qx) return true;
+      const q = ((x.q_ar||"")+" "+(x.q_en||"")+" "+(x.a_ar||"")+" "+(x.a_en||"")).toLowerCase();
+      return q.includes(qx);
+    });
+
+    if (!list.length){
+      wrap.innerHTML = `<div class="card" style="padding:16px"><h3 style="margin:0 0 8px; font-weight:900">${LANG==="ar"?"لا توجد نتائج":"No results"}</h3><p class="muted" style="margin:0">${LANG==="ar"?"جرّب كلمة أخرى.":"Try another keyword."}</p></div>`;
+      return;
+    }
+
+    list.forEach(x=>{
       const q = (LANG==="ar") ? (x.q_ar||"") : (x.q_en||"");
       const a = (LANG==="ar") ? (x.a_ar||"") : (x.a_en||"");
       const card = document.createElement("div");
@@ -1160,6 +1417,7 @@ body.is-admin .admin-only{display:block}
       wrap.appendChild(card);
     });
   }
+
 
   function renderFaqAdmin(){
     const list = $("faqAdminList");
@@ -1320,18 +1578,204 @@ body.is-admin .admin-only{display:block}
   $("closeCart").addEventListener("click", closeCart);
   $("cartModal").addEventListener("click", (e)=>{ if (e.target.id==="cartModal") closeCart(); });
 
-  function loadCart() {
+
+  // ===== Drawer (Hamburger) =====
+  function openDrawer(){
+    $("drawerBackdrop").classList.add("show");
+    $("mobileDrawer").classList.add("open");
+    $("drawerBackdrop").setAttribute("aria-hidden","false");
+    $("mobileDrawer").setAttribute("aria-hidden","false");
+    // focus close for accessibility
+    $("drawerClose").focus({preventScroll:true});
+  }
+  function closeDrawer(){
+    $("drawerBackdrop").classList.remove("show");
+    $("mobileDrawer").classList.remove("open");
+    $("drawerBackdrop").setAttribute("aria-hidden","true");
+    $("mobileDrawer").setAttribute("aria-hidden","true");
+  }
+  $("hamburgerBtn")?.addEventListener("click", openDrawer);
+  $("drawerClose")?.addEventListener("click", closeDrawer);
+  $("drawerBackdrop")?.addEventListener("click", closeDrawer);
+  $("mobileDrawer")?.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener("click", closeDrawer));
+  $("drawerLoginBtn")?.addEventListener("click", ()=>{ closeDrawer(); openModal(); });
+  $("drawerCartBtn")?.addEventListener("click", ()=>{ closeDrawer(); openCart(); });
+
+  // Keep drawer cart count in sync
+  Bus.on("cart:saved", ()=>{ $("drawerCartCount") && ($("drawerCartCount").textContent = String($("cartCount").textContent||"0")); });
+
+  // ===== Filters =====
+  $("categoryFilter")?.addEventListener("change", (e)=>{
+    state.category = e.target.value || "all";
+    saveUiSettings();
+    renderProducts();
+  });
+  $("productSearch")?.addEventListener("input", (e)=>{
+    state.q = e.target.value || "";
+    saveUiSettings();
+    renderProducts();
+  });
+  $("clearFilters")?.addEventListener("click", ()=>{
+    state.category="all"; state.q="";
+    saveUiSettings();
+    renderProducts();
+  });
+
+  // ===== FAQ search =====
+  $("faqSearch")?.addEventListener("input", (e)=>{
+    state.faqQ = e.target.value || "";
+    saveUiSettings();
+    renderFaqPublic();
+  });
+
+  // ===== Coupon =====
+  async function applyCouponCode(codeRaw){
+    const msg = $("couponHint");
+    if (!msg) return;
+    msg.style.display="block";
+    const code = String(codeRaw||"").trim().toUpperCase();
+    if (!code){ state.coupon=null; saveUiSettings(); renderCart(); msg.style.display="none"; return; }
+
+    // basic validation
+    if (!/^[A-Z0-9_-]{3,16}$/.test(code)){
+      msg.textContent = (LANG==="ar") ? "كود غير صالح" : "Invalid code";
+      return;
+    }
+    try{
+      const snap = await getDoc(doc(db,"coupons",code));
+      if (!snap.exists()){
+        msg.textContent = (LANG==="ar") ? "الكود غير موجود" : "Code not found";
+        return;
+      }
+      const c = snap.data() || {};
+      if (c.active === false){
+        msg.textContent = (LANG==="ar") ? "الكود غير فعال" : "Code inactive";
+        return;
+      }
+      if (c.expiresAt && c.expiresAt.toDate){
+        const exp = c.expiresAt.toDate().getTime();
+        if (Date.now() > exp){
+          msg.textContent = (LANG==="ar") ? "انتهت صلاحية الكود" : "Code expired";
+          return;
+        }
+      }
+      const percent = Number(c.percent||0);
+      const amount_jod = Number(c.amount_jod||0);
+      const amount_usd = Number(c.amount_usd||0);
+
+      if (!(percent>0) && !(amount_jod>0 || amount_usd>0)){
+        msg.textContent = (LANG==="ar") ? "الكود غير مُعرّف بشكل صحيح" : "Code misconfigured";
+        return;
+      }
+
+      state.coupon = { code, percent: percent>0?percent:null, amount_jod: amount_jod>0?amount_jod:null, amount_usd: amount_usd>0?amount_usd:null };
+      saveUiSettings();
+      renderCart();
+    }catch(e){
+      console.error(e);
+      msg.textContent = (LANG==="ar") ? "تعذر التحقق من الكود" : "Couldn't verify code";
+    }
+  }
+  $("applyCoupon")?.addEventListener("click", ()=> applyCouponCode($("couponInput").value));
+  $("couponInput")?.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); applyCouponCode($("couponInput").value); } });
+
+  // ===== Rating =====
+  async function submitRating(productId, value){
+    const rl = rateLimit(RATE_RATE_KEY, {windowMs: 60_000, max: 8});
+    if (!rl.ok){
+      alert((LANG==="ar") ? "تم إرسال تقييمات كثيرة. حاول لاحقًا." : "Too many ratings. Try later.");
+      return;
+    }
+    const cid = getClientId();
+    try{
+      // write unique rating per (product, client)
+      const rid = `${productId}_${cid}`;
+      const rref = doc(db,"ratings", rid);
+      const prev = await getDoc(rref);
+      const prevVal = prev.exists() ? Number(prev.data().value||0) : 0;
+
+      await setDoc(rref, { productId, clientId: cid, value, updatedAt: serverTimestamp() }, { merge:true });
+
+      // update aggregates in product doc (best-effort)
+      const pref = doc(db,"products", productId);
+      let sumDelta = value;
+      let cntDelta = 1;
+      if (prevVal>=1 && prevVal<=5){
+        sumDelta = value - prevVal;
+        cntDelta = 0;
+      }
+      try{
+        await updateDoc(pref, { ratingSum: (Number((PRODUCTS.find(p=>p.id===productId)?.ratingSum)||0) + sumDelta), ratingCount: (Number((PRODUCTS.find(p=>p.id===productId)?.ratingCount)||0) + cntDelta) });
+      }catch(e2){
+        // ignore (security rules may block)
+      }
+
+      // local optimistic update
+      const p = PRODUCTS.find(x=>x.id===productId);
+      if (p){
+        p.ratingSum = (Number(p.ratingSum||0) + sumDelta);
+        p.ratingCount = (Number(p.ratingCount||0) + cntDelta);
+        p.ratingAvg = (p.ratingCount ? (Number(p.ratingSum||0)/Number(p.ratingCount||1)) : 0);
+      }
+      renderProducts();
+    }catch(e){
+      console.error(e);
+      alert((LANG==="ar") ? "فشل حفظ التقييم" : "Failed to save rating");
+    }
+  }
+
+  // ===== Export compare table to PDF =====
+  $("exportComparePDF")?.addEventListener("click", ()=>{
+    try{
+      const el = document.querySelector("#compareTable");
+      if (!el) return alert((LANG==="ar") ? "لا يوجد جدول" : "No table");
+      const { jsPDF } = window.jspdf || {};
+      if (!jsPDF) return alert("jsPDF not loaded");
+      const docp = new jsPDF({orientation:"landscape", unit:"pt", format:"a4"});
+      docp.setFontSize(12);
+      docp.text((LANG==="ar") ? "مقارنة الإصدارات" : "Products comparison", 40, 30);
+
+      // Extract headers + rows
+      const headers = [...el.querySelectorAll("thead th")].map(th=>th.innerText.trim());
+      const rows = [...el.querySelectorAll("tbody tr")].map(tr=>[...tr.children].map(td=>td.innerText.trim()));
+
+      docp.autoTable({ head: [headers], body: rows, startY: 50, styles:{fontSize:9, cellPadding:4} });
+      docp.save("compare.pdf");
+    }catch(e){
+      console.error(e);
+      alert((LANG==="ar") ? "فشل التصدير" : "Export failed");
+    }
+  });
+
+
+  
+function loadCart() {
     try {
       const raw = localStorage.getItem(CART_KEY);
       CART = raw ? JSON.parse(raw) : [];
       if (!Array.isArray(CART)) CART = [];
     } catch(e) { CART = []; }
+    // Ensure meta exists
+    try{
+      const metaRaw = localStorage.getItem(CART_KEY+"_meta");
+      if (!metaRaw){
+        localStorage.setItem(CART_KEY+"_meta", JSON.stringify({ ts: Date.now(), id: (crypto?.randomUUID?crypto.randomUUID():(""+Date.now())) }));
+      }
+    }catch(e){}
     updateCartCount();
   }
-  function saveCart() {
-    try { localStorage.setItem(CART_KEY, JSON.stringify(CART)); } catch(e) {}
+
+  
+function saveCart() {
+    try {
+      const meta = { ts: Date.now(), id: (JSON.parse(localStorage.getItem(CART_KEY+"_meta")||"{}").id) || (crypto?.randomUUID?crypto.randomUUID():(""+Date.now())) };
+      localStorage.setItem(CART_KEY, JSON.stringify(CART));
+      localStorage.setItem(CART_KEY+"_meta", JSON.stringify(meta));
+    } catch(e) {}
     updateCartCount();
+    Bus.emit("cart:saved", {len:CART.length});
   }
+
   function updateCartCount() {
     const c = CART.reduce((a,it)=>a + (Number(it.qty)||0), 0);
     $("cartCount").textContent = String(c);
@@ -1353,31 +1797,54 @@ body.is-admin .admin-only{display:block}
     return out;
   }
 
+  
+function calcDiscountForCurrency(subTotal, cur){
+    if (!state.coupon) return 0;
+    const c = state.coupon;
+    if (c.percent && c.percent>0){
+      return Math.max(0, Math.min(subTotal, subTotal*(c.percent/100)));
+    }
+    if (c.amount_jod!=null || c.amount_usd!=null){
+      const amt = (cur==="JOD") ? Number(c.amount_jod||0) : Number(c.amount_usd||0);
+      return Math.max(0, Math.min(subTotal, amt));
+    }
+    return 0;
+  }
+
   function renderCart() {
     const body = $("cartBody");
     body.innerHTML = "";
 
     if (!CART.length) {
       body.innerHTML = `<div class="muted" style="text-align:center; font-weight:900">${i18n[LANG].cart_empty}</div>`;
+      $("cartSubTotalVal").textContent = "0";
+      $("cartDiscountVal").textContent = "0";
       $("cartTotalVal").textContent = "0";
       return;
     }
 
     CART.forEach((it, idx)=>{
+      const p = PRODUCTS.find(x=>x.id===it.productId);
+      const thumb = (p && p.image) ? p.image : "";
       const line = document.createElement("div");
       line.className = "cart-line";
       line.innerHTML = `
-        <div style="display:grid; gap:4px">
-          <div style="font-weight:900">${escapeHtml(it.name||"")}</div>
-          <div class="muted" style="font-size:13px; font-weight:900">${money(it.unitPrice, it.currency)} • ${it.currency}</div>
+        <div style="display:flex; gap:10px; align-items:flex-start">
+          <div style="width:58px; height:58px; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:#fff; flex:0 0 auto">
+            ${thumb?`<img src="${thumb}" alt="" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover">`:`<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--muted)"><i class="fa-regular fa-image"></i></div>`}
+          </div>
+          <div style="display:grid; gap:4px">
+            <div style="font-weight:900">${escapeHtml(it.name||"")}</div>
+            <div class="muted" style="font-size:13px; font-weight:900">${money(it.unitPrice, it.currency)} • ${it.currency}</div>
+          </div>
         </div>
         <div style="display:grid; gap:8px; justify-items:end">
           <div class="qty">
-            <button type="button" data-act="minus">−</button>
+            <button type="button" data-act="minus" aria-label="minus">−</button>
             <span>${Number(it.qty||1)}</span>
-            <button type="button" data-act="plus">+</button>
+            <button type="button" data-act="plus" aria-label="plus">+</button>
           </div>
-          <button type="button" class="btn btn-ghost danger" style="padding:8px 10px; border-radius:14px" data-act="rm"><i class="fa-regular fa-trash-can"></i> ${i18n[LANG].cart_remove}</button>
+          <button type="button" class="btn btn-ghost danger" style="padding:8px 10px" data-act="rm"><i class="fa-regular fa-trash-can"></i> ${i18n[LANG].cart_remove}</button>
         </div>
       `;
       line.querySelector('[data-act="minus"]').addEventListener("click", ()=>{
@@ -1394,10 +1861,34 @@ body.is-admin .admin-only{display:block}
       body.appendChild(line);
     });
 
-    const totals = totalsByCurrency();
-    const parts = Object.entries(totals).map(([cur,val])=>money(val,cur));
-    $("cartTotalVal").textContent = parts.join("  |  ");
+    const subTotals = totalsByCurrency();
+    const subParts = Object.entries(subTotals).map(([cur,val])=>money(val,cur));
+    const discounts = Object.entries(subTotals).reduce((acc,[cur,val])=>{
+      acc[cur] = calcDiscountForCurrency(val, cur);
+      return acc;
+    }, {});
+    const totalParts = Object.entries(subTotals).map(([cur,val])=>money(Math.max(0,val - (discounts[cur]||0)), cur));
+    const discParts = Object.entries(discounts).filter(([_,v])=>v>0).map(([cur,val])=>money(val,cur));
+
+    $("cartSubTotalVal").textContent = subParts.join("  |  ");
+    $("cartDiscountVal").textContent = discParts.length ? ("− " + discParts.join("  |  ")) : "0";
+    $("cartTotalVal").textContent = totalParts.join("  |  ");
+
+    // coupon hint
+    const hint = $("couponHint");
+    if (hint){
+      if (state.coupon){
+        hint.style.display="block";
+        const label = (LANG==="ar") ? "تم تطبيق الكود" : "Coupon applied";
+        hint.textContent = `${label}: ${state.coupon.code}`;
+      } else {
+        hint.style.display="none";
+      }
+    }
+
+    Bus.emit("cart:rendered", {items:CART.length});
   }
+
 
   window.__addToCart = (productId)=>{
     const p = PRODUCTS.find(x=>x.id===productId);
@@ -1435,9 +1926,18 @@ body.is-admin .admin-only{display:block}
   }
   $("doLogin").addEventListener("click", doLogin);
 
-  async function placeOrder() {
+  
+async function placeOrder() {
     const msgEl = $("cartMsg");
     msgEl.style.display="none";
+
+    // Rate limit (client-side)
+    const rl = rateLimit(ORDER_RATE_KEY, {windowMs: 10*60_000, max: 3});
+    if (!rl.ok){
+      const mins = Math.ceil(rl.retryMs/60_000);
+      showHint(msgEl, (LANG==="ar" ? `طلبات كثيرة. حاول بعد ${mins} دقيقة.` : `Too many orders. Try again in ${mins} min.`), false);
+      return;
+    }
 
     if (!CART.length) {
       showHint(msgEl, i18n[LANG].cart_empty, false);
@@ -1452,44 +1952,75 @@ body.is-admin .admin-only{display:block}
       note: $("co_note").value.trim(),
     };
 
-    if (!customer.name || !customer.phone) {
-      showHint(msgEl, (LANG==="ar" ? "يرجى إدخال الاسم ورقم الهاتف" : "Please enter name and phone"), false);
+    // Validate
+    if (customer.name.length < 2 || customer.name.length > 60){
+      showHint(msgEl, (LANG==="ar" ? "يرجى إدخال اسم صحيح" : "Please enter a valid name"), false);
+      return;
+    }
+    if (!isValidPhoneJO(customer.phone)){
+      showHint(msgEl, (LANG==="ar" ? "رقم الهاتف غير صحيح (مثال: 079xxxxxxx)" : "Invalid phone number"), false);
+      return;
+    }
+    if (customer.city.length < 2 || customer.city.length > 40){
+      showHint(msgEl, (LANG==="ar" ? "يرجى إدخال المدينة" : "Please enter city"), false);
+      return;
+    }
+    if (customer.address.length < 5 || customer.address.length > 140){
+      showHint(msgEl, (LANG==="ar" ? "يرجى إدخال العنوان بشكل أوضح" : "Please enter a clearer address"), false);
+      return;
+    }
+    if (customer.note.length > 300){
+      showHint(msgEl, (LANG==="ar" ? "الملاحظة طويلة جدًا" : "Note is too long"), false);
       return;
     }
 
-    const totals = totalsByCurrency();
+    // Totals
+    const subTotals = totalsByCurrency();
+    const discounts = Object.entries(subTotals).reduce((acc,[cur,val])=>{
+      acc[cur] = calcDiscountForCurrency(val, cur);
+      return acc;
+    }, {});
+    const totals = Object.entries(subTotals).reduce((acc,[cur,val])=>{
+      acc[cur] = Math.max(0, val - (discounts[cur]||0));
+      return acc;
+    }, {});
 
     const payload = {
-      status: "new",
-      createdAt: serverTimestamp(),
-      lang: LANG,
-      customer,
       items: CART.map(it=>({
         productId: it.productId,
         name: it.name,
-        qty: Number(it.qty||1),
         unitPrice: Number(it.unitPrice||0),
-        currency: it.currency || "JOD"
+        currency: it.currency||"JOD",
+        qty: Number(it.qty||1),
       })),
-      totalsByCurrency: totals,
-      user: USER ? { uid: USER.uid, email: USER.email||null, role: ROLE } : null,
-      source: "web"
+      customer,
+      coupon: state.coupon ? { code: state.coupon.code, percent: state.coupon.percent||null, amount_jod: state.coupon.amount_jod||null, amount_usd: state.coupon.amount_usd||null } : null,
+      totals: { subTotals, discounts, totals },
+      meta: {
+        lang: LANG,
+        clientId: getClientId(),
+        ua: navigator.userAgent,
+        createdAt: serverTimestamp(),
+      }
     };
 
     try {
       await addDoc(collection(db,"orders"), payload);
       CART = [];
+      state.coupon = null;
+      saveUiSettings();
       saveCart();
       renderCart();
       showHint(msgEl, i18n[LANG].cart_saved, true);
       setTimeout(()=>{ closeCart(); }, 900);
-      // clear checkout inputs
       ["co_name","co_phone","co_city","co_address","co_note"].forEach(id=>$(id).value="");
+      if ($("couponInput")) $("couponInput").value="";
     } catch(e) {
       console.error("Order error:", e);
       showHint(msgEl, (i18n[LANG].cart_failed + ": " + (e.code||"")), false);
     }
   }
+
   $("placeOrder").addEventListener("click", placeOrder);
 
   $("logoutBtn").addEventListener("click", async ()=>{ await signOut(auth); });
@@ -1537,37 +2068,95 @@ body.is-admin .admin-only{display:block}
     return `<div class="p-specs"><b>${title}</b><ul class="spec">${lis}</ul></div>`;
   }
 
+
 function renderProducts() {
     const grid = $("productsGrid");
-    grid.innerHTML = "";
-    $("productsEmpty").style.display = PRODUCTS.length ? "none" : "block";
+    const empty = $("productsEmpty");
+    const loader = $("productsLoader");
+    if (loader) loader.classList.toggle("show", !!state.productsLoading);
 
-    PRODUCTS.forEach(p=>{
-      const img = p.image || "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80";
+    // Build categories from products
+    const cats = Array.from(new Set(PRODUCTS.map(p => (p.category || "").trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+    const sel = $("categoryFilter");
+    if (sel) {
+      const allLabel = (LANG==="ar") ? "كل الفئات" : "All categories";
+      const optAll = `<option value="all">${allLabel}</option>`;
+      const optCats = cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+      sel.innerHTML = optAll + optCats;
+      sel.value = state.category || "all";
+    }
+    const ps = $("productSearch");
+    if (ps) {
+      ps.placeholder = (LANG==="ar") ? "بحث في المنتجات..." : "Search products...";
+      ps.value = state.q || "";
+    }
+    const lt = $("productsLoaderText");
+    if (lt) lt.textContent = (LANG==="ar") ? "جاري تحميل المنتجات..." : "Loading products...";
+
+    // Filter
+    const q = (state.q || "").trim().toLowerCase();
+    const list = PRODUCTS.filter(p=>{
+      const catOk = (state.category==="all" || !state.category) ? true : ((p.category||"").trim() === state.category);
+      if (!catOk) return false;
+      if (!q) return true;
+      const hay = ((p.name||"")+" "+(p.badge||"")+" "+(Array.isArray(p.features)?p.features.join(" "):"")).toLowerCase();
+      return hay.includes(q);
+    });
+
+    grid.innerHTML = "";
+    if (empty) empty.style.display = (!state.productsLoading && list.length===0) ? "block" : "none";
+
+    const frag = document.createDocumentFragment();
+
+    list.forEach(p=>{
+      const img = (p.image || "").trim() || "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80";
       const feats = Array.isArray(p.features) ? p.features : [];
       const price = (LANG==="ar") ? p.price_jod_retail : p.price_usd_retail;
+
       const oldPriceRaw = (LANG==="ar") ? p.old_price_jod_retail : p.old_price_usd_retail;
       let oldPrice = (oldPriceRaw!=null && oldPriceRaw!=="" && !isNaN(Number(oldPriceRaw))) ? Number(oldPriceRaw) : null;
       let disc = (p.discount_percent!=null && p.discount_percent!=="" && !isNaN(Number(p.discount_percent))) ? Number(p.discount_percent) : null;
       const curPrice = (price!=null && price!=="" && !isNaN(Number(price))) ? Number(price) : null;
+
       if ((oldPrice==null || !(oldPrice>0)) && disc!=null && disc>0 && disc<96 && curPrice!=null && curPrice>0) {
         oldPrice = +(curPrice / (1 - disc/100)).toFixed(2);
       }
       if ((disc==null || !(disc>0)) && oldPrice!=null && curPrice!=null && oldPrice>curPrice && oldPrice>0) {
         disc = Math.round(((oldPrice-curPrice)/oldPrice)*100);
       }
+
       const discBadge = (disc!=null && disc>0) ? `<div class="p-discount">${LANG==="ar" ? ("خصم "+disc+"%") : (disc+"% OFF")}</div>` : "";
       const oldPriceHTML = (oldPrice!=null && curPrice!=null && oldPrice>curPrice) ? `<div class="p-old">${fmtPrice(oldPrice)}</div>` : "";
+
+      // Rating
+      const count = Number(p.ratingCount || 0) || 0;
+      const avg = Number(p.ratingAvg || (count ? (Number(p.ratingSum||0)/count) : 0)) || 0;
+      const avgTxt = count ? avg.toFixed(1) : (LANG==="ar" ? "بدون تقييم" : "No ratings");
 
       const card = document.createElement("div");
       card.className = "card p-card";
       card.innerHTML = `
         <div class="p-top">
-          <div class="p-img"><img src="${img}" alt=""></div>
+          <div class="p-img">
+            <img data-src="${img}" alt="${escapeHtml(p.name||'product')}" loading="lazy" decoding="async">
+          </div>
           <div style="flex:1">
-            <div class="p-badge">${badgeText(p.badge)} </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap">
+              <div class="p-badge">${badgeText(p.badge)} </div>
+              ${(p.category||"").trim()?`<span class="badge-mini">${escapeHtml((p.category||"").trim())}</span>`:""}
+            </div>
             <h3 class="p-name">${escapeHtml(p.name||"")}</h3>
-            <div class="p-price-row"><div class="p-price">${fmtPrice(price)}</div>${discBadge}</div>${oldPriceHTML}
+            <div class="p-price-row">
+              <div class="p-price">${fmtPrice(price)}</div>
+              ${discBadge}
+            </div>
+            ${oldPriceHTML}
+            <div class="rating-meta">
+              <div class="stars" data-pid="${p.id}">
+                ${[1,2,3,4,5].map(n=>`<button class="star ${(avg>=n-0.25)?'on':''}" data-rate="${n}" aria-label="rate ${n}">★</button>`).join("")}
+              </div>
+              <span class="badge-mini">${escapeHtml(avgTxt)}${count?` • ${count}`:""}</span>
+            </div>
             <div class="muted" style="margin-top:4px">${LANG==="ar" ? "عمّان - الأردن" : "Amman, Jordan"}</div>
           </div>
         </div>
@@ -1576,15 +2165,44 @@ function renderProducts() {
         </ul>
         ${renderSpecsHTML(p)}
         <div class="p-actions">
-          <a class="btn btn-ghost" href="${p.software||"#"}" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> ${i18n[LANG].btn_sw}</a>
-          <a class="btn btn-ghost" href="${p.catalog||"#"}" target="_blank" rel="noopener"><i class="fa-regular fa-file-pdf"></i> ${i18n[LANG].btn_cat}</a>
-          <a class="btn btn-ghost" href="${p.video||"#"}" target="_blank" rel="noopener"><i class="fa-solid fa-play"></i> ${i18n[LANG].btn_vid}</a>
-          <button class="btn btn-primary" style="margin-inline-start:auto" onclick="window.__addToCart(\'${p.id}\')"><i class="fa-solid fa-cart-shopping"></i> ${i18n[LANG].btn_order}</button>
+          <a class="btn btn-ghost" href="${safeUrl(p.software)}" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> ${i18n[LANG].btn_sw}</a>
+          <a class="btn btn-ghost" href="${safeUrl(p.catalog)}" target="_blank" rel="noopener"><i class="fa-regular fa-file-pdf"></i> ${i18n[LANG].btn_cat}</a>
+          <a class="btn btn-ghost" href="${safeUrl(p.video)}" target="_blank" rel="noopener"><i class="fa-solid fa-play"></i> ${i18n[LANG].btn_vid}</a>
+          <button class="btn btn-primary" data-add="${p.id}" style="margin-inline-start:auto"><i class="fa-solid fa-cart-shopping"></i> ${i18n[LANG].btn_order}</button>
         </div>
       `;
-      grid.appendChild(card);
+      frag.appendChild(card);
     });
+
+    grid.appendChild(frag);
+
+    // Lazy load images with IntersectionObserver
+    lazyLoadImages();
+
+    // Bind actions
+    grid.querySelectorAll('button[data-add]').forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-add");
+        const p = PRODUCTS.find(x=>x.id===id);
+        if (p && window.__addToCart) window.__addToCart(p.id);
+      });
+    });
+
+    // Rating clicks
+    grid.querySelectorAll('.stars').forEach(st=>{
+      st.addEventListener("click", async (e)=>{
+        const b = e.target.closest("button.star");
+        if (!b) return;
+        const pid = st.getAttribute("data-pid");
+        const v = Number(b.getAttribute("data-rate"));
+        if (!pid || !(v>=1 && v<=5)) return;
+        await submitRating(pid, v);
+      });
+    });
+
+    Bus.emit("products:rendered", {count:list.length});
   }
+
 
   function renderCompare() {
     const tbl = $("compareTable");
@@ -1625,11 +2243,21 @@ function renderProducts() {
   // Live products subscription
   const qy = query(collection(db,"products"), orderBy("createdAt","desc"));
   onSnapshot(qy, (snap)=>{
+    state.productsLoading = false;
     PRODUCTS = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+// extra labels not covered by data-i18n
+    const d1 = $("cartDiscountLabel"); if (d1) d1.textContent = (LANG==="ar") ? "الخصم" : "Discount";
+    const d2 = $("cartAfterLabel"); if (d2) d2.textContent = (LANG==="ar") ? "الإجمالي بعد الخصم" : "Total after discount";
+    const cInp = $("couponInput"); if (cInp) cInp.placeholder = (LANG==="ar") ? "مثال: SAVE10" : "e.g. SAVE10";
+    const pSearch = $("productSearch"); if (pSearch) pSearch.placeholder = (LANG==="ar") ? "بحث في المنتجات..." : "Search products...";
+    const fSearch = $("faqSearch"); if (fSearch) fSearch.placeholder = (LANG==="ar") ? "بحث داخل الأسئلة..." : "Search FAQs...";
+    saveUiSettings();
+    renderCart();
+
     renderProducts();
     renderCompare();
     renderAdminList();
-  }, (err)=>{ console.error("Firestore snapshot error:", err); });
+  }, (err)=>{ console.error("Firestore snapshot error:", err); state.productsLoading=false; renderProducts(); });
 
   // Admin CRUD
   function numOrNull(v) {
@@ -1642,6 +2270,7 @@ function renderProducts() {
     const specs = $("f_specs") ? $("f_specs").value.split("\n").map(s=>s.trim()).filter(Boolean) : [];
     return {
       name: $("f_name").value.trim(),
+      category: ($("f_category")?$("f_category").value.trim():""),
       badge: $("f_badge").value,
       image: $("f_img").value.trim(),
       video: $("f_video").value.trim(),
@@ -1672,7 +2301,7 @@ function renderProducts() {
 
   function clearForm() {
     EDITING_ID = null;
-    ["f_name","f_img","f_video","f_software","f_catalog","f_features","f_price_jod_retail","f_price_jod_trade","f_price_usd_retail","f_price_usd_trade","f_old_price_jod_retail","f_old_price_usd_retail","f_discount_percent"].forEach(id=>$(id) && ($(id).value=""));
+    ["f_name","f_category","f_img","f_video","f_software","f_catalog","f_features","f_price_jod_retail","f_price_jod_trade","f_price_usd_retail","f_price_usd_trade","f_old_price_jod_retail","f_old_price_usd_retail","f_discount_percent"].forEach(id=>$(id) && ($(id).value=""));
     ["c_power","c_protection"].forEach(id=>$(id) && ($(id).value=""));
     ["c_interface","c_schedule","c_remote","c_voice"].forEach(id=>$(id) && ($(id).checked=false));
     $("f_badge").value="new";
@@ -1740,6 +2369,7 @@ function renderProducts() {
   function loadToForm(p) {
     EDITING_ID = p.id;
     $("f_name").value = p.name||"";
+    if ($("f_category")) $("f_category").value = p.category||"";
     $("f_badge").value = p.badge||"new";
     $("f_img").value = p.image||"";
     $("f_video").value = p.video||"";
@@ -1794,8 +2424,20 @@ function renderProducts() {
   $("langEN").addEventListener("click", ()=>{ LANG="en"; applyLang(); });
 
   $("year").textContent = new Date().getFullYear();
+  loadUiSettings();
   loadCart();
+  // restore UI inputs
+  if ($("couponInput") && state.coupon) $("couponInput").value = state.coupon.code;
   applyLang();
+  renderProducts();
+  renderFaqPublic();
+  renderCart();
+
+  // Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch((e)=>console.warn('SW failed', e));
+  }
+
 </script>
 
 </body>
